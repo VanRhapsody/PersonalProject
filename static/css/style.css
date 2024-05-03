@@ -1,0 +1,80 @@
+* {
+    font-family: "Ubuntu Mono", monospace;
+}
+
+:root {
+    --background-green:#285238;
+    --hover-green:#007C41;
+    --active-green:#01D758;
+    --page-background: #34403A;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--background-green);
+  }
+  
+  li {
+    float: left;
+  }
+  
+  li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 30px 30px;
+    text-decoration: none;
+    font-size:30px;
+    transition: 0.3s;
+  }
+  
+  li a:hover:not(.active) {
+    background-color: var(--hover-green);
+    transition: 0.3s;
+  }
+  
+  .active {
+    background-color: var(--active-green);
+    color:var(--background-green);
+  }
+
+h1 {
+    font-size: 75px;
+    display: inline-block;
+    text-align: center !important;
+    margin: auto;
+    color: white;
+    position: relative;
+
+}
+
+.ubuntu-mono-regular {
+    font-family: "Ubuntu Mono", monospace;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .ubuntu-mono-bold {
+    font-family: "Ubuntu Mono", monospace;
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  .ubuntu-mono-regular-italic {
+    font-family: "Ubuntu Mono", monospace;
+    font-weight: 400;
+    font-style: italic;
+  }
+  
+  .ubuntu-mono-bold-italic {
+    font-family: "Ubuntu Mono", monospace;
+    font-weight: 700;
+    font-style: italic;
+  }
