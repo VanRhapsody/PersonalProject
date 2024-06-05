@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+
+    <ul style="display:flex; justify-content: center; align-items: center;">
+        <div>
+            {% if active==1 %}
+            <li><a class="active" href="{{url_for('index')}}">Domů</a></li>
+            {% else %}
+            <li><a href="{{url_for('index')}}">Domů</a></li>
+            {% endif %}
+            {% if active==2 %}
+            <li><a class="active" href="{{url_for('ulohy')}}">Úlohy</a></li>
+            {% else %}
+            <li><a href="{{url_for('ulohy')}}">Úlohy</a></li>
+            {% endif %}
+        </div>
+        <h1 style="align-self: center; bottom: 60%; transform: translate(0%, -8%);">ByteBurst</h1>
+        <div>
+            {% if active==4 and session["name"]==None %}
+            <li style="float:right"><a class="active" href="{{url_for('profil')}}">Přihlásit se</a></li>
+            {% elif active != 4 %}
+            <li style="float:right"><a href="{{url_for('profil')}}l">Přihlásit se</a></li>
+            {% else %}
+            <div class="dropdown">
+                <span>Mouse over me</span>
+                <div class="dropdown-content">
+                <p>Hello World!</p>
+                </div>
+              </div>
+            {% endif %}
+        {% if active==3 %}
+        <li style="float:right"><a class="active" href="{{url_for('kvizy')}}">Kvízy</a></li>
+        {% else %}
+        <li style="float:right"><a href="{{url_for('kvizy')}}">Kvízy</a></li>
+        {% endif %}
+
+        </div>
+      </ul>
+    {% block content %}{% endblock %}
+
+</body>
+</html>
