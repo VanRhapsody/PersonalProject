@@ -28,17 +28,15 @@
         <h1 style="align-self: center; bottom: 60%; transform: translate(0%, -8%);">ByteBurst</h1>
         <div>
             {% if active==4 and session["name"]==None %}
-            <li style="float:right"><a class="active" href="{{url_for('profil')}}">Přihlásit se</a></li>
-            {% elif active != 4 %}
-            <li style="float:right"><a href="{{url_for('profil')}}l">Přihlásit se</a></li>
-            {% else %}
-            <div class="dropdown">
-                <span>Mouse over me</span>
-                <div class="dropdown-content">
-                <p>Hello World!</p>
-                </div>
-              </div>
+            <li style="float:right"><a class="active" href="{{url_for('profile')}}">Registrovat</a></li>
+            {% elif active != 4 and session["name"]==None %}
+            <li style="float:right"><a href="{{url_for('profile')}}">Registrovat</a></li>
+            {% elif active != 4 and session["name"]!=None %}
+            <li style="float:right"><a href="{{url_for('profile')}}">{{ session["name"] }}</a></li>
+            
+            
             {% endif %}
+            
         {% if active==3 %}
         <li style="float:right"><a class="active" href="{{url_for('kvizy')}}">Kvízy</a></li>
         {% else %}
