@@ -27,12 +27,12 @@
         </div>
         <h1 style="align-self: center; bottom: 60%; transform: translate(0%, -8%);">ByteBurst</h1>
         <div>
-            {% if active==4 and session["name"]==None %}
+            {% if active==4 and not session["name"] %}
             <li style="float:right"><a class="active" href="{{url_for('profile')}}">Registrovat</a></li>
-            {% elif active != 4 and session["name"]==None %}
+            {% elif active != 4 and not session["name"] %}
             <li style="float:right"><a href="{{url_for('profile')}}">Registrovat</a></li>
-            {% elif active != 4 and session["name"]!=None %}
-            <li style="float:right"><a href="{{url_for('profile')}}">{{ session["name"] }}</a></li>
+            {% elif active != 4 and session["name"] %}
+            <li style="float:right"><a href="{{url_for('profile')}}">{{ session["name"] }}xx</a></li>
             {% else %}
             <li style="float:right"><a class="active" href="{{url_for('profile')}}">{{ session["name"] }}</a></li>
             {% endif %}
