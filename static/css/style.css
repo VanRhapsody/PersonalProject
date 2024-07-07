@@ -61,17 +61,37 @@ h1 {
 }
 
 h2 {
+  font-size: 60px;
+  display: inline-block;
+  color: white;
+
+}
+
+h3 {
   font-size: 30px;
   display: inline-block;
   color: white;
   margin: 20px;
   padding: 5px;
+  
 }
+
+
 
 .align-center {
   text-align: center;
   margin-left: auto;
   margin-right: auto;
+}
+
+.align-left {
+  text-align: center;
+  left: 0;
+}
+
+.align-right {
+  text-align: center;
+  right: 0;
 }
 
 .ubuntu-mono-regular {
