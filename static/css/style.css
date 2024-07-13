@@ -87,11 +87,13 @@ h3 {
 .align-left {
   text-align: center;
   left: 0;
+  float: left;
 }
 
 .align-right {
   text-align: center;
   right: 0;
+  float: right;
 }
 
 .ubuntu-mono-regular {
