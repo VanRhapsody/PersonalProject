@@ -94,6 +94,27 @@ h3 {
   float: right;
 }
 
+.main-menu-img {
+  margin: 20px;
+  padding: 20px;
+  width: 35%;
+  height: 35%;
+}
+
+.element-main-menu {
+  margin-top: 50px;
+  margin-bottom: 400px;
+  padding: 20px;
+  
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  background-color: var(--background-green);
+  width: 100%;
+}
+
 .ubuntu-mono-regular {
     font-family: "Ubuntu Mono", monospace;
     font-weight: 400;
