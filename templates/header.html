@@ -12,8 +12,7 @@
 </head>
 <body>
 
-    <ul style="display:flex; justify-content: center; align-items: center;">
-        <div>
+    <ul style="text-align: center;">
             {% if active==1 %}
             <li><a class="active" href="{{url_for('index')}}">Domů</a></li>
             {% else %}
@@ -24,9 +23,7 @@
             {% else %}
             <li><a href="{{url_for('ulohy')}}">Úlohy</a></li>
             {% endif %}
-        </div>
-        <h1 style="align-self: center; bottom: 60%; transform: translate(0%, -8%);">ByteBurst</h1>
-        <div>
+        <h1 style="bottom: 60%;">ByteBurst</h1>
             {% if active==4 and not session["name"] %}
             <li style="float:right"><a class="active" href="{{url_for('profile')}}">Registrovat</a></li>
             {% elif active != 4 and not session["name"] %}
@@ -43,7 +40,6 @@
         <li style="float:right"><a href="{{url_for('kvizy')}}">Kvízy</a></li>
         {% endif %}
 
-        </div>
       </ul>
     {% block content %}{% endblock %}
 

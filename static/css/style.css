@@ -110,9 +110,13 @@ h3 {
 
 footer {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   background-color: var(--background-green);
   width: 100%;
+  text-align: center;
+  padding: 10px;
+  padding-right: 0;
 }
 
 .ubuntu-mono-regular {
