@@ -113,10 +113,17 @@ footer {
   flex-direction: row;
   justify-content: center;
   background-color: var(--background-green);
-  width: 100%;
+
   text-align: center;
   padding: 10px;
   padding-right: 0;
+}
+
+.vertical-navbar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: center;
 }
 
 .ubuntu-mono-regular {
