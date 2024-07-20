@@ -122,8 +122,14 @@ footer {
 .vertical-navbar {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+
+  justify-content: center;
   text-align: center;
+  width: 12%;
+}
+
+.vertical-navbar li a {
+  display: block;
 }
 
 .ubuntu-mono-regular {
