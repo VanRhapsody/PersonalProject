@@ -14,40 +14,41 @@ body {
     padding: 0;
     background-color: #34403A;
 }
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: var(--background-green);
-  }
-  
-  li {
-    float: left;
-  }
-  
-  li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 30px 30px;
-    text-decoration: none;
-    font-size:30px;
-    transition: 0.3s;
 
-  }
-  
-  li a:hover:not(.active) {
-    background-color: var(--hover-green);
-    transition: 0.3s;
-  
-  }
-  
-  .active {
-    background-color: var(--active-green);
-    color:var(--background-green);
+header ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: var(--background-green);
+}
 
-  }
+header li {
+  float: left;
+}
+
+header li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 30px 30px;
+  text-decoration: none;
+  font-size:30px;
+  transition: 0.3s;
+
+}
+
+header li a:hover:not(.active) {
+  background-color: var(--hover-green);
+  transition: 0.3s;
+
+}
+
+header .active {
+  background-color: var(--active-green);
+  color:var(--background-green);
+
+}
 
 h1 {
     font-size: 75px;
@@ -113,24 +114,37 @@ footer {
   flex-direction: row;
   justify-content: center;
   background-color: var(--background-green);
-
   text-align: center;
   padding: 10px;
   padding-right: 0;
 }
 
 .vertical-navbar {
-  display: flex;
-  flex-direction: column;
-
-  justify-content: center;
-  text-align: center;
-  width: 12%;
+  position: sticky;
+  top: 10px;
+  margin: 20px;
+  width: 10%;
+  background-color: var(--background-green);
 }
+
+.vertical-navbar ul {
+
+  list-style-type: none;
+  font-family: "Ubuntu Mono", monospace;
+}
+
 
 .vertical-navbar li a {
+  font-family: "Ubuntu Mono", monospace;
+  font-size: 30px;
+  margin: 20px;
+  margin-left: 0;
   display: block;
+  color: white;
+  text-align: center;
+  text-decoration: none;
 }
+
 
 .ubuntu-mono-regular {
     font-family: "Ubuntu Mono", monospace;
