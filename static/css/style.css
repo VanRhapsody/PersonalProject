@@ -1,5 +1,6 @@
 * {
     font-family: "Ubuntu Mono", monospace;
+    color: white;
 }
 
 :root {
@@ -29,7 +30,6 @@ header li {
 
 header li a {
   display: block;
-  color: white;
   text-align: center;
   padding: 30px 30px;
   text-decoration: none;
@@ -55,7 +55,6 @@ h1 {
     display: inline-block;
     text-align: center !important;
     margin: auto;
-    color: white;
     position: relative;
     vertical-align: center;
 
@@ -64,14 +63,12 @@ h1 {
 h2 {
   font-size: 60px;
   display: inline-block;
-  color: white;
 
 }
 
 h3 {
   font-size: 30px;
   display: inline-block;
-  color: white;
   margin: 20px;
   padding: 5px;
   
@@ -131,6 +128,13 @@ footer {
 
   list-style-type: none;
   font-family: "Ubuntu Mono", monospace;
+  padding: 0;
+  
+
+}
+
+.vertical-navbar li {
+  border-bottom: solid var(--hover-green);
 }
 
 
@@ -138,13 +142,33 @@ footer {
   font-family: "Ubuntu Mono", monospace;
   font-size: 30px;
   margin: 20px;
-  margin-left: 0;
   display: block;
-  color: white;
   text-align: center;
   text-decoration: none;
+  
 }
 
+.vertical-navbar li:last-child {
+  border-bottom: none;
+  padding-bottom: 10px;
+}
+
+.vertical-navbar li:first-child {
+  padding-top: 10px;
+}
+
+.task-menu {
+  width: 85%; 
+  float: right;
+}
+
+.task-table {
+  background-color: var(--background-green);
+}
+
+.task-table th {
+  font-size: 50px;
+}
 
 .ubuntu-mono-regular {
     font-family: "Ubuntu Mono", monospace;
