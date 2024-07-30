@@ -125,12 +125,10 @@ footer {
 }
 
 .vertical-navbar ul {
-
   list-style-type: none;
   font-family: "Ubuntu Mono", monospace;
   padding: 0;
   
-
 }
 
 .vertical-navbar li {
@@ -160,14 +158,25 @@ footer {
 .task-menu {
   width: 85%; 
   float: right;
+  right: 20px;
+  top: 10px;
+  position: relative;
 }
 
 .task-table {
   background-color: var(--background-green);
+  width: 100%;
+  
 }
 
 .task-table th {
   font-size: 50px;
+  padding-left: 0;
+}
+
+.task-table td {
+  font-size: 40px;
+  padding: 10px;
 }
 
 .ubuntu-mono-regular {
