@@ -2,13 +2,25 @@
 {% block title %}Ulohy{% endblock %}
 {% block content %}
 <br>
+
+
 <div class="task-menu">
+    <div class="filters">
+        <h1>Filtry</h1>
+        <table>
+            <table>
+                <th>Verified</th>
+                <input type="radio" id="1" value="Ano"/>
+            </table>
+        </table>
+    </div>
+    
     <table class="task-table">
         <tr>
-            <th>VER</th>
+            <th style="text-align: center; padding: 0;">VER</th>
             <th style="padding-right: 45%;">Název</th>
-            <th style="padding-right: 15%;">Téma</th>
-            <th style="padding-right: 15%;">Úroveň</th>
+            <th style="padding-right: 20%;">Téma</th>
+            <th style="padding-right: 20%;">Úroveň</th>
         </tr>
         <tr>
             <td style="text-align: center;"><img src="static\images\shield_15627713.png" alt=""></td>

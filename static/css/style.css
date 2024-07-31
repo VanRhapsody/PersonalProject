@@ -53,7 +53,7 @@ header .active {
 h1 {
     font-size: 75px;
     display: inline-block;
-    text-align: center !important;
+    text-align: center;
     margin: auto;
     position: relative;
     vertical-align: center;
@@ -139,11 +139,14 @@ footer {
 .vertical-navbar li a {
   font-family: "Ubuntu Mono", monospace;
   font-size: 30px;
-  margin: 20px;
+  padding: 20px;
   display: block;
   text-align: center;
   text-decoration: none;
-  
+}
+
+.vertical-navbar li:hover {
+  background-color: var(--active-green);
 }
 
 .vertical-navbar li:last-child {
@@ -166,17 +169,29 @@ footer {
 .task-table {
   background-color: var(--background-green);
   width: 100%;
-  
 }
 
 .task-table th {
   font-size: 50px;
-  padding-left: 0;
+  padding: 10px;
+  text-align: left;
 }
 
 .task-table td {
   font-size: 40px;
   padding: 10px;
+}
+
+.task-table tr:first-child:hover {
+  background-color: var(--background-green);
+}
+
+.task-table tr:hover {
+  background-color: var(--active-green);
+}
+
+.filters {
+  text-align: center;
 }
 
 .ubuntu-mono-regular {
