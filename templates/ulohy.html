@@ -7,11 +7,17 @@
 <div class="task-menu">
     <div class="filters">
         <h1>Filtry</h1>
-            <table>
+            <table class="filters">
                 <tr>
                     <th>Verified</th>
-                    <td><input type="radio" id="1" value="Ano"/></td>
-                    <td><input type="radio" id="0" value="Ne"></td>
+                    <td>
+                        <input type="radio" id="1" name="1">
+                        <label for="1">Ano</label>
+                    </td>
+                    <td>
+                        <input type="radio" id="0" name="0">
+                        <label for="0">Ne</label>
+                    </td>
                 </tr>
                 <tr>
                     <th>Téma</th>
@@ -43,6 +49,24 @@
                         <input type="checkbox" name="algoritmy" id="algoritmy">
                         <label for="algoritmy">Algoritmy</label>
                     </td>
+                </tr>
+                <tr>
+                    <th>Obtížnost</th>
+                    <td>
+                        <input type="checkbox" name="lehka" id="lehka">
+                        <label for="lehka">Lehká</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="stredni" id="stredni">
+                        <label for="stredni">Sřední</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="tezka" id="tezka">
+                        <label for="tezka">Těžká</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="submit" value="Odeslat"></td>
                 </tr>
             </table>
     </div>

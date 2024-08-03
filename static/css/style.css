@@ -169,6 +169,7 @@ footer {
 .task-table {
   background-color: var(--background-green);
   width: 100%;
+  border-top: solid black 2px;
 }
 
 .task-table th {
@@ -192,7 +193,24 @@ footer {
 
 .filters {
   text-align: center;
+  font-size: 25px;
+  width: 100%;
+  padding-bottom: 10px;
+  background-color: var(--background-green);
+  border-collapse: collapse;
 }
+
+
+.filters th {
+  border: solid var(--hover-green);
+  border-collapse: collapse;
+}
+
+.filters td {
+  border: solid var(--hover-green);
+  border-collapse: collapse;
+}
+
 
 .ubuntu-mono-regular {
     font-family: "Ubuntu Mono", monospace;
