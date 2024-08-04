@@ -192,21 +192,28 @@ footer {
 }
 
 .filters {
-  text-align: center;
-  font-size: 25px;
+  font-size: 30px;
   width: 100%;
-  padding-bottom: 10px;
   background-color: var(--background-green);
   border-collapse: collapse;
 }
 
+.filters p {
+  display: inline-block;
+  font-size: 40px;
+}
 
-.filters th {
+.filters-form {
+  padding: 10px; 
+}
+
+
+.filters-table th {
   border: solid var(--hover-green);
   border-collapse: collapse;
 }
 
-.filters td {
+.filters-table td {
   border: solid var(--hover-green);
   border-collapse: collapse;
 }

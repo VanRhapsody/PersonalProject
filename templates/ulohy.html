@@ -7,68 +7,49 @@
 <div class="task-menu">
     <div class="filters">
         <h1>Filtry</h1>
-            <table class="filters">
-                <tr>
-                    <th>Verified</th>
-                    <td>
-                        <input type="radio" id="1" name="1">
-                        <label for="1">Ano</label>
-                    </td>
-                    <td>
-                        <input type="radio" id="0" name="0">
-                        <label for="0">Ne</label>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Téma</th>
-                    <td>
-                        <input type="checkbox" name="python" id="python">
-                        <label for="python">Python</label>
-                    </td>
-                    <td>
-                        <input type="checkbox" name="C" id="C">
-                        <label for="C">C</label>
-                    </td>
-                    <td>
-                        <input type="checkbox" name="C#" id="C#">
-                        <label for="C#">C#</label>
-                    </td>
-                    <td>
-                        <input type="checkbox" name="C++" id="C++">
-                        <label for="C++">C++</label>
-                    </td>
-                    <td>
-                        <input type="checkbox" name="sql" id="sql">
-                        <label for="sql">SQL</label>
-                    </td>
-                    <td>
-                        <input type="checkbox" name="html" id="html">
-                        <label for="html">HTML</label>
-                    </td>
-                    <td>
-                        <input type="checkbox" name="algoritmy" id="algoritmy">
-                        <label for="algoritmy">Algoritmy</label>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Obtížnost</th>
-                    <td>
-                        <input type="checkbox" name="lehka" id="lehka">
-                        <label for="lehka">Lehká</label>
-                    </td>
-                    <td>
-                        <input type="checkbox" name="stredni" id="stredni">
-                        <label for="stredni">Sřední</label>
-                    </td>
-                    <td>
-                        <input type="checkbox" name="tezka" id="tezka">
-                        <label for="tezka">Těžká</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td><input type="submit" value="Odeslat"></td>
-                </tr>
-            </table>
+        <form action="" class="filters-form">
+            <p>Verified</p> 
+            <input type="radio" id="ano" name="volba" value="ano">
+            <label for="ano">Ano</label>
+                
+
+                <input type="radio" id="ne" name="volba" value="ne">
+                <label for="ne">Ne</label>
+            <br>
+            <p>Téma</p>
+                    <input type="checkbox" name="python" id="python">
+                    <label for="python">Python</label>
+
+                    <input type="checkbox" name="C" id="C">
+                    <label for="C">C</label>
+
+                    <input type="checkbox" name="C#" id="C#">
+                    <label for="C#">C#</label>
+
+                    <input type="checkbox" name="C++" id="C++">
+                    <label for="C++">C++</label>
+
+                    <input type="checkbox" name="sql" id="sql">
+                    <label for="sql">SQL</label>
+
+                    <input type="checkbox" name="html" id="html">
+                    <label for="html">HTML</label>
+
+                    <input type="checkbox" name="algoritmy" id="algoritmy">
+                    <label for="algoritmy">Algoritmy</label>
+            <br>
+            <p>Obtížnost</p>
+                <input type="checkbox" name="lehka" id="lehka">
+                <label for="lehka">Lehká</label>
+
+                <input type="checkbox" name="stredni" id="stredni">
+                <label for="stredni">Sřední</label>
+
+                <input type="checkbox" name="tezka" id="tezka">
+                <label for="tezka">Těžká</label>
+            <br>
+            <input type="submit" value="Odeslat" style="color: black;">
+        </form>
     </div>
     
     <table class="task-table">
