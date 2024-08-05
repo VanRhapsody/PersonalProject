@@ -196,15 +196,27 @@ footer {
   width: 100%;
   background-color: var(--background-green);
   border-collapse: collapse;
+  text-align: center;
 }
 
 .filters p {
+  padding: 10px;
+  border-left: solid var(--hover-green);
   display: inline-block;
   font-size: 40px;
 }
 
+.filters p:first-child {
+  border-left: none;
+}
+
 .filters-form {
   padding: 10px; 
+}
+
+.filters input,option,select {
+  color: black;
+  font-size: 30px;
 }
 
 
