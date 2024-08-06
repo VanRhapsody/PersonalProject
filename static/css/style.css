@@ -118,7 +118,6 @@ footer {
 
 .vertical-navbar {
   position: sticky;
-  top: 10px;
   margin: 20px;
   width: 10%;
   background-color: var(--background-green);
@@ -162,7 +161,6 @@ footer {
   width: 85%; 
   float: right;
   right: 20px;
-  top: 10px;
   position: relative;
 }
 
@@ -230,6 +228,12 @@ footer {
   border-collapse: collapse;
 }
 
+.quiz-content {
+  margin: auto;
+  width: 95%;
+  text-align: center;
+  background-color: var(--background-green);
+}
 
 .ubuntu-mono-regular {
     font-family: "Ubuntu Mono", monospace;
