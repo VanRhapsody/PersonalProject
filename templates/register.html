@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="static\css\login.css">
     <title>Document</title>
 </head>
-<body>
+<body style="background-image: url(static/images/EWjl.gif); background-size: cover;">
     {% with messages=get_flashed_messages() %}
         {% if messages %}
             {% for msg in messages %}
@@ -14,6 +14,7 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
+    <div class="form-class">
     <form action="{{ url_for('profile') }}" method="post">
         <label for="name">Už. jméno</label>
         <input type="text" name="name" id="name" placeholder="Zadejte jméno:"><br>
@@ -22,6 +23,10 @@
         <label for="password">Heslo</label>
         <input type="password" name="password" id="password" placeholder="Zadejte heslo:"><br>
         <input type="submit" value="Registrovat se">
+        <p>Máte již účet? <a href="#">Přihlaste se!</a></p>
+        <p>Upozorňuji vás, že databáze, v níž jsou uživatelské údaje uloženy, neručí za ochranu proti případnému útoku. Proto, prosím, používjete údaje, které nikde jinde nepoužívate</p>
     </form>
+    
+</div>
 </body>
 </html>
