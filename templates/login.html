@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static\css\login.css">
+    <title>Document</title>
+</head>
+<body style="background-image: url(static/images/EWjl.gif); background-size: cover;">
+    {% with messages=get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p>{{msg}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="form-class">
+    <form action="{{ url_for('login') }}" method="post">
+        <label for="name">Už. jméno nebo E-Mail</label>
+        <input type="text" name="identifier" id="identifier" placeholder="Zadejte jméno:"><br>
+        <label for="password">Heslo</label>
+        <input type="password" name="password" id="password" placeholder="Zadejte heslo:"><br>
+        <input type="submit" value="Registrovat se">
+        <p>Ještě nemáte účet?<a href="#">Registrujte se!</a></p>
+        <a href="{{ url_for('index') }}">Vrátit se zpět</a>
+        <p id="disclaimer">Upozorňuji vás, že databáze, v níž jsou uživatelské údaje uloženy, neručí za ochranu proti případnému útoku. Proto, prosím, používjete údaje, které nikde jinde nepoužívate</p>
+    </form>
+    
+</div>
+</body>
+</html>

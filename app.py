@@ -30,7 +30,6 @@ def profile():
         username_duplicate=cur.execute("SELECT username FROM user WHERE username=?",(username,))
         username_duplicate=username_duplicate.fetchall()
         con.commit()
-        print(email_duplicate,username_duplicate)
         if username_duplicate and email_duplicate:
             flash("Zadaný E-Mail a uživatelské jméno jsou obsazené!")
             con.close()
@@ -75,20 +74,26 @@ def login():
     if request.method=="POST":
         con = sqlite3.connect("database.db")
         cur = con.cursor()
-        username=request.form["name"]
+        identifier=request.form["identifier"]
         password=request.form["password"]
-        cur.execute("SELECT * FROM user WHERE username=? AND password=?",(username,password))
-        user=cur.fetchall()
+        if identifier.__contains__("@"):
+            cur.execute("SELECT * FROM user WHERE email=? AND password=?",(identifier,password))
+            user=cur.fetchall()
+            cur.execute("SELECT username FROM user WHERE email=?",(identifier,))
+            db_username=cur.fetchone()
+        else:
+            cur.execute("SELECT * FROM user WHERE username=? AND password=?",(identifier,password))
+            user=cur.fetchall()
+            db_username=identifier
         if user:
-            session["name"]=username
+            session["name"]=db_username
             return render_template("index.html")
-        
         else:
             pass
         con.commit()
         con.close()
     else:
-        return render_template("logininitial.html")
+        return render_template("login.html")
 
 if __name__=="__main__":
     app.run(debug=True)
