@@ -45,13 +45,16 @@ def profile():
         else:
             cur.execute("INSERT INTO user (username, email, password) VALUES (?,?,?)",(username,email,password))
             con.commit()
-            session["name"]=username
+            session["username"]=username
+            session["email"]=email
             con.close()
             return redirect(url_for("index"))
-    elif "name" in session:
-        return render_template("profil.html", active=4)
+    elif session.get("username"):
+        return render_template("profil.html", active=4, username=session["username"], email=session["email"])
     else:
+        print(session.get("username"))
         return render_template("register.html", active=4)
+
 
     
 
@@ -79,14 +82,12 @@ def login():
         if identifier.__contains__("@"):
             cur.execute("SELECT * FROM user WHERE email=? AND password=?",(identifier,password))
             user=cur.fetchall()
-            cur.execute("SELECT username FROM user WHERE email=?",(identifier,))
-            db_username=cur.fetchone()
         else:
             cur.execute("SELECT * FROM user WHERE username=? AND password=?",(identifier,password))
             user=cur.fetchall()
-            db_username=identifier
         if user:
-            session["name"]=db_username
+            session["name"]=user[0][1]
+            session["email"]=user[0][3]
             return render_template("index.html")
         else:
             pass

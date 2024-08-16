@@ -31,7 +31,7 @@
             {% elif active != 4 and not session["name"] %}
             <li style="float:right"><a href="{{url_for('profile')}}">Registrovat</a></li>
             {% elif active != 4 and session["name"] %}
-            <li style="float:right"><a href="{{url_for('profile')}}">{{ session["name"] }}xx</a></li>
+            <li style="float:right"><a href="{{url_for('profile')}}">{{ session["name"] }}</a></li>
             {% else %}
             <li style="float:right"><a class="active" href="{{url_for('profile')}}">{{ session["name"] }}</a></li>
             {% endif %}

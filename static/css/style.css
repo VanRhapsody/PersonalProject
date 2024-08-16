@@ -251,6 +251,18 @@ footer {
   color: black;
 }
 
+.profile-left-section {
+  width: 50%;
+  float: left;
+  margin: 10px;
+}
+
+.profile-right-section {
+  width: 50%;
+  float: right;
+  margin: 10px;
+}
+
 
 
 .ubuntu-mono-regular {

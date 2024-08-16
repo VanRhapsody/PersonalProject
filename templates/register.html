@@ -23,7 +23,7 @@
         <label for="password">Heslo</label>
         <input type="password" name="password" id="password" placeholder="Zadejte heslo:"><br>
         <input type="submit" value="Registrovat se">
-        <p>Máte již účet? <a href="#">Přihlaste se!</a></p>
+        <p>Máte již účet? <a href="{{ url_for('login') }}">Přihlaste se!</a></p>
         <a href="{{ url_for('index') }}">Vrátit se zpět</a>
         <p id="disclaimer">Upozorňuji vás, že databáze, v níž jsou uživatelské údaje uloženy, neručí za ochranu proti případnému útoku. Proto, prosím, používjete údaje, které nikde jinde nepoužívate</p>
     </form>
