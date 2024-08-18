@@ -19,6 +19,7 @@ def kvizy():
 
 @app.route("/profile", methods=["POST","GET"])
 def profile():
+    print(session.get("username"))
     if request.method=="POST":
         con = sqlite3.connect("database.db")
         cur = con.cursor()
@@ -49,11 +50,12 @@ def profile():
             session["email"]=email
             con.close()
             return redirect(url_for("index"))
-    elif session.get("username"):
+    elif "username" in session:
         return render_template("profil.html", active=4, username=session["username"], email=session["email"])
     else:
-        print(session.get("username"))
+        
         return render_template("register.html", active=4)
+    
 
 
     
@@ -86,11 +88,11 @@ def login():
             cur.execute("SELECT * FROM user WHERE username=? AND password=?",(identifier,password))
             user=cur.fetchall()
         if user:
-            session["name"]=user[0][1]
+            session["username"]=user[0][1]
             session["email"]=user[0][3]
             return render_template("index.html")
         else:
-            pass
+            pass #zobrazení chybové hlášky
         con.commit()
         con.close()
     else:

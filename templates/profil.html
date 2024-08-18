@@ -3,5 +3,17 @@
 {% block content %}
 <div>
     <h1>Uživatelské jméno: {{ username }}</h1>
+    <h1>E-Mail: {{ email }}</h1>
+    <h1>Bio</h1>
+    <p> 
+        {% if bio %}
+            {{ bio }}
+        {% endif% }
+    </p>
+
+    <a href="{{ url_for('changeinfo')}}">Změnit už. jméno</a>
+    <a href="{{ url_for('changeinfo')}}">Změnit e-mail</a>
+    <a href="{{ url_for('changeinfo')}}">Změnit heslo</a>
+    <a href="{{ url_for('changeinfo')}}">Změnit bio</a>
 </div>
 {% endblock %}
