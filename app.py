@@ -56,24 +56,6 @@ def profile():
         
         return render_template("register.html", active=4)
     
-
-
-    
-
-"""@app.route("/register", methods=["GET","POST"])
-def register():
-    if request.method=="POST":
-        con = sqlite3.connect("database.db")
-        cur = con.cursor()
-        username=request.form["name"]
-        password=request.form["password"]
-        session["name"]=username
-        cur.execute("INSERT INTO user (username,password) VALUES (?,?)",(username,password))
-        con.commit()
-        con.close()
-    else:
-        return render_template("registerinitial.html")"""
-
 @app.route("/login",methods=["POST","GET"])
 def login():
     if request.method=="POST":
@@ -97,6 +79,34 @@ def login():
         con.close()
     else:
         return render_template("login.html")
+    
+@app.route("/changeinfo", methods=["POST","GET"])
+def change_info():
+    if request.method=="POST":
+        bio=request.form["bio"]
+        con = sqlite3.connect("database.db")
+        cur = con.cursor()
+        cur.execute("SELECT ")
+    
+
+
+    
+
+"""@app.route("/register", methods=["GET","POST"])
+def register():
+    if request.method=="POST":
+        con = sqlite3.connect("database.db")
+        cur = con.cursor()
+        username=request.form["name"]
+        password=request.form["password"]
+        session["name"]=username
+        cur.execute("INSERT INTO user (username,password) VALUES (?,?)",(username,password))
+        con.commit()
+        con.close()
+    else:
+        return render_template("registerinitial.html")"""
+
+
 
 if __name__=="__main__":
     app.run(debug=True)

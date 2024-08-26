@@ -244,7 +244,7 @@ footer {
   color: white;
 }
 
-.quiz-content input, select, label {
+.quiz-content input, select, label, textarea {
   margin-top: 60px;
   margin-bottom: 60px;
   font-size: 30px;
@@ -255,14 +255,62 @@ footer {
   width: 50%;
   float: left;
   margin: 10px;
+  background-color: var(--background-green);
+  min-height: 200px;
+  max-height: 500px;
 }
 
-.profile-right-section {
-  width: 50%;
-  float: right;
+.profile-left-section h2,p {
   margin: 10px;
 }
 
+.profile-left-section p {
+  font-size: 20px;
+}
+
+.profile-right-section {
+  width: 47%;
+  float: right;
+  margin: 10px;
+  background-color: var(--background-green);
+  min-height: 500px;
+}
+
+.profile-right-section h1 {
+  border-bottom: solid var(--hover-green);
+  width: 100%;
+  padding: 5px;
+}
+
+.profile-links {
+  margin: auto;
+  border-spacing: 10px;
+}
+
+.profile-links a {
+  text-decoration: none;
+  font-weight: bold;
+  font-size:50px;
+}
+
+.profile-links tr, td {
+  text-align: center;
+  padding: 10px;
+
+
+}
+
+.profile-links td {
+  min-width: 200px;
+  border: solid var(--page-background);
+  transition: 0.3s;
+  
+}
+
+.profile-links td:hover {
+  background-color: var(--active-green);
+  transition: 0.3s;
+}
 
 
 .ubuntu-mono-regular {
