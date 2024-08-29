@@ -22,6 +22,8 @@
         <input type="email" name="email" id="email" placeholder="Zadejte E-Mail:"><br>
         <label for="password">Heslo</label>
         <input type="password" name="password" id="password" placeholder="Zadejte heslo:"><br>
+        <label for="bio">Bio</label>
+        <textarea id="bio" name="bio"></textarea><br>
         <input type="submit" value="Registrovat se">
         <p>Máte již účet? <a href="{{ url_for('login') }}">Přihlaste se!</a></p>
         <a href="{{ url_for('index') }}">Vrátit se zpět</a>

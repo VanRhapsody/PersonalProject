@@ -31,7 +31,7 @@ for i in range(1,101):
         print(i)
 
 """
-import random
+"""import random
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -52,4 +52,50 @@ for j in range(0,numbers_count):
 for k in range(0,special_char_count):
     password+=(random.choice(special_char))
 
-print(password)
+print(password)"""
+
+"""import random
+
+character=["Harry","Hermiona","Ron","Albus","Draco"]
+
+current_character=random.choice(character)
+
+guess=input("Hádej postavu")
+
+count=3
+
+while guess!=current_character and count!=0:
+    print("Ne!")
+    guess=input("Hádej postavu")
+    count-=1
+
+
+if count==0:
+    print("Prohrál jsi")
+else:
+
+    print("Správně!")"""
+
+"""def vymalovat(a : int, b :int ):
+    s=a*b
+    s/=5
+    return f"Budete potřebovat {s.__ceil__()} kusů plechovek"
+
+a=int(input("Zadejte a"))
+b=int(input("Zadejte b"))
+
+
+print(vymalovat(a,b))"""
+
+a=int(input("Zadej číslo"))
+
+counter=0
+
+for i in range(1,a+1):
+    if a%i==0:
+        counter+=1
+
+if counter==2:
+    print("Číslo je prvočíslo")
+else:
+    print("Není prvočíslo")

@@ -5,6 +5,8 @@ app=Flask(__name__)
 app.secret_key="Velice tajny klic xddd"
 
 
+
+
 @app.route("/")
 def index():
     return render_template("index.html", active=1)
@@ -21,11 +23,12 @@ def kvizy():
 def profile():
     print(session.get("username"))
     if request.method=="POST":
-        con = sqlite3.connect("database.db")
+        con = sqlite3.connect("user.db")
         cur = con.cursor()
         username=request.form["name"]
         email=request.form["email"]
         password=request.form["password"]
+        bio=request.form["bio"]
         email_duplicate=cur.execute("SELECT email FROM user WHERE email=?",(email,))
         email_duplicate=email_duplicate.fetchall()
         username_duplicate=cur.execute("SELECT username FROM user WHERE username=?",(username,))
@@ -44,14 +47,16 @@ def profile():
             con.close()           
             return redirect(url_for("profile"))
         else:
-            cur.execute("INSERT INTO user (username, email, password) VALUES (?,?,?)",(username,email,password))
+            cur.execute("INSERT INTO user (username, email, password,bio) VALUES (?,?,?,?)",(username,email,password,bio))
             con.commit()
+            session["bio"]=bio
             session["username"]=username
             session["email"]=email
+            
             con.close()
             return redirect(url_for("index"))
     elif "username" in session:
-        return render_template("profil.html", active=4, username=session["username"], email=session["email"])
+        return render_template("profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"])
     else:
         
         return render_template("register.html", active=4)
@@ -59,7 +64,7 @@ def profile():
 @app.route("/login",methods=["POST","GET"])
 def login():
     if request.method=="POST":
-        con = sqlite3.connect("database.db")
+        con = sqlite3.connect("user.db")
         cur = con.cursor()
         identifier=request.form["identifier"]
         password=request.form["password"]
@@ -72,6 +77,7 @@ def login():
         if user:
             session["username"]=user[0][1]
             session["email"]=user[0][3]
+            session["bio"]=user[0][4]
             return render_template("index.html")
         else:
             pass #zobrazení chybové hlášky
@@ -84,7 +90,7 @@ def login():
 def change_info():
     if request.method=="POST":
         bio=request.form["bio"]
-        con = sqlite3.connect("database.db")
+        con = sqlite3.connect("user.db")
         cur = con.cursor()
         cur.execute("SELECT ")
     

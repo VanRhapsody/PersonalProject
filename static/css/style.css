@@ -276,10 +276,20 @@ footer {
   min-height: 500px;
 }
 
-.profile-right-section h1 {
-  border-bottom: solid var(--hover-green);
+.profile-right-section h1,h2 {
   width: 100%;
   padding: 5px;
+  text-align: center;
+}
+
+.profile-right-section h1 {
+  border-bottom: solid var(--hover-green);
+}
+
+.profile-right-section p {
+  font-size: 30px;
+  padding: 5px;
+  text-align: center;
 }
 
 .profile-links {
