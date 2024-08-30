@@ -86,13 +86,18 @@ def login():
     else:
         return render_template("login.html")
     
-@app.route("/changeinfo", methods=["POST","GET"])
-def change_info():
+@app.route("/change_bio", methods=["POST","GET"])
+def change_bio():
     if request.method=="POST":
         bio=request.form["bio"]
         con = sqlite3.connect("user.db")
         cur = con.cursor()
-        cur.execute("SELECT ")
+        cur.execute("UPDATE user SET bio=? WHERE username=?",(bio,session["username"]))
+        con.commit()
+        con.close()
+        return redirect(url_for(profile))
+    else:
+        return render_template("bio.html")
     
 
 

@@ -87,7 +87,7 @@ b=int(input("Zadejte b"))
 
 print(vymalovat(a,b))"""
 
-a=int(input("Zadej číslo"))
+"""a=int(input("Zadej číslo"))
 
 counter=0
 
@@ -98,4 +98,21 @@ for i in range(1,a+1):
 if counter==2:
     print("Číslo je prvočíslo")
 else:
-    print("Není prvočíslo")
+    print("Není prvočíslo")"""
+
+students_results = {
+    "Harry" : 85,
+    "Ron" : 71,
+    "Hermione" : 98,
+    "Draco" : 69
+}
+
+for key in students_results:
+    if 91 <= students_results[key] <= 100:
+        print("Exc")
+    elif 81 <= students_results[key] <= 90:
+        print("Vyn")
+    elif 71 <= students_results[key] <= 80:
+        print("Spln")
+    else:
+        print("Nespln")
