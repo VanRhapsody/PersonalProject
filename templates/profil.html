@@ -13,11 +13,11 @@
     </p>
     <table class="profile-links">
     <tr>
-        <td><a href="#">Změnit už. jméno</a></td>
-        <td><a href="#">Změnit e-mail</a></td>
+        <td><a href="{{ url_for('change_username')}}">Změnit už. jméno</a></td>
+        <td><a href="{{ url_for('change_email')}}">Změnit e-mail</a></td>
     </tr>
     <tr>
-        <td><a href="#">Změnit heslo</a></td>
+        <td><a href="{{ url_for('change_password')}}">Změnit heslo</a></td>
         <td><a href="{{ url_for('change_bio')}}">Změnit bio</a></td>
     </tr>
     

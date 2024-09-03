@@ -90,14 +90,64 @@ def login():
 def change_bio():
     if request.method=="POST":
         bio=request.form["bio"]
+        session["bio"]=bio
         con = sqlite3.connect("user.db")
         cur = con.cursor()
         cur.execute("UPDATE user SET bio=? WHERE username=?",(bio,session["username"]))
         con.commit()
         con.close()
-        return redirect(url_for(profile))
+        return redirect(url_for("profile"))
     else:
         return render_template("bio.html")
+    
+@app.route("/change-email", methods=["POST","GET"])
+def change_email():
+    if request.method=="POST":
+        email=request.form["email"]
+        session["email"]=email
+        con = sqlite3.connect("user.db")
+        cur = con.cursor()
+        cur.execute("UPDATE user SET email=? WHERE username=?",(email,session["username"]))
+        con.commit()
+        con.close()
+        return redirect(url_for("profile"))
+    else:
+        return render_template("email.html")
+    
+@app.route("/change-password", methods=["POST","GET"])
+def change_password():
+    if request.method=="POST":
+        password=request.form["password"]
+        session["password"]=password
+        con = sqlite3.connect("user.db")
+        cur = con.cursor()
+        cur.execute("UPDATE user SET password=? WHERE username=?",(password,session["username"]))
+        con.commit()
+        con.close()
+        return redirect(url_for("profile"))
+    else:
+        return render_template("password.html")
+    
+@app.route("/change-username", methods=["POST","GET"])
+def change_username():
+    if request.method=="POST":
+        username=request.form["username"]
+        con = sqlite3.connect("user.db")
+        cur = con.cursor()
+        cur.execute("SELECT * FROM user WHERE username=?",(username,))
+        con.commit()
+        user=cur.fetchall()
+        if user:
+            pass
+        else:      
+            cur.execute("UPDATE user SET username=? WHERE username=?",(username,session["username"]))
+            session["username"]=username
+            con.commit()
+            con.close()
+            return redirect(url_for("profile"))
+    else:
+        return render_template("username.html")
+
     
 
 
