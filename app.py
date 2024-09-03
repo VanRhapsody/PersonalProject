@@ -148,6 +148,14 @@ def change_username():
     else:
         return render_template("username.html")
 
+@app.route("/logout")
+def logout():
+    session.pop("username",None)
+    session.pop("password",None)
+    session.pop("email",None)
+    session.pop("bio",None)
+    return redirect(url_for('index'))
+
     
 
 
