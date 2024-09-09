@@ -99,7 +99,7 @@ if counter==2:
     print("Číslo je prvočíslo")
 else:
     print("Není prvočíslo")"""
-
+"""
 students_results = {
     "Harry" : 85,
     "Ron" : 71,
@@ -115,4 +115,29 @@ for key in students_results:
     elif 71 <= students_results[key] <= 80:
         print("Spln")
     else:
-        print("Nespln")
+        print("Nespln")"""
+
+"""def velke():
+    slovo="hOj"
+    for letter in slovo:
+        print(letter)
+        if letter==letter.upper():
+            print(f"velké slovo je písmeno na pozici {slovo.index(str(letter))} a je to písmeno {letter}")
+
+velke()"""
+def fibonacci(n):
+    if n<=1:
+        return n
+    return (fibonacci(n-1) + fibonacci(n-2))
+
+def faktorial(n):
+    if n==0:
+        return 1
+    elif n<0:
+        return "Chybný argument"
+
+    return n*faktorial(n-1)
+print(fibonacci(6))
+
+print(faktorial(5))
+

@@ -28,14 +28,14 @@
         <h1 style="bottom: 60%;">ByteBurst</h1>
             {% if active==4 and not session["username"] %}
             <li style="float:right"><a class="active" href="{{url_for('profile')}}">Registrovat</a></li>
-            {% elif active != 4 and not session["username"] %}
+            {% elif not session["username"] %}
             <li style="float:right"><a href="{{url_for('profile')}}">Registrovat</a></li>
-            {% elif active != 4 and session["username"] %}
+            {% elif active!=4 %}
             <li style="float:right"><a href="{{url_for('profile')}}">{{ session["username"] }}</a></li>
             {% else %}
-            <li style="float:right"><a class="active" href="{{url_for('profile')}}">{{ session["username"] }}</a></li>
+            <li class="active" style="float:right"><a href="{{url_for('profile')}}">{{ session["username"] }}</a></li>
             {% endif %}
-            
+
         {% if active==3 %}
         <li style="float:right"><a class="active" href="{{url_for('kvizy')}}">Kvízy</a></li>
         {% else %}
@@ -43,7 +43,12 @@
         {% endif %}
 
       </ul>
+
+
+
 </header>
+
+
 
     {% block content %}{% endblock %}
 

@@ -28,17 +28,19 @@ header li {
   float: left;
 }
 
-header li a {
+header li a, button {
   display: block;
   text-align: center;
   padding: 30px 30px;
+  margin: 0;
   text-decoration: none;
   font-size:30px;
   transition: 0.3s;
+  background-color: none;
 
 }
 
-header li a:hover:not(.active) {
+header li a:hover:not(.active), button:hover:not(.active) {
   background-color: var(--hover-green);
   transition: 0.3s;
 
@@ -110,6 +112,7 @@ footer {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
   background-color: var(--background-green);
   text-align: center;
   padding: 10px;
@@ -256,8 +259,7 @@ footer {
   float: left;
   margin: 10px;
   background-color: var(--background-green);
-  min-height: 200px;
-  max-height: 500px;
+  max-height: 700px;
 }
 
 .profile-left-section h2,p {
