@@ -24,9 +24,6 @@ header ul {
   background-color: var(--background-green);
 }
 
-header li {
-  float: left;
-}
 
 header li a, button {
   display: block;
@@ -39,6 +36,8 @@ header li a, button {
   background-color: none;
 
 }
+
+
 
 header li a:hover:not(.active), button:hover:not(.active) {
   background-color: var(--hover-green);
@@ -58,8 +57,6 @@ h1 {
     text-align: center;
     margin: auto;
     position: relative;
-    vertical-align: center;
-
 }
 
 h2 {

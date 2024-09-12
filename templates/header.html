@@ -14,7 +14,7 @@
 </head>
 <body>
 <header>
-    <ul style="text-align: center;">
+    <ul style="display: flex; justify-content: space-evenly; align-items: center;">
             {% if active==1 %}
             <li><a class="active" href="{{url_for('index')}}">Domů</a></li>
             {% else %}
@@ -25,22 +25,23 @@
             {% else %}
             <li><a href="{{url_for('ulohy')}}">Úlohy</a></li>
             {% endif %}
-        <h1 style="bottom: 60%;">ByteBurst</h1>
+            <li><h1 style="">ByteBurst</h1></li>
+
+            {% if active==3 %}
+            <li style=""><a class="active" href="{{url_for('kvizy')}}">Kvízy</a></li>
+            {% else %}
+            <li style=""><a href="{{url_for('kvizy')}}">Kvízy</a></li>
+            {% endif %}
+
             {% if active==4 and not session["username"] %}
-            <li style="float:right"><a class="active" href="{{url_for('profile')}}">Registrovat</a></li>
+            <li style=""><a class="active" href="{{url_for('profile')}}">Registrovat</a></li>
             {% elif not session["username"] %}
-            <li style="float:right"><a href="{{url_for('profile')}}">Registrovat</a></li>
+            <li style=""><a href="{{url_for('profile')}}">Registrovat</a></li>
             {% elif active!=4 %}
-            <li style="float:right"><a href="{{url_for('profile')}}">{{ session["username"] }}</a></li>
+            <li style=""><a href="{{url_for('profile')}}">{{ session["username"] }}</a></li>
             {% else %}
             <li class="active" style="float:right"><a href="{{url_for('profile')}}">{{ session["username"] }}</a></li>
             {% endif %}
-
-        {% if active==3 %}
-        <li style="float:right"><a class="active" href="{{url_for('kvizy')}}">Kvízy</a></li>
-        {% else %}
-        <li style="float:right"><a href="{{url_for('kvizy')}}">Kvízy</a></li>
-        {% endif %}
 
       </ul>
 
