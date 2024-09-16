@@ -22,6 +22,9 @@ header ul {
   padding: 0;
   overflow: hidden;
   background-color: var(--background-green);
+  display: flex; 
+  justify-content: space-evenly; 
+  align-items: center;
 }
 
 
@@ -169,17 +172,17 @@ footer {
   background-color: var(--background-green);
   width: 100%;
   border-top: solid black 2px;
+  
 }
 
 .task-table th {
   font-size: 50px;
   padding: 10px;
-  text-align: left;
+  text-align: center;
 }
 
 .task-table td {
   font-size: 40px;
-  padding: 10px;
 }
 
 .task-table tr:first-child:hover {
@@ -211,12 +214,10 @@ footer {
 
 .filters-form {
   padding: 10px; 
-}
-
-.filters input,option,select {
-  color: black;
+  color: white;
   font-size: 30px;
 }
+
 
 
 .filters-table th {

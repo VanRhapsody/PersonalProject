@@ -14,7 +14,7 @@
 </head>
 <body>
 <header>
-    <ul style="display: flex; justify-content: space-evenly; align-items: center;">
+    <ul>
             {% if active==1 %}
             <li><a class="active" href="{{url_for('index')}}">Domů</a></li>
             {% else %}
@@ -25,7 +25,7 @@
             {% else %}
             <li><a href="{{url_for('ulohy')}}">Úlohy</a></li>
             {% endif %}
-            <li><h1 style="">ByteBurst</h1></li>
+            <li style="margin: 30px;"><h1>ByteBurst</h1></li>
 
             {% if active==3 %}
             <li style=""><a class="active" href="{{url_for('kvizy')}}">Kvízy</a></li>

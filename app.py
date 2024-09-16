@@ -4,16 +4,18 @@ import sqlite3
 app=Flask(__name__)
 app.secret_key="Velice tajny klic xddd"
 
-
-
-
 @app.route("/")
 def index():
     return render_template("index.html", active=1)
 
-@app.route("/ulohy")
-def ulohy():
-    return render_template("ulohy.html", active=2)
+@app.route("/ulohy/<language>") #do routování se zadá jazyk - např. sql a  to se ptoom předá jako vstupní parametr funkce, která z databáze získá všechny instance, kde jazyk je sql a zobrazí je
+def ulohy(language):
+    con = sqlite3.connect("task.db")
+    cur = con.cursor()
+    cur.execute("SELECT * FROM task WHERE language=?",(language,))
+    con.commit()
+    task=cur.fetchall()
+    return render_template("ulohy.html", active=2, task=task)
 
 @app.route("/kvizy")
 def kvizy():
@@ -155,6 +157,7 @@ def logout():
     session.pop("email",None)
     session.pop("bio",None)
     return redirect(url_for('index'))
+
 
     
 
