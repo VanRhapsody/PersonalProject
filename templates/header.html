@@ -28,17 +28,17 @@
             <li style="margin: 30px;"><h1>ByteBurst</h1></li>
 
             {% if active==3 %}
-            <li style=""><a class="active" href="{{url_for('kvizy')}}">Kvízy</a></li>
+            <li><a class="active" href="{{url_for('kvizy')}}">Kvízy</a></li>
             {% else %}
-            <li style=""><a href="{{url_for('kvizy')}}">Kvízy</a></li>
+            <li><a href="{{url_for('kvizy')}}">Kvízy</a></li>
             {% endif %}
 
             {% if active==4 and not session["username"] %}
-            <li style=""><a class="active" href="{{url_for('profile')}}">Registrovat</a></li>
+            <li><a class="active" href="{{url_for('profile')}}">Registrovat</a></li>
             {% elif not session["username"] %}
-            <li style=""><a href="{{url_for('profile')}}">Registrovat</a></li>
+            <li><a href="{{url_for('profile')}}">Registrovat</a></li>
             {% elif active!=4 %}
-            <li style=""><a href="{{url_for('profile')}}">{{ session["username"] }}</a></li>
+            <li><a href="{{url_for('profile')}}">{{ session["username"] }}</a></li>
             {% else %}
             <li class="active" style="float:right"><a href="{{url_for('profile')}}">{{ session["username"] }}</a></li>
             {% endif %}
