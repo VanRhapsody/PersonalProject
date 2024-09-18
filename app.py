@@ -8,14 +8,58 @@ app.secret_key="Velice tajny klic xddd"
 def index():
     return render_template("index.html", active=1)
 
-@app.route("/ulohy/<language>") #do routování se zadá jazyk - např. sql a  to se ptoom předá jako vstupní parametr funkce, která z databáze získá všechny instance, kde jazyk je sql a zobrazí je
-def ulohy(language):
+@app.route("/uloha/<task_id>")
+def task(task_id):
     con = sqlite3.connect("task.db")
     cur = con.cursor()
-    cur.execute("SELECT * FROM task WHERE language=?",(language,))
+    cur.execute("SELECT * FROM task WHERE task_id=?",(task_id))
+    task=cur.fetchone()
     con.commit()
-    task=cur.fetchall()
-    return render_template("ulohy.html", active=2, task=task)
+
+    cur.execute("SELECT distinct(category) FROM task")
+    categories=cur.fetchall()
+    con.commit()
+    con.close()
+
+    return render_template("uloha.html", task=task, categories=categories)
+
+@app.route("/ulohy/", defaults={'categories':None})
+@app.route("/ulohy/<categories>") #do routování se zadá jazyk - např. sql a  to se ptoom předá jako vstupní parametr funkce, která z databáze získá všechny instance, kde jazyk je sql a zobrazí je
+def tasks(categories):
+    con = sqlite3.connect("task.db")
+    cur = con.cursor()
+    if categories is None:
+        cur.execute("SELECT * FROM task")
+    else:
+        cur.execute("SELECT * FROM task WHERE category=?",(categories,))
+    con.commit()
+    tasks=cur.fetchall()
+    cur.execute("SELECT DISTINCT(category) FROM task")
+    con.commit()
+    categories=cur.fetchall()
+    print(categories)
+    print(tasks)
+    return render_template("ulohy.html", active=2, tasks=tasks, categories=categories)
+
+
+
+@app.route("/ulohy/add", methods=["POST","GET"])
+def add_task():
+    if request.method=="POST":
+        title=request.form["title"]
+        category=request.form["category"]
+        difficulty=request.form["difficulty"]
+        description=request.form["description"]
+        solution=request.form["solution"]
+        con = sqlite3.connect("task.db")
+        cur = con.cursor()
+        cur.execute("INSERT INTO task (title, category, difficulty, description, solution) VALUES (?,?,?,?,?)",(title,category,difficulty,description,solution,))
+        con.commit()
+        return redirect(url_for("tasks"))
+    else:
+        return render_template("taskadd.html")
+
+
 
 @app.route("/kvizy")
 def kvizy():

@@ -31,224 +31,25 @@
             <th>Téma</th>
             <th>Úroveň</th>
         </tr>
+        {% for element in tasks %}
         <tr>
             <td style="text-align: center;"><img src="static\images\shield_15627713.png" alt=""></td>
-            <td>Fibbonaciho posloupnost - určování</td>
-            <td>Python</td>
-            <td>Lehká</td>
+            <td><a href="{{ url_for('task', task_id=element[0]) }}" style="text-decoration: none;">{{ element[1] }}</a></td>
+            <td>{{ element[2] }}</td>
+            <td>{{ element[3] }}</td>
         </tr>
+        {% endfor %}
     </table>
 </div>
 </div>
 
 <div class="vertical-navbar">
     <ul>
-        <li><a href="/">Python</a></li>
-        <li><a href="/">C</a></li>
-        <li><a href="/">C#</a></li>
-        <li><a href="/">C++</a></li>
-        <li><a href="/">SQL</a></li>
-        <li><a href="/">HTML</a></li>
-        <li><a href="/">Algoritmy</a></li>
+        {% for category in categories %}
+        <li><a href="{{ url_for('tasks', categories=category[0]) }}">{{ category[0] }}</a></li>
+        {% endfor %}
     </ul>
 </div>
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 
 {% endblock %}

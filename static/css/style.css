@@ -166,10 +166,10 @@ footer {
   float: right;
   right: 20px;
   position: relative;
+  background-color: var(--background-green);
 }
 
 .task-table {
-  background-color: var(--background-green);
   width: 100%;
   border-top: solid black 2px;
   

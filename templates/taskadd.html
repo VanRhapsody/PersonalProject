@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static\css\login.css">
+    <title>Document</title>
+</head>
+<body style="background-image: url(static/images/EWjl.gif); background-size: cover;">
+    {% with messages=get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p>{{msg}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="form-class">
+        <form action="{{ url_for('add_task') }}" method="post">
+            <label for="title">Zadejte titulek dané úlohy:</label>
+            <input type="text" name="title" id="title">
+            <label for="category">Zadejte kategorii tématu:</label>
+            <select name="category" id="category">
+                <option value="C">C</option>
+                <option value="C#">C#</option>
+                <option value="Python">Python</option>
+            </select>
+            <label for="difficulty">Zadejte obtížnost úlohy</label>
+            <select name="difficulty" id="difficulty">
+                <option value="Lehká">Lehká</option>
+                <option value="Střední">Střední</option>
+                <option value="Těžká">Těžká</option>
+            </select>
+            <label for="description">Zadejte konkrétní zadání úlohy (co má uživatel udělat):</label>
+            <input type="text" name="description" id="description">
+            <label for="solution">Zadejte řešení úlohy (buď odpověď nebo úryvek kódu):</label>
+            <input type="text" name="solution" id="solution">
+            <input type="submit" value="Přidat úlohu">
+        </form>
+    </div>
+</body>
+</html>
