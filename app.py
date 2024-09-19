@@ -41,8 +41,6 @@ def tasks(categories):
     print(tasks)
     return render_template("ulohy.html", active=2, tasks=tasks, categories=categories)
 
-
-
 @app.route("/ulohy/add", methods=["POST","GET"])
 def add_task():
     if request.method=="POST":
@@ -64,6 +62,12 @@ def add_task():
 @app.route("/kvizy")
 def kvizy():
     return render_template("kvizy.html", active=3)
+
+@app.route("/kvizy/add", methods=["POST","GET"])
+def add_quiz():
+    if request.method=="POST":
+        pass
+
 
 @app.route("/profile", methods=["POST","GET"])
 def profile():
