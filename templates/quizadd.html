@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static\css\login.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
     <title>Document</title>
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/EWjl.gif') }}");
+        }
+    </style>
 </head>
-<body style="background-image: url(static/images/EWjl.gif); background-size: cover;">
+<body style="background-size: cover;">
     {% with messages=get_flashed_messages() %}
         {% if messages %}
             {% for msg in messages %}
@@ -15,26 +20,32 @@
         {% endif %}
     {% endwith %}
     <div class="form-class">
-        <form action="{{ url_for('add_task') }}" method="post">
-            <label for="category">Zadejte kategorii tématu:</label>
+        <form action="{{ url_for('add_task') }}" method="post" style="width: 600px;">
+            <label for="category" style="width: 50%;">Zadejte kategorii tématu:</label>
             <select name="category" id="category">
                 <option value="C">C</option>
                 <option value="C#">C#</option>
                 <option value="Python">Python</option>
             </select>
-            <label for="description">Napište otázku, která se má zobrazit:</label>
+            <br>
+            <label for="description" style="width: 50%;">Napište otázku, která se má zobrazit:</label>
             <input type="text" name="description" id="description">
-            <label for="description">Napište správnou odpověď:</label>
+            <br>
+            <label for="description" style="width: 50%;">Napište správnou odpověď:</label>
             <input type="text" name="description" id="description">
-            <label for="description">Napište otázku, která se má zobrazit:</label>
+            <br>
+            <label for="description" style="width: 50%;">Napište první špatnou odpověď: </label>
             <input type="text" name="description" id="description">
-            <label for="description">Napište otázku, která se má zobrazit:</label>
+            <br>
+            <label for="description" style="width: 50%;">Napište druhou špatnou odpověď: </label>
             <input type="text" name="description" id="description">
-
-
-            <label for="solution">Zadejte řešení úlohy (buď odpověď nebo úryvek kódu):</label>
-            <input type="text" name="solution" id="solution">
-            <input type="submit" value="Přidat úlohu">
+            <br>
+            <label for="description" style="width: 50%;">Napište třetí špatnou odpověď: </label>
+            <input type="text" name="description" id="description">
+            <br>
+            <input type="submit" value="Přidat otázku">
+            <br>
+            <a href="{{ url_for('index') }}">Vrátit se zpět</a>
         </form>
     </div>
 </body>

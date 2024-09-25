@@ -125,7 +125,7 @@ for key in students_results:
             print(f"velké slovo je písmeno na pozici {slovo.index(str(letter))} a je to písmeno {letter}")
 
 velke()"""
-def fibonacci(n):
+"""def fibonacci(n):
     if n<=1:
         return n
     return (fibonacci(n-1) + fibonacci(n-2))
@@ -139,5 +139,11 @@ def faktorial(n):
     return n*faktorial(n-1)
 print(fibonacci(6))
 
-print(faktorial(5))
+print(faktorial(5))"""
 
+max=18446744073709551615
+
+input=9841657865461987453*2
+
+if input>max:
+    print("Yes")

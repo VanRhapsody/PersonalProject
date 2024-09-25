@@ -66,7 +66,18 @@ def kvizy():
 @app.route("/kvizy/add", methods=["POST","GET"])
 def add_quiz():
     if request.method=="POST":
-        pass
+        category=request.form["category"]
+        description=request.form["description"]
+        correct=request.form["correct"]
+        second=request.form["second"]
+        third=request.form["third"]
+        fourth=request.form["fourth"]
+        con = sqlite3.connect("quiz.db")
+        cur = con.cursor()
+        cur.execute("INSERT INTO quiz (category, description, correct, second, third, fourth) VALUES (?,?,?,?,?)",(category, description, correct, second, third, fourth))
+        con.commit()
+    else:
+        return render_template("quizadd.html")
 
 
 @app.route("/profile", methods=["POST","GET"])
