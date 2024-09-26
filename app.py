@@ -74,8 +74,9 @@ def add_quiz():
         fourth=request.form["fourth"]
         con = sqlite3.connect("quiz.db")
         cur = con.cursor()
-        cur.execute("INSERT INTO quiz (category, description, correct, second, third, fourth) VALUES (?,?,?,?,?)",(category, description, correct, second, third, fourth))
+        cur.execute("INSERT INTO quiz (category, description, correct, second, third, fourth) VALUES (?,?,?,?,?,?)",(category, description, correct, second, third, fourth))
         con.commit()
+        return redirect(url_for('kvizy'))
     else:
         return render_template("quizadd.html")
 

@@ -20,7 +20,7 @@
         {% endif %}
     {% endwith %}
     <div class="form-class">
-        <form action="{{ url_for('add_task') }}" method="post" style="width: 600px;">
+        <form action="{{ url_for('add_quiz') }}" method="post" style="width: 600px;">
             <label for="category" style="width: 50%;">Zadejte kategorii tématu:</label>
             <select name="category" id="category">
                 <option value="C">C</option>
@@ -31,17 +31,17 @@
             <label for="description" style="width: 50%;">Napište otázku, která se má zobrazit:</label>
             <input type="text" name="description" id="description">
             <br>
-            <label for="description" style="width: 50%;">Napište správnou odpověď:</label>
-            <input type="text" name="description" id="description">
+            <label for="correct" style="width: 50%;">Napište správnou odpověď:</label>
+            <input type="text" name="correct" id="correct">
             <br>
-            <label for="description" style="width: 50%;">Napište první špatnou odpověď: </label>
-            <input type="text" name="description" id="description">
+            <label for="second" style="width: 50%;">Napište první špatnou odpověď: </label>
+            <input type="text" name="second" id="second">
             <br>
-            <label for="description" style="width: 50%;">Napište druhou špatnou odpověď: </label>
-            <input type="text" name="description" id="description">
+            <label for="third" style="width: 50%;">Napište druhou špatnou odpověď: </label>
+            <input type="text" name="third" id="third">
             <br>
-            <label for="description" style="width: 50%;">Napište třetí špatnou odpověď: </label>
-            <input type="text" name="description" id="description">
+            <label for="fourth" style="width: 50%;">Napište třetí špatnou odpověď: </label>
+            <input type="text" name="fourth" id="fourth">
             <br>
             <input type="submit" value="Přidat otázku">
             <br>
