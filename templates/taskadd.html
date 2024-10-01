@@ -20,25 +20,31 @@
         {% endif %}
     {% endwith %}
     <div class="form-class">
-        <form action="{{ url_for('add_task') }}" method="post">
-            <label for="title">Zadejte titulek dané úlohy:</label>
+        <form action="{{ url_for('add_task') }}" method="post" style="width: 800px;">
+            <label for="title" style="width: 50%;">Zadejte titulek dané úlohy:</label>
             <input type="text" name="title" id="title">
-            <label for="category">Zadejte kategorii tématu:</label>
+            <br>
+            <label for="category" style="width: 50%;">Zadejte kategorii tématu:</label>
             <select name="category" id="category">
                 <option value="C">C</option>
                 <option value="C#">C#</option>
                 <option value="Python">Python</option>
             </select>
-            <label for="difficulty">Zadejte obtížnost úlohy</label>
+            <br>
+            <label for="difficulty" style="width: 50%;">Zadejte obtížnost úlohy</label>
             <select name="difficulty" id="difficulty">
                 <option value="Lehká">Lehká</option>
                 <option value="Střední">Střední</option>
                 <option value="Těžká">Těžká</option>
             </select>
-            <label for="description">Zadejte konkrétní zadání úlohy (co má uživatel udělat):</label>
+            <br>
+            <label for="description" style="width: 50%;">Zadejte konkrétní zadání úlohy (co má uživatel udělat):</label>
             <input type="text" name="description" id="description">
-            <label for="solution">Zadejte řešení úlohy (buď odpověď nebo úryvek kódu):</label>
+            <br>
+            <label for="solution" style="width: 50%;">Zadejte řešení úlohy (buď odpověď nebo úryvek kódu):</label>
             <input type="text" name="solution" id="solution">
+            <br>
+
             <input type="submit" value="Přidat úlohu">
         </form>
     </div>
