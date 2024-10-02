@@ -124,8 +124,24 @@ def next_quiz():
                     wrong+=1
             return render_template("result.html", correct=correct, wrong=wrong)
         return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
-    else:
-        print("yes")
+@app.route("/kvizy/verify", methods=["POST","GET"])
+def send_answer():
+    if request.method=="POST":
+        global quiz_list
+        global quiz_list_index
+        global correct_wrong
+        global quiz_id_max
+        answer=request.form["answer"]
+        if answer==quiz_list[quiz_list_index][3]:
+            correct_wrong[quiz_list_index]=1
+            chosen_color="red"
+            correct_color="primary"
+        else:
+            correct_wrong[quiz_list_index]=0
+            chosen_color="primary"
+            
+
+
 
 @app.route("/kvizy/add", methods=["POST","GET"])
 def add_quiz():
