@@ -251,6 +251,7 @@ footer {
 .quiz-content-left {
   background-color: var(--background-green);
   width: 10%;
+  margin: 10px;
   float: left;
   min-height: 200px;
 }
@@ -261,14 +262,16 @@ footer {
 
 .quiz-content-main {
   width: 85%;
+  margin: 10px;
   float: right;
   background-color: var(--background-green);
-  font-size: 30px;
   color: white;
 }
 
 .quiz-content-form {
   width: 100%;
+  text-align: center;
+  font-size: 30px;
 }
 
 .quiz-content-form label,input {
@@ -277,12 +280,23 @@ footer {
   padding: 5px;
 }
 
+
+
+.quiz-content-form input[type=submit] {
+  color: black;
+}
+
 .quiz-content-answer {
   padding: 5px;
   background-color: var(--page-background);
   margin: 10px;
   width: 95%;
   display: inline-block;
+  text-align: left;
+}
+
+.quiz-content-form input:focus ~ .quiz-content-answer {
+  background-color: var(--active-green) !important;
 }
 
 .profile-left-section {
