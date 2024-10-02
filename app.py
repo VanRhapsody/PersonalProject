@@ -1,8 +1,12 @@
 from flask import Flask, render_template, request, session, flash, url_for, redirect
 import sqlite3
+import random
 
 app=Flask(__name__)
 app.secret_key="Velice tajny klic xddd"
+
+quiz_list=[]
+quiz_list_index=0
 
 @app.route("/")
 def index():
@@ -59,9 +63,37 @@ def add_task():
 
 
 
-@app.route("/kvizy")
+@app.route("/kvizy", methods=["POST","GET"])
 def kvizy():
-    return render_template("kvizy.html", active=3)
+    if request.method=="POST":
+        con = sqlite3.connect("quiz.db")
+        cur = con.cursor()
+        cur.execute("SELECT id FROM quiz ORDER BY id DESC")
+        quiz_id_max=cur.fetchone()
+        con.commit()
+        count=request.form["count"]
+        quiz_id_list=[]
+        for i in range(0, int(count)):
+            quiz_id_random=(random.randint(1,int(quiz_id_max[0])))
+            while quiz_id_random in quiz_id_list:
+                quiz_id_random=(random.randint(1,int(quiz_id_max[0])))
+            quiz_id_list.append(quiz_id_random)
+        for id in quiz_id_list:
+            cur.execute("SELECT * FROM quiz WHERE id=?",(id,))
+            one_task=cur.fetchone()
+            con.commit()
+            quiz_list.append(one_task)
+        print(quiz_list)
+
+        return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index)
+    else:
+        return render_template("kvizy.html", active=3)
+    
+@app.route("/kvizy/next", methods=["POST","GET"])
+def next_quiz():
+    if request.method=="POST":
+        con = sqlite3.connect("task.db")
+        cur = con.cursor()
 
 @app.route("/kvizy/add", methods=["POST","GET"])
 def add_quiz():
@@ -162,7 +194,7 @@ def change_bio():
     else:
         return render_template("bio.html")
     
-@app.route("/change-email", methods=["POST","GET"])
+@app.route("/change_email", methods=["POST","GET"])
 def change_email():
     if request.method=="POST":
         email=request.form["email"]
@@ -176,7 +208,7 @@ def change_email():
     else:
         return render_template("email.html")
     
-@app.route("/change-password", methods=["POST","GET"])
+@app.route("/change_password", methods=["POST","GET"])
 def change_password():
     if request.method=="POST":
         password=request.form["password"]
@@ -190,7 +222,7 @@ def change_password():
     else:
         return render_template("password.html")
     
-@app.route("/change-username", methods=["POST","GET"])
+@app.route("/change_username", methods=["POST","GET"])
 def change_username():
     if request.method=="POST":
         username=request.form["username"]

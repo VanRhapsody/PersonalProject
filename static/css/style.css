@@ -230,7 +230,7 @@ footer {
   border-collapse: collapse;
 }
 
-.quiz-content {
+.quiz-choice {
   top: 10px;
   position: relative;
   margin-top: 20px;
@@ -241,27 +241,62 @@ footer {
   
 }
 
-.quiz-content label {
-  color: white;
-}
-
-.quiz-content input, select, label, textarea {
+.quiz-choice input, select, label, option {
   margin-top: 60px;
   margin-bottom: 60px;
   font-size: 30px;
   color: black;
 }
 
+.quiz-content-left {
+  background-color: var(--background-green);
+  width: 10%;
+  float: left;
+  min-height: 200px;
+}
+
+.quiz-content-left-circle {
+  border-radius: 50%;
+}
+
+.quiz-content-main {
+  width: 85%;
+  float: right;
+  background-color: var(--background-green);
+  font-size: 30px;
+  color: white;
+}
+
+.quiz-content-form {
+  width: 100%;
+}
+
+.quiz-content-form label,input {
+  color: white;
+  margin: 20px;
+  padding: 5px;
+}
+
+.quiz-content-answer {
+  padding: 5px;
+  background-color: var(--page-background);
+  margin: 10px;
+  width: 95%;
+  display: inline-block;
+}
+
 .profile-left-section {
   width: 50%;
   float: left;
+  text-align: center;
   margin: 10px;
   background-color: var(--background-green);
-  max-height: 700px;
+
 }
 
-.profile-left-section h2,p {
-  margin: 10px;
+.profile-left-section h2 {
+ margin: 10px;
+ max-width: 90%;
 }
 
 .profile-left-section p {
