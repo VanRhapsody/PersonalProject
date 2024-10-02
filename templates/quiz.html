@@ -11,24 +11,24 @@
 <div class="quiz-content-main">
     <h2>{{ quiz_list[quiz_list_index][2] }}</h2>
     <hr>
-    <form action="" class="quiz-content-form">
+    <form action="{{ url_for('next_quiz') }}" method="post" class="quiz-content-form">
         <span class="quiz-content-answer">
-            <input type="radio" name="answer" value="first_answer">
+            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][3] }}">
             <label for="first_answer">{{ quiz_list[quiz_list_index][3] }}</label>
         </span>
         <br>
         <span class="quiz-content-answer">
-            <input type="radio" name="answer" value="second_answer">
+            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][4] }}">
             <label for="second_answer">{{ quiz_list[quiz_list_index][4] }}</label>
         </span>
         <br>
         <span class="quiz-content-answer">
-            <input type="radio" name="answer" value="third_answer">
+            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][5] }}">
             <label for="third_answer">{{ quiz_list[quiz_list_index][5] }}</label>
         </span>
         <br>
         <span class="quiz-content-answer">
-            <input type="radio" name="answer" value="fourth_answer">
+            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][6] }}">
             <label for="fourth_answer">{{ quiz_list[quiz_list_index][6] }}</label>
         </span>
         <br>

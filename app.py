@@ -7,6 +7,8 @@ app.secret_key="Velice tajny klic xddd"
 
 quiz_list=[]
 quiz_list_index=0
+correct_wrong=[]
+quiz_id_max=0
 
 @app.route("/")
 def index():
@@ -66,6 +68,13 @@ def add_task():
 @app.route("/kvizy", methods=["POST","GET"])
 def kvizy():
     if request.method=="POST":
+        global quiz_list
+        global quiz_list_index
+        global correct_wrong
+        global quiz_id_max
+        quiz_list=[]
+        quiz_list_index=0
+        correct_wrong=[]
         con = sqlite3.connect("quiz.db")
         cur = con.cursor()
         cur.execute("SELECT id FROM quiz ORDER BY id DESC")
@@ -78,22 +87,45 @@ def kvizy():
             while quiz_id_random in quiz_id_list:
                 quiz_id_random=(random.randint(1,int(quiz_id_max[0])))
             quiz_id_list.append(quiz_id_random)
+            correct_wrong.append(None)
         for id in quiz_id_list:
             cur.execute("SELECT * FROM quiz WHERE id=?",(id,))
             one_task=cur.fetchone()
             con.commit()
             quiz_list.append(one_task)
+        print(correct_wrong)
         print(quiz_list)
-
-        return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index)
+        return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
     else:
         return render_template("kvizy.html", active=3)
     
 @app.route("/kvizy/next", methods=["POST","GET"])
 def next_quiz():
     if request.method=="POST":
+        global quiz_list
+        global quiz_list_index
+        global correct_wrong
+        global quiz_id_max
         con = sqlite3.connect("task.db")
         cur = con.cursor()
+        answer=request.form["answer"]
+        if answer==quiz_list[quiz_list_index][3]:
+            correct_wrong[quiz_list_index]=1
+        else:
+            correct_wrong[quiz_list_index]=1
+        quiz_list_index+=1
+        if int(quiz_list_index)>=int(quiz_id_max[0]):
+            correct=0
+            wrong=0
+            for element in correct_wrong:
+                if element==1:
+                    correct+=1
+                else:
+                    wrong+=1
+            return render_template("result.html", correct=correct, wrong=wrong)
+        return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+    else:
+        print("yes")
 
 @app.route("/kvizy/add", methods=["POST","GET"])
 def add_quiz():
