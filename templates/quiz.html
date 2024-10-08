@@ -12,27 +12,47 @@
     <h2>{{ quiz_list[quiz_list_index][2] }}</h2>
     <hr>
     <form action="{{ url_for('next_quiz') }}" method="post" class="quiz-content-form">
+        
+        {% if answer == quiz_list[quiz_list_index][3] %}
+        <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
+        {% else %}
         <span class="quiz-content-answer">
+        {% endif %}
             <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][3] }}">
             <label for="first_answer">{{ quiz_list[quiz_list_index][3] }}</label>
         </span>
         <br>
+        {% if answer == quiz_list[quiz_list_index][4] %}
+        <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
+        {% else %}
         <span class="quiz-content-answer">
+        {% endif %}
             <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][4] }}">
             <label for="second_answer">{{ quiz_list[quiz_list_index][4] }}</label>
         </span>
         <br>
+        {% if answer == quiz_list[quiz_list_index][5] %}
+        <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
+        {% else %}
         <span class="quiz-content-answer">
+        {% endif %}
             <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][5] }}">
             <label for="third_answer">{{ quiz_list[quiz_list_index][5] }}</label>
         </span>
         <br>
+        {% if answer == quiz_list[quiz_list_index][6] %}
+        <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
+        {% else %}
         <span class="quiz-content-answer">
+        {% endif %}
             <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][6] }}">
             <label for="fourth_answer">{{ quiz_list[quiz_list_index][6] }}</label>
         </span>
         <br>
         <input type="submit" value="Odpovědět">
+        {% if answered %}
+        <a></a>
+        {% endif %}
     </form>
 </div>
 

@@ -106,13 +106,24 @@ def next_quiz():
         global quiz_list_index
         global correct_wrong
         global quiz_id_max
-        con = sqlite3.connect("task.db")
-        cur = con.cursor()
+        print(correct_wrong)
         answer=request.form["answer"]
         if answer==quiz_list[quiz_list_index][3]:
             correct_wrong[quiz_list_index]=1
+            return render_template("quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
         else:
-            correct_wrong[quiz_list_index]=1
+            correct_wrong[quiz_list_index]=0
+            return render_template("quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+        return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+    
+
+@app.route("/kvizy/verify", methods=["POST","GET"])
+def send_answer():
+    if request.method=="POST":
+        global quiz_list
+        global quiz_list_index
+        global correct_wrong
+        global quiz_id_max
         quiz_list_index+=1
         if int(quiz_list_index)>=int(quiz_id_max[0]):
             correct=0
@@ -122,24 +133,10 @@ def next_quiz():
                     correct+=1
                 else:
                     wrong+=1
-            return render_template("result.html", correct=correct, wrong=wrong)
+            return render_template("kvizy.html", correct=correct, wrong=wrong)
         return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
-@app.route("/kvizy/verify", methods=["POST","GET"])
-def send_answer():
-    if request.method=="POST":
-        global quiz_list
-        global quiz_list_index
-        global correct_wrong
-        global quiz_id_max
-        answer=request.form["answer"]
-        if answer==quiz_list[quiz_list_index][3]:
-            correct_wrong[quiz_list_index]=1
-            chosen_color="red"
-            correct_color="primary"
-        else:
-            correct_wrong[quiz_list_index]=0
-            chosen_color="primary"
-            
+        
+        
 
 
 

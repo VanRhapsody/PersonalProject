@@ -28,5 +28,13 @@
 
     </form>
 </div>
+<br>
+{% if correct %}
+<div class="quiz-choice" style="padding:20px;">
+
+    <h1>Gratulujeme! Dokončili jste kvíz, váš výsledek je {{ correct }} správných odpovědí a {{ wrong }} špatných</h1>
+
+</div>
+{% endif %}
 
 {% endblock %}
