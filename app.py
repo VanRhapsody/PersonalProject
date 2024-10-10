@@ -117,9 +117,8 @@ def next_quiz():
         return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
     
 
-@app.route("/kvizy/verify", methods=["POST","GET"])
+@app.route("/kvizy/verify")
 def send_answer():
-    if request.method=="POST":
         global quiz_list
         global quiz_list_index
         global correct_wrong
@@ -135,9 +134,6 @@ def send_answer():
                     wrong+=1
             return render_template("kvizy.html", correct=correct, wrong=wrong)
         return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
-        
-        
-
 
 
 @app.route("/kvizy/add", methods=["POST","GET"])

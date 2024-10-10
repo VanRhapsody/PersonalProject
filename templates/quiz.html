@@ -51,7 +51,7 @@
         <br>
         <input type="submit" value="Odpovědět">
         {% if answered %}
-        <a></a>
+        <a href="{{ url_for('send_answer') }}">Pokračovat</a>
         {% endif %}
     </form>
 </div>
