@@ -371,6 +371,19 @@ footer {
   transition: 0.3s;
 }
 
+.quiz-check {
+  all: unset; 
+  padding: 30px; 
+  margin: 10px; 
+  cursor: pointer; 
+  background-color: var(--page-background);
+  transition: 0.3s;
+}
+
+.quiz-check:hover {
+  background-color: var(--hover-green);
+  transition: 0.3s;
+}
 
 .ubuntu-mono-regular {
     font-family: "Ubuntu Mono", monospace;

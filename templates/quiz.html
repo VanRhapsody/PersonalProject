@@ -49,9 +49,11 @@
             <label for="fourth_answer">{{ quiz_list[quiz_list_index][6] }}</label>
         </span>
         <br>
-        <input type="submit" value="Odpovědět">
+        <div style="text-align: center;">
+        <input class="quiz-check" style="color: white;" type="submit" value="Odpovědět">
         {% if answered %}
-        <a href="{{ url_for('send_answer') }}">Pokračovat</a>
+        <a class="quiz-check" href="{{ url_for('send_answer') }}">Pokračovat</a>
+        </div>
         {% endif %}
     </form>
 </div>
