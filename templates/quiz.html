@@ -49,9 +49,9 @@
             <label for="second_answer">{{ quiz_list[quiz_list_index][4] }}</label>
         </span>
         <br>
-        {% if answer == quiz_list[quiz_list_index][5] and quiz_list[quiz_list_index][5]!=None %}
+        {% if answer == quiz_list[quiz_list_index][5] and correct_wrong[quiz_list_index]==1 %}
         <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
-        {% elif quiz_list[quiz_list_index][5]!=None and Answered %}
+        {% elif answer == quiz_list[quiz_list_index][5] and correct_wrong[quiz_list_index]==0 %}
         <span class="quiz-content-answer" style="background-color: red !important">
         {% else %}
         <span class="quiz-content-answer">
@@ -64,9 +64,9 @@
             <label for="third_answer">{{ quiz_list[quiz_list_index][5] }}</label>
         </span>
         <br>
-        {% if answer == quiz_list[quiz_list_index][6] and quiz_list[quiz_list_index][6]!=None %}
+        {% if answer == quiz_list[quiz_list_index][6] and correct_wrong[quiz_list_index]==1 %}
         <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
-        {% elif quiz_list[quiz_list_index][6]!=None and Answered %}
+        {% elif answer == quiz_list[quiz_list_index][6] and correct_wrong[quiz_list_index]==0 %}
         <span class="quiz-content-answer" style="background-color:red !important">
         {% else %}
         <span class="quiz-content-answer">
