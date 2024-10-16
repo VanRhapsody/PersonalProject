@@ -254,10 +254,16 @@ footer {
   margin: 10px;
   float: left;
   min-height: 200px;
+  
 }
 
 .quiz-content-left-circle {
+  display: block;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
+  margin: auto;
+  filter: drop-shadow(0 0 0.75rem black);
 }
 
 .quiz-content-main {

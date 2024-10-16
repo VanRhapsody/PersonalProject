@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session, flash, url_for, redirect
 import sqlite3
+from collections import OrderedDict
 import random
 
 app=Flask(__name__)
@@ -9,6 +10,7 @@ quiz_list=[]
 quiz_list_index=0
 correct_wrong=[]
 quiz_id_max=0
+category=""
 
 @app.route("/")
 def index():
@@ -16,7 +18,7 @@ def index():
 
 @app.route("/uloha/<task_id>")
 def task(task_id):
-    con = sqlite3.connect("task.db")
+    con = sqlite3.connect("database.db")
     cur = con.cursor()
     cur.execute("SELECT * FROM task WHERE task_id=?",(task_id))
     task=cur.fetchone()
@@ -32,7 +34,7 @@ def task(task_id):
 @app.route("/ulohy/", defaults={'categories':None})
 @app.route("/ulohy/<categories>") #do routování se zadá jazyk - např. sql a  to se ptoom předá jako vstupní parametr funkce, která z databáze získá všechny instance, kde jazyk je sql a zobrazí je
 def tasks(categories):
-    con = sqlite3.connect("task.db")
+    con = sqlite3.connect("database.db")
     cur = con.cursor()
     if categories is None:
         cur.execute("SELECT * FROM task")
@@ -55,7 +57,7 @@ def add_task():
         difficulty=request.form["difficulty"]
         description=request.form["description"]
         solution=request.form["solution"]
-        con = sqlite3.connect("task.db")
+        con = sqlite3.connect("database.db")
         cur = con.cursor()
         cur.execute("INSERT INTO task (title, category, difficulty, description, solution) VALUES (?,?,?,?,?)",(title,category,difficulty,description,solution,))
         con.commit()
@@ -72,15 +74,19 @@ def kvizy():
         global quiz_list_index
         global correct_wrong
         global quiz_id_max
+        global category
+        if session.get("username")==None:
+            return render_template("error.html", message="Nelze spustit kvíz, pokud nejste přihlášeni!")
         quiz_list=[]
         quiz_list_index=0
         correct_wrong=[]
-        con = sqlite3.connect("quiz.db")
+        con = sqlite3.connect("database.db")
         cur = con.cursor()
         cur.execute("SELECT id FROM quiz ORDER BY id DESC")
         quiz_id_max=cur.fetchone()
         con.commit()
         count=request.form["count"]
+        category=request.form["language"]
         quiz_id_list=[]
         for i in range(0, int(count)):
             quiz_id_random=(random.randint(1,int(quiz_id_max[0])))
@@ -91,10 +97,17 @@ def kvizy():
         for id in quiz_id_list:
             cur.execute("SELECT * FROM quiz WHERE id=?",(id,))
             one_task=cur.fetchone()
+            question_mix=[one_task[3], one_task[4], one_task[5], one_task[6]]
+            question_mix=list(filter(None,question_mix))
+            random.shuffle(question_mix)
+            one_task=[one_task[0],one_task[1],one_task[2]]
+            for question in question_mix:
+                one_task.append(question)
+            for i in range(0,4-len(question_mix)):
+                one_task.append("")
             con.commit()
             quiz_list.append(one_task)
-        print(correct_wrong)
-        print(quiz_list)
+        print(category)
         return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
     else:
         return render_template("kvizy.html", active=3)
@@ -107,13 +120,19 @@ def next_quiz():
         global correct_wrong
         global quiz_id_max
         print(correct_wrong)
+        con = sqlite3.connect("database.db")
+        cur = con.cursor()
+        cur.execute("SELECT correct FROM quiz")
+        correct_answers=cur.fetchall()
         answer=request.form["answer"]
-        if answer==quiz_list[quiz_list_index][3]:
-            correct_wrong[quiz_list_index]=1
-            return render_template("quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
-        else:
-            correct_wrong[quiz_list_index]=0
-            return render_template("quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+        for i, correct_answer in enumerate(correct_answers):
+            print(correct_answer)
+            if answer==correct_answer[0]:
+                correct_wrong[quiz_list_index]=1
+                return render_template("quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+            elif i == len(correct_answers) - 1:
+                correct_wrong[quiz_list_index]=0
+                return render_template("quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
         return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
     
 
@@ -123,6 +142,7 @@ def send_answer():
         global quiz_list_index
         global correct_wrong
         global quiz_id_max
+        global category
         quiz_list_index+=1
         if int(quiz_list_index)>=int(quiz_id_max[0]):
             correct=0
@@ -132,6 +152,14 @@ def send_answer():
                     correct+=1
                 else:
                     wrong+=1
+            print(correct)
+            con = sqlite3.connect("database.db")
+            cur = con.cursor()
+            cur.execute("UPDATE user SET quiz_correct = quiz_correct + ?", (correct,))
+            cur.execute("UPDATE user SET quiz_absolved = quiz_absolved + 1")
+            cur.execute(f"UPDATE languagepopularity SET {category} = {category} + 1")
+            con.commit()
+            con.close()
             return render_template("kvizy.html", correct=correct, wrong=wrong)
         return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
 
@@ -145,7 +173,7 @@ def add_quiz():
         second=request.form["second"]
         third=request.form["third"]
         fourth=request.form["fourth"]
-        con = sqlite3.connect("quiz.db")
+        con = sqlite3.connect("database.db")
         cur = con.cursor()
         cur.execute("INSERT INTO quiz (category, description, correct, second, third, fourth) VALUES (?,?,?,?,?,?)",(category, description, correct, second, third, fourth))
         con.commit()
@@ -158,7 +186,7 @@ def add_quiz():
 def profile():
     print(session.get("username"))
     if request.method=="POST":
-        con = sqlite3.connect("user.db")
+        con = sqlite3.connect("database.db")
         cur = con.cursor()
         username=request.form["name"]
         email=request.form["email"]
@@ -183,15 +211,35 @@ def profile():
             return redirect(url_for("profile"))
         else:
             cur.execute("INSERT INTO user (username, email, password,bio) VALUES (?,?,?,?)",(username,email,password,bio))
-            con.commit()
+            cur.execute("SELECT id FROM user where username=?",(username,))
+            id=cur.fetchone()
+            print(id[0])
+            session["id"]=id[0]
+            cur.execute("INSERT INTO languagepopularity(id) VALUES (?)",(session["id"],))
             session["bio"]=bio
             session["username"]=username
             session["email"]=email
-            
+            print(session["id"])
+            con.commit()
             con.close()
             return redirect(url_for("index"))
     elif "username" in session:
-        return render_template("profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"])
+        
+        con = sqlite3.connect("database.db")
+        cur = con.cursor()
+        cur.execute("SELECT quiz_correct, quiz_absolved FROM user WHERE username=?",(session["username"],))
+        quiz_correct, quiz_absolved=cur.fetchone()
+        cur.execute("SELECT * FROM languagepopularity WHERE id=?",(session["id"],))
+        language_popularity=cur.fetchall()
+        print(language_popularity)
+        language_popularity_temporary={}
+        language_names=["Algoritmizace","C","C#","Java","Python","SQL"]
+        for i in range (0, len(language_names)):
+            language_popularity_temporary[language_names[i]]=language_popularity[0][i+1]
+            print(language_names[i], language_popularity[0][i])
+        language_popularity_temporary=sorted(language_popularity_temporary.items(), key=lambda x: x[1], reverse=True)
+        print(language_popularity_temporary)
+        return render_template("profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"], quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity_temporary=language_popularity_temporary)
     else:
         
         return render_template("register.html", active=4)
@@ -199,7 +247,7 @@ def profile():
 @app.route("/login",methods=["POST","GET"])
 def login():
     if request.method=="POST":
-        con = sqlite3.connect("user.db")
+        con = sqlite3.connect("database.db")
         cur = con.cursor()
         identifier=request.form["identifier"]
         password=request.form["password"]
@@ -226,7 +274,7 @@ def change_bio():
     if request.method=="POST":
         bio=request.form["bio"]
         session["bio"]=bio
-        con = sqlite3.connect("user.db")
+        con = sqlite3.connect("database.db")
         cur = con.cursor()
         cur.execute("UPDATE user SET bio=? WHERE username=?",(bio,session["username"]))
         con.commit()
@@ -240,7 +288,7 @@ def change_email():
     if request.method=="POST":
         email=request.form["email"]
         session["email"]=email
-        con = sqlite3.connect("user.db")
+        con = sqlite3.connect("database.db")
         cur = con.cursor()
         cur.execute("UPDATE user SET email=? WHERE username=?",(email,session["username"]))
         con.commit()
@@ -254,7 +302,7 @@ def change_password():
     if request.method=="POST":
         password=request.form["password"]
         session["password"]=password
-        con = sqlite3.connect("user.db")
+        con = sqlite3.connect("database.db")
         cur = con.cursor()
         cur.execute("UPDATE user SET password=? WHERE username=?",(password,session["username"]))
         con.commit()
@@ -267,7 +315,7 @@ def change_password():
 def change_username():
     if request.method=="POST":
         username=request.form["username"]
-        con = sqlite3.connect("user.db")
+        con = sqlite3.connect("database.db")
         cur = con.cursor()
         cur.execute("SELECT * FROM user WHERE username=?",(username,))
         con.commit()
@@ -315,3 +363,58 @@ def register():
 
 if __name__=="__main__":
     app.run(debug=True)
+
+    """
+    {% if answer == quiz_list[quiz_list_index][3] and quiz_list[quiz_list_index][3]!=None %}
+        <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
+        {% else %}
+        <span class="quiz-content-answer">
+        {% endif %}
+            {% if quiz_list[quiz_list_index][3]==None %}
+            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][3] }}" disabled>
+            {% else %}
+            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][3] }}">
+            {% endif %}
+            <label for="first_answer">{{ quiz_list[quiz_list_index][3] }}</label>
+        </span>
+        <br>
+        {% if answer == quiz_list[quiz_list_index][4] and quiz_list[quiz_list_index][4]!=None %}
+        <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
+        {% else %}
+        <span class="quiz-content-answer">
+        {% endif %}
+            {% if quiz_list[quiz_list_index][4]==None %}
+            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][4] }}" disabled>
+            {% else %}
+            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][4] }}">
+            {% endif %}
+            <label for="second_answer">{{ quiz_list[quiz_list_index][4] }}</label>
+        </span>
+        <br>
+        {% if answer == quiz_list[quiz_list_index][5] and quiz_list[quiz_list_index][5]!=None %}
+        <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
+        {% else %}
+        <span class="quiz-content-answer">
+        {% endif %}
+            {% if quiz_list[quiz_list_index][5]==None %}
+            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][5] }}" disabled>
+            {% else %}
+            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][5] }}">
+            {% endif %}
+            <label for="third_answer">{{ quiz_list[quiz_list_index][5] }}</label>
+        </span>
+        <br>
+        {% if answer == quiz_list[quiz_list_index][6] and quiz_list[quiz_list_index][6]!=None %}
+        <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
+        {% else %}
+        <span class="quiz-content-answer">
+        {% endif %}
+        {% if quiz_list[quiz_list_index][6]==None %}
+        <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][6] }}" disabled>
+        {% else %}
+        <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][6] }}">
+        {% endif %}
+            <label for="fourth_answer">{{ quiz_list[quiz_list_index][6] }}</label>
+        </span>
+        <br>
+    """
