@@ -16,12 +16,13 @@
 </div>
 
 <div class="quiz-content-main">
-    <h2>{{ quiz_list[quiz_list_index][2] }}</h2>
-    <hr>
+    <h2 style="border-bottom: solid var(--hover-green); padding: 20px;">{{ quiz_list[quiz_list_index][2] }}</h2>
     <form action="{{ url_for('next_quiz') }}" method="post" class="quiz-content-form">
         
-        {% if answer == quiz_list[quiz_list_index][3] and quiz_list[quiz_list_index][3]!=None %}
+        {% if answer == quiz_list[quiz_list_index][3] and correct_wrong[quiz_list_index]==1 %}
         <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
+        {% elif answer == quiz_list[quiz_list_index][3] and correct_wrong[quiz_list_index]==0 %}
+        <span class="quiz-content-answer" style="background-color:red !important">
         {% else %}
         <span class="quiz-content-answer">
         {% endif %}
@@ -33,8 +34,10 @@
             <label for="first_answer">{{ quiz_list[quiz_list_index][3] }}</label>
         </span>
         <br>
-        {% if answer == quiz_list[quiz_list_index][4] and quiz_list[quiz_list_index][4]!=None %}
+        {% if answer == quiz_list[quiz_list_index][4] and correct_wrong[quiz_list_index]==1 %}
         <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
+        {% elif answer == quiz_list[quiz_list_index][4] and correct_wrong[quiz_list_index]==0 %}
+        <span class="quiz-content-answer" style="background-color:red !important">
         {% else %}
         <span class="quiz-content-answer">
         {% endif %}
@@ -48,6 +51,8 @@
         <br>
         {% if answer == quiz_list[quiz_list_index][5] and quiz_list[quiz_list_index][5]!=None %}
         <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
+        {% elif quiz_list[quiz_list_index][5]!=None and Answered %}
+        <span class="quiz-content-answer" style="background-color: red !important">
         {% else %}
         <span class="quiz-content-answer">
         {% endif %}
@@ -61,14 +66,16 @@
         <br>
         {% if answer == quiz_list[quiz_list_index][6] and quiz_list[quiz_list_index][6]!=None %}
         <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
+        {% elif quiz_list[quiz_list_index][6]!=None and Answered %}
+        <span class="quiz-content-answer" style="background-color:red !important">
         {% else %}
         <span class="quiz-content-answer">
         {% endif %}
-        {% if quiz_list[quiz_list_index][6]==None %}
-        <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][6] }}" disabled>
-        {% else %}
-        <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][6] }}">
-        {% endif %}
+            {% if quiz_list[quiz_list_index][6]==None %}
+            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][6] }}" disabled>
+            {% else %}
+            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][6] }}">
+            {% endif %}
             <label for="fourth_answer">{{ quiz_list[quiz_list_index][6] }}</label>
         </span>
         <br>
