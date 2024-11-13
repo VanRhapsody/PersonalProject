@@ -80,20 +80,28 @@ def kvizy():
         quiz_list=[]
         quiz_list_index=0
         correct_wrong=[]
+        count=request.form["count"]
+        category=request.form["category"]
         con = sqlite3.connect("database.db")
         cur = con.cursor()
-        cur.execute("SELECT id FROM quiz ORDER BY id DESC")
+        cur.execute(f"SELECT id FROM quiz WHERE category=? ORDER BY id DESC",(category,))
         quiz_id_max=cur.fetchone()
+        cur.execute(f"SELECT id FROM quiz WHERE category=? ORDER BY id DESC",(category,))
+        quiz_id_allowed_0=cur.fetchall()
+        quiz_id_allowed=[]
+        print(quiz_id_allowed_0)
+        for array in quiz_id_allowed_0:
+            for element in array:
+                quiz_id_allowed.append(element)
         con.commit()
-        count=request.form["count"]
-        category=request.form["language"]
         quiz_id_list=[]
         for i in range(0, int(count)):
             quiz_id_random=(random.randint(1,int(quiz_id_max[0])))
-            while quiz_id_random in quiz_id_list:
+            while (quiz_id_random in quiz_id_list) or (quiz_id_random not in quiz_id_allowed):
                 quiz_id_random=(random.randint(1,int(quiz_id_max[0])))
             quiz_id_list.append(quiz_id_random)
             correct_wrong.append(None)
+        
         for id in quiz_id_list:
             cur.execute("SELECT * FROM quiz WHERE id=?",(id,))
             one_task=cur.fetchone()
@@ -144,6 +152,7 @@ def send_answer():
         global quiz_id_max
         global category
         quiz_list_index+=1
+        
         if int(quiz_list_index)>=int(quiz_id_max[0]):
             correct=0
             wrong=0
@@ -152,12 +161,11 @@ def send_answer():
                     correct+=1
                 else:
                     wrong+=1
-            print(correct)
             con = sqlite3.connect("database.db")
             cur = con.cursor()
             cur.execute("UPDATE user SET quiz_correct = quiz_correct + ?", (correct,))
             cur.execute("UPDATE user SET quiz_absolved = quiz_absolved + 1")
-            cur.execute(f"UPDATE languagepopularity SET {category} = {category} + 1")
+            cur.execute(f"UPDATE languagepopularity SET {category} = {category} + 1 WHERE id={session["id"]}")
             con.commit()
             con.close()
             return render_template("kvizy.html", correct=correct, wrong=wrong)
@@ -169,14 +177,31 @@ def add_quiz():
     if request.method=="POST":
         category=request.form["category"]
         description=request.form["description"]
+        description=description.split(";")
         correct=request.form["correct"]
+        correct=correct.split(";")
         second=request.form["second"]
+        second=second.split(";")
         third=request.form["third"]
+        third=third.split(";")
         fourth=request.form["fourth"]
+        fourth=fourth.split(";")
+        list_of_inputs=[description,correct,second,third,fourth]
+        max=0
+        for input in list_of_inputs:
+            if len(input) > max:
+                max=len(input)
+        for input in list_of_inputs:
+            if len(input) < max:
+                for i in range(0, (max - len(input))):
+                    input.append("")
+        for input in list_of_inputs:
+            print(input)                           
         con = sqlite3.connect("database.db")
         cur = con.cursor()
-        cur.execute("INSERT INTO quiz (category, description, correct, second, third, fourth) VALUES (?,?,?,?,?,?)",(category, description, correct, second, third, fourth))
-        con.commit()
+        for i in range(0,len(category)):
+            cur.execute("INSERT INTO quiz (category, description, correct, second, third, fourth) VALUES (?,?,?,?,?,?)",(category, description[i], correct[i], second[i], third[i], fourth[i]))
+            con.commit()
         return redirect(url_for('kvizy'))
     else:
         return render_template("quizadd.html")
@@ -224,7 +249,6 @@ def profile():
             con.close()
             return redirect(url_for("index"))
     elif "username" in session:
-        
         con = sqlite3.connect("database.db")
         cur = con.cursor()
         cur.execute("SELECT quiz_correct, quiz_absolved FROM user WHERE username=?",(session["username"],))
@@ -232,13 +256,12 @@ def profile():
         cur.execute("SELECT * FROM languagepopularity WHERE id=?",(session["id"],))
         language_popularity=cur.fetchall()
         print(language_popularity)
+        print(f"id: {session["id"]}")
         language_popularity_temporary={}
         language_names=["Algoritmizace","C","C#","Java","Python","SQL"]
         for i in range (0, len(language_names)):
             language_popularity_temporary[language_names[i]]=language_popularity[0][i+1]
-            print(language_names[i], language_popularity[0][i])
         language_popularity_temporary=sorted(language_popularity_temporary.items(), key=lambda x: x[1], reverse=True)
-        print(language_popularity_temporary)
         return render_template("profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"], quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity_temporary=language_popularity_temporary)
     else:
         
@@ -258,6 +281,7 @@ def login():
             cur.execute("SELECT * FROM user WHERE username=? AND password=?",(identifier,password))
             user=cur.fetchall()
         if user:
+            session["id"]=user[0][0]
             session["username"]=user[0][1]
             session["email"]=user[0][3]
             session["bio"]=user[0][4]
