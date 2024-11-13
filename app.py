@@ -14,13 +14,13 @@ category=""
 
 @app.route("/")
 def index():
-    return render_template("index.html", active=1)
+    return render_template("pages/index.html", active=1)
 
 @app.route("/uloha/<task_id>")
 def task(task_id):
     con = sqlite3.connect("database.db")
     cur = con.cursor()
-    cur.execute("SELECT * FROM task WHERE task_id=?",(task_id))
+    cur.execute("SELECT * FROM task WHERE id=?",(task_id))
     task=cur.fetchone()
     con.commit()
 
@@ -29,7 +29,7 @@ def task(task_id):
     con.commit()
     con.close()
 
-    return render_template("uloha.html", task=task, categories=categories)
+    return render_template("pages/uloha.html", task=task, categories=categories)
 
 @app.route("/ulohy/", defaults={'categories':None})
 @app.route("/ulohy/<categories>") #do routování se zadá jazyk - např. sql a  to se ptoom předá jako vstupní parametr funkce, která z databáze získá všechny instance, kde jazyk je sql a zobrazí je
@@ -47,7 +47,7 @@ def tasks(categories):
     categories=cur.fetchall()
     print(categories)
     print(tasks)
-    return render_template("ulohy.html", active=2, tasks=tasks, categories=categories)
+    return render_template("pages/ulohy.html", active=2, tasks=tasks, categories=categories)
 
 @app.route("/ulohy/add", methods=["POST","GET"])
 def add_task():
@@ -63,7 +63,7 @@ def add_task():
         con.commit()
         return redirect(url_for("tasks"))
     else:
-        return render_template("taskadd.html")
+        return render_template("funcionality_forms/taskadd.html")
 
 
 
@@ -76,7 +76,7 @@ def kvizy():
         global quiz_id_max
         global category
         if session.get("username")==None:
-            return render_template("error.html", message="Nelze spustit kvíz, pokud nejste přihlášeni!")
+            return render_template("messages/error.html", message="Nelze spustit kvíz, pokud nejste přihlášeni!")
         quiz_list=[]
         quiz_list_index=0
         correct_wrong=[]
@@ -116,9 +116,9 @@ def kvizy():
             con.commit()
             quiz_list.append(one_task)
         print(category)
-        return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+        return render_template("pages/quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
     else:
-        return render_template("kvizy.html", active=3)
+        return render_template("pages/kvizy.html", active=3)
     
 @app.route("/kvizy/next", methods=["POST","GET"])
 def next_quiz():
@@ -137,11 +137,11 @@ def next_quiz():
             print(correct_answer)
             if answer==correct_answer[0]:
                 correct_wrong[quiz_list_index]=1
-                return render_template("quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+                return render_template("pages/quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
             elif i == len(correct_answers) - 1:
                 correct_wrong[quiz_list_index]=0
-                return render_template("quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
-        return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+                return render_template("pages/quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+        return render_template("pages/quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
     
 
 @app.route("/kvizy/verify")
@@ -152,8 +152,7 @@ def send_answer():
         global quiz_id_max
         global category
         quiz_list_index+=1
-        
-        if int(quiz_list_index)>=int(quiz_id_max[0]):
+        if int(quiz_list_index)>=int(len(quiz_list)):
             correct=0
             wrong=0
             for element in correct_wrong:
@@ -168,8 +167,8 @@ def send_answer():
             cur.execute(f"UPDATE languagepopularity SET {category} = {category} + 1 WHERE id={session["id"]}")
             con.commit()
             con.close()
-            return render_template("kvizy.html", correct=correct, wrong=wrong)
-        return render_template("quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+            return render_template("pages/kvizy.html", correct=correct, wrong=wrong)
+        return render_template("pages/quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
 
 
 @app.route("/kvizy/add", methods=["POST","GET"])
@@ -204,7 +203,7 @@ def add_quiz():
             con.commit()
         return redirect(url_for('kvizy'))
     else:
-        return render_template("quizadd.html")
+        return render_template("funcionality_forms/quizadd.html")
 
 
 @app.route("/profile", methods=["POST","GET"])
@@ -262,10 +261,10 @@ def profile():
         for i in range (0, len(language_names)):
             language_popularity_temporary[language_names[i]]=language_popularity[0][i+1]
         language_popularity_temporary=sorted(language_popularity_temporary.items(), key=lambda x: x[1], reverse=True)
-        return render_template("profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"], quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity_temporary=language_popularity_temporary)
+        return render_template("pages/profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"], quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity_temporary=language_popularity_temporary)
     else:
         
-        return render_template("register.html", active=4)
+        return render_template("profile_forms/register.html", active=4)
     
 @app.route("/login",methods=["POST","GET"])
 def login():
@@ -285,13 +284,13 @@ def login():
             session["username"]=user[0][1]
             session["email"]=user[0][3]
             session["bio"]=user[0][4]
-            return render_template("index.html")
+            return render_template("pages/index.html")
         else:
             pass #zobrazení chybové hlášky
         con.commit()
         con.close()
     else:
-        return render_template("login.html")
+        return render_template("profile_forms/login.html")
     
 @app.route("/change_bio", methods=["POST","GET"])
 def change_bio():
@@ -305,7 +304,7 @@ def change_bio():
         con.close()
         return redirect(url_for("profile"))
     else:
-        return render_template("bio.html")
+        return render_template("profile_forms/bio.html")
     
 @app.route("/change_email", methods=["POST","GET"])
 def change_email():
@@ -319,7 +318,7 @@ def change_email():
         con.close()
         return redirect(url_for("profile"))
     else:
-        return render_template("email.html")
+        return render_template("profile_forms/email.html")
     
 @app.route("/change_password", methods=["POST","GET"])
 def change_password():
@@ -333,7 +332,7 @@ def change_password():
         con.close()
         return redirect(url_for("profile"))
     else:
-        return render_template("password.html")
+        return render_template("profile_forms/password.html")
     
 @app.route("/change_username", methods=["POST","GET"])
 def change_username():
@@ -353,7 +352,7 @@ def change_username():
             con.close()
             return redirect(url_for("profile"))
     else:
-        return render_template("username.html")
+        return render_template("profile_forms/username.html")
 
 @app.route("/logout")
 def logout():
