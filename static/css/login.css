@@ -3,18 +3,31 @@
   
 }
 
+body, form {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0; /* Odstraníme výchozí mezery */
+  height: 100vh; /* 100% výška viewportu */
+  display: flex; /* Aktivace Flexboxu */
+  justify-content: center; /* Horizontální zarovnání na střed */
+  align-items: center; /* Vertikální zarovnání na střed */
+  background-image: url("{{ url_for('static', filename='images/EWjl.gif') }}");
+  background-size: cover; /* Pokrytí celé plochy pozadí */
+  background-repeat: no-repeat; /* Zamezí opakování pozadí */
+  background-position: center; /* Zarovná pozadí na střed */
+}
+
 form {
   background-color: white;
   border-radius: 30px;
-  filter: drop-shadow(50px 50px 50px black);
+  filter: drop-shadow(5px 5px 15px rgba(0, 0, 0, 0.5));
   text-align: center;
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, 10%);
   font-size: 20px;
-  width: 20%;
-  height: 50%;
+  width: 25%;
+  height: 40%;
   padding: 20px;
 }
 
@@ -22,7 +35,16 @@ form input {
   margin: 10px;
   position: relative;
   font-size: 20px;
+  vertical-align: middle;
 }
+
+form textarea {
+  margin: 10px;
+  position: relative;
+  font-size: 20px;
+  vertical-align: middle;
+}
+
 
 form input[type=submit] {
   padding: 10px;
@@ -41,6 +63,7 @@ form label {
   width: 100px;
   opacity: 70%;
   margin-right: 10px;
+  vertical-align: middle;
 }
 
 form p,a {
