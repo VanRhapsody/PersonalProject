@@ -16,7 +16,6 @@ body {
   align-items: center; /* Vertikální zarovnání na střed */
   background-image: url("{{ url_for('static', filename='images/EWjl.gif') }}");
   background-size: cover; /* Pokrytí celé plochy pozadí */
-  background-repeat: no-repeat; /* Zamezí opakování pozadí */
   background-position: center; /* Zarovná pozadí na střed */
 }
 

@@ -82,11 +82,12 @@ def kvizy():
         correct_wrong=[]
         count=request.form["count"]
         category=request.form["category"]
+        print(category)
         con = sqlite3.connect("database.db")
         cur = con.cursor()
-        cur.execute(f"SELECT id FROM quiz WHERE category=? ORDER BY id DESC",(category,))
+        cur.execute(f"SELECT id FROM quiz WHERE category=? AND used=1 ORDER BY id DESC",(category,))
         quiz_id_max=cur.fetchone()
-        cur.execute(f"SELECT id FROM quiz WHERE category=? ORDER BY id DESC",(category,))
+        cur.execute(f"SELECT id FROM quiz WHERE category=? AND used=1 ORDER BY id DESC",(category,))
         quiz_id_allowed_0=cur.fetchall()
         quiz_id_allowed=[]
         print(quiz_id_allowed_0)
@@ -108,14 +109,15 @@ def kvizy():
             question_mix=[one_task[3], one_task[4], one_task[5], one_task[6]]
             question_mix=list(filter(None,question_mix))
             random.shuffle(question_mix)
-            one_task=[one_task[0],one_task[1],one_task[2]]
+            one_task=[one_task[0],one_task[1],one_task[2], one_task[8]]
             for question in question_mix:
                 one_task.append(question)
+                print(f"otázka: {question}")
             for i in range(0,4-len(question_mix)):
                 one_task.append("")
             con.commit()
             quiz_list.append(one_task)
-        print(category)
+            print(f"jedna zamixovaná úloha: {one_task}")
         return render_template("pages/quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
     else:
         return render_template("pages/kvizy.html", active=3)

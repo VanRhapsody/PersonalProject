@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
     <title>Document</title>
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/EWjl.gif') }}");
+        }
+    </style>
 </head>
 <body style="background-size: cover;">
     {% with messages=get_flashed_messages() %}
