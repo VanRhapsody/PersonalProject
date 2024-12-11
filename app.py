@@ -74,36 +74,55 @@ def kvizy():
         global quiz_list_index
         global correct_wrong
         global quiz_id_max
-        global category
+        global category_id
+        global answers_list
         if session.get("username")==None:
             return render_template("messages/error.html", message="Nelze spustit kvíz, pokud nejste přihlášeni!")
-        quiz_list=[]
         quiz_list_index=0
         correct_wrong=[]
         count=request.form["count"]
         category=request.form["category"]
-        print(category)
         con = sqlite3.connect("database.db")
         cur = con.cursor()
-        cur.execute(f"SELECT id FROM quiz WHERE category=? AND used=1 ORDER BY id DESC",(category,))
-        quiz_id_max=cur.fetchone()
-        cur.execute(f"SELECT id FROM quiz WHERE category=? AND used=1 ORDER BY id DESC",(category,))
-        quiz_id_allowed_0=cur.fetchall()
-        quiz_id_allowed=[]
-        print(quiz_id_allowed_0)
-        for array in quiz_id_allowed_0:
-            for element in array:
-                quiz_id_allowed.append(element)
+        cur.execute(f"SELECT id FROM category WHERE name=?", (category,))
+        category_id_0=cur.fetchone()
+        category_id=category_id_0[0]
+        cur.execute(f"SELECT id FROM question ORDER BY id DESC")
+        id_max_0=cur.fetchone()
+        id_max=id_max_0[0]
+        print(category_id)
+        #cur.execute(f"SELECT id FROM quiz WHERE category=? AND used=1 ORDER BY id DESC",(category,))
+        #quiz_id_max=cur.fetchone()
+        #cur.execute(f"SELECT id FROM quiz WHERE category=? AND used=1 ORDER BY id DESC",(category,))
+        #quiz_id_allowed_0=cur.fetchall()
+        #quiz_id_allowed=[]
+        #print(quiz_id_allowed_0)
+        #for array in quiz_id_allowed_0:
+        #    for element in array:
+        #        quiz_id_allowed.append(element)
         con.commit()
-        quiz_id_list=[]
+        quiz_list=[]
+        answers_list=[]
+        question=None
+        quiz_id_random=0
         for i in range(0, int(count)):
-            quiz_id_random=(random.randint(1,int(quiz_id_max[0])))
-            while (quiz_id_random in quiz_id_list) or (quiz_id_random not in quiz_id_allowed):
-                quiz_id_random=(random.randint(1,int(quiz_id_max[0])))
-            quiz_id_list.append(quiz_id_random)
+            while (question is None) or (question in quiz_list):
+                quiz_id_random=(random.randint(1,int(id_max)))
+                cur.execute("SELECT id, prompt FROM question WHERE category_id=? AND id=?", (category_id,quiz_id_random,))
+                question=cur.fetchone()
+            quiz_list.append(question)
             correct_wrong.append(None)
-        
-        for id in quiz_id_list:
+        print(quiz_list)
+        for id in quiz_list:
+            cur.execute("SELECT * FROM answer WHERE quiz_id=?", (id[0],))
+            one_answer=cur.fetchall()
+            random.shuffle(one_answer)
+            while len(one_answer)<4:
+                one_answer.append(['','','',''])
+            answers_list.append(one_answer)
+        print(answers_list)
+        quiz_list_index=0
+        """for id in quiz_id_list:
             cur.execute("SELECT * FROM quiz WHERE id=?",(id,))
             one_task=cur.fetchone()
             question_mix=[one_task[3], one_task[4], one_task[5], one_task[6]]
@@ -117,8 +136,8 @@ def kvizy():
                 one_task.append("")
             con.commit()
             quiz_list.append(one_task)
-            print(f"jedna zamixovaná úloha: {one_task}")
-        return render_template("pages/quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+            print(f"jedna zamixovaná úloha: {one_task}")"""
+        return render_template("pages/quiz.html", active=3, quiz_list=quiz_list, answers_list=answers_list, correct_wrong=correct_wrong, quiz_list_index=quiz_list_index)
     else:
         return render_template("pages/kvizy.html", active=3)
     
@@ -126,24 +145,32 @@ def kvizy():
 def next_quiz():
     if request.method=="POST":
         global quiz_list
-        global quiz_list_index
         global correct_wrong
         global quiz_id_max
-        print(correct_wrong)
+        global answers_list
         con = sqlite3.connect("database.db")
         cur = con.cursor()
-        cur.execute("SELECT correct FROM quiz")
-        correct_answers=cur.fetchall()
         answer=request.form["answer"]
-        for i, correct_answer in enumerate(correct_answers):
+        print(answer)
+        correct_answer=None
+        for one_answer in answers_list[quiz_list_index]:
+            if one_answer[3]==1:
+                correct_answer=one_answer
+        if correct_answer[2]==answer:
+            correct_wrong[quiz_list_index]=1
+        else:
+            correct_wrong[quiz_list_index]=0
+        print(correct_answer)
+        print(correct_wrong)
+        """for i, correct_answer in enumerate(correct_answers):
             print(correct_answer)
             if answer==correct_answer[0]:
                 correct_wrong[quiz_list_index]=1
                 return render_template("pages/quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
             elif i == len(correct_answers) - 1:
                 correct_wrong[quiz_list_index]=0
-                return render_template("pages/quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
-        return render_template("pages/quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+                return render_template("pages/quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)"""
+        return render_template("pages/quiz.html", answered=True, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong, answer=answer, correct_answer=correct_answer, answers_list=answers_list)
     
 
 @app.route("/kvizy/verify")
@@ -152,7 +179,7 @@ def send_answer():
         global quiz_list_index
         global correct_wrong
         global quiz_id_max
-        global category
+        global category_id
         quiz_list_index+=1
         if int(quiz_list_index)>=int(len(quiz_list)):
             correct=0
@@ -166,11 +193,12 @@ def send_answer():
             cur = con.cursor()
             cur.execute("UPDATE user SET quiz_correct = quiz_correct + ?", (correct,))
             cur.execute("UPDATE user SET quiz_absolved = quiz_absolved + 1")
-            cur.execute(f"UPDATE languagepopularity SET {category} = {category} + 1 WHERE id={session["id"]}")
+            print(session["id"], category_id)
+            cur.execute("UPDATE language_popularity SET value = value + 1 WHERE user_id=? AND category_id=?", (session["id"], category_id))
             con.commit()
             con.close()
             return render_template("pages/kvizy.html", correct=correct, wrong=wrong)
-        return render_template("pages/quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
+        return render_template("pages/quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong, answers_list=answers_list)
 
 
 @app.route("/kvizy/add", methods=["POST","GET"])
@@ -241,7 +269,10 @@ def profile():
             id=cur.fetchone()
             print(id[0])
             session["id"]=id[0]
-            cur.execute("INSERT INTO languagepopularity(id) VALUES (?)",(session["id"],))
+            cur.execute("SELECT id FROM category ORDER BY id DESC")
+            category_id_max=cur.fetchone()[0]
+            for i in range(1,category_id_max+1):
+                cur.execute("INSERT INTO language_popularity(user_id, category_id, value) VALUES (?, ?,?)",(session["id"],i,0,))
             session["bio"]=bio
             session["username"]=username
             session["email"]=email
@@ -254,16 +285,16 @@ def profile():
         cur = con.cursor()
         cur.execute("SELECT quiz_correct, quiz_absolved FROM user WHERE username=?",(session["username"],))
         quiz_correct, quiz_absolved=cur.fetchone()
-        cur.execute("SELECT * FROM languagepopularity WHERE id=?",(session["id"],))
-        language_popularity=cur.fetchall()
+        cur.execute("SELECT * FROM language_popularity WHERE user_id=?",(session["id"],))
+        language_popularity_temporary=cur.fetchall()
+        cur.execute("SELECT name FROM category")
+        categories=cur.fetchall()
+        language_popularity={}
+        for i in range (0, len(categories)):
+            language_popularity[categories[i]]=language_popularity_temporary[i][3]
         print(language_popularity)
-        print(f"id: {session["id"]}")
-        language_popularity_temporary={}
-        language_names=["Algoritmizace","C","C#","Java","Python","SQL"]
-        for i in range (0, len(language_names)):
-            language_popularity_temporary[language_names[i]]=language_popularity[0][i+1]
-        language_popularity_temporary=sorted(language_popularity_temporary.items(), key=lambda x: x[1], reverse=True)
-        return render_template("pages/profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"], quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity_temporary=language_popularity_temporary)
+        language_popularity=sorted(language_popularity.items(), key=lambda x: x[1], reverse=True)
+        return render_template("pages/profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"], quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity)
     else:
         
         return render_template("profile_forms/register.html", active=4)
