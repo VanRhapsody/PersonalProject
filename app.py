@@ -12,6 +12,7 @@ correct_wrong=[]
 quiz_id_max=0
 category=""
 
+
 @app.route("/")
 def index():
     return render_template("pages/index.html", active=1)
@@ -108,19 +109,20 @@ def kvizy():
         for i in range(0, int(count)):
             while (question is None) or (question in quiz_list):
                 quiz_id_random=(random.randint(1,int(id_max)))
-                cur.execute("SELECT id, prompt FROM question WHERE category_id=? AND id=?", (category_id,quiz_id_random,))
+                cur.execute("SELECT id, prompt, image_url FROM question WHERE category_id=? AND id=?", (category_id,quiz_id_random,))
                 question=cur.fetchone()
             quiz_list.append(question)
             correct_wrong.append(None)
         print(quiz_list)
         for id in quiz_list:
-            cur.execute("SELECT * FROM answer WHERE quiz_id=?", (id[0],))
+            cur.execute("SELECT * FROM answer WHERE quiz_id=? AND is_used==1", (id[0],))
             one_answer=cur.fetchall()
             random.shuffle(one_answer)
             while len(one_answer)<4:
                 one_answer.append(['','','',''])
             answers_list.append(one_answer)
-        print(answers_list)
+        for answer in answers_list:
+            print(f"Odpověď: {answer}")
         quiz_list_index=0
         """for id in quiz_id_list:
             cur.execute("SELECT * FROM quiz WHERE id=?",(id,))
@@ -180,6 +182,10 @@ def send_answer():
         global correct_wrong
         global quiz_id_max
         global category_id
+        print(quiz_list_index)
+        for one_answer in answers_list[quiz_list_index]:
+            if one_answer[3]==1:
+                correct_answer=one_answer
         quiz_list_index+=1
         if int(quiz_list_index)>=int(len(quiz_list)):
             correct=0
