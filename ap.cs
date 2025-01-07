@@ -61,3 +61,25 @@ list.Remove(5); // list.RemoveAt(0);
 int[] array = new int[10];
 array[0] = 5;
 
+int x = 10;
+if (x > 5) {
+    Console.WriteLine("Yes");
+} else {
+    Console.WriteLine("No");
+}
+
+
+int x = 5;
+int y = x++;
+Console.WriteLine(y);
+
+
+public class Book {    
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Author { get; set; }
+    public int PageCount { get; set; } // Nová vlastnost
+}
+    
+
+

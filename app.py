@@ -74,72 +74,43 @@ def kvizy():
         global quiz_list
         global quiz_list_index
         global correct_wrong
-        global quiz_id_max
         global category_id
         global answers_list
         if session.get("username")==None:
             return render_template("messages/error.html", message="Nelze spustit kvíz, pokud nejste přihlášeni!")
-        quiz_list_index=0
-        correct_wrong=[]
+        session["quiz_list_index"]=0
+        session["correct_wrong"]=[]
         count=request.form["count"]
         category=request.form["category"]
         con = sqlite3.connect("database.db")
         cur = con.cursor()
         cur.execute(f"SELECT id FROM category WHERE name=?", (category,))
         category_id_0=cur.fetchone()
-        category_id=category_id_0[0]
+        session["category_id"]=category_id_0[0]
         cur.execute(f"SELECT id FROM question ORDER BY id DESC")
         id_max_0=cur.fetchone()
         id_max=id_max_0[0]
-        print(category_id)
-        #cur.execute(f"SELECT id FROM quiz WHERE category=? AND used=1 ORDER BY id DESC",(category,))
-        #quiz_id_max=cur.fetchone()
-        #cur.execute(f"SELECT id FROM quiz WHERE category=? AND used=1 ORDER BY id DESC",(category,))
-        #quiz_id_allowed_0=cur.fetchall()
-        #quiz_id_allowed=[]
-        #print(quiz_id_allowed_0)
-        #for array in quiz_id_allowed_0:
-        #    for element in array:
-        #        quiz_id_allowed.append(element)
         con.commit()
-        quiz_list=[]
-        answers_list=[]
-        question=None
-        quiz_id_random=0
+        session["quiz_list"]=[]
+        session["answers_list"]=[]
         for i in range(0, int(count)):
+            question=None
             while (question is None) or (question in quiz_list):
                 quiz_id_random=(random.randint(1,int(id_max)))
-                cur.execute("SELECT id, prompt, image_url FROM question WHERE category_id=? AND id=?", (category_id,quiz_id_random,))
+                cur.execute("SELECT id, prompt, image_url FROM question WHERE category_id=? AND id=?", (session["category_id"],quiz_id_random,))
                 question=cur.fetchone()
-            quiz_list.append(question)
-            correct_wrong.append(None)
-        print(quiz_list)
-        for id in quiz_list:
+            session["quiz_list"].append(question)
+            session["correct_wrong"].append(None)
+        for id in session["quiz_list"]:
             cur.execute("SELECT * FROM answer WHERE quiz_id=? AND is_used==1", (id[0],))
             one_answer=cur.fetchall()
             random.shuffle(one_answer)
             while len(one_answer)<4:
                 one_answer.append(['','','',''])
-            answers_list.append(one_answer)
+            session["answers_list"].append(one_answer)
         for answer in answers_list:
             print(f"Odpověď: {answer}")
-        quiz_list_index=0
-        """for id in quiz_id_list:
-            cur.execute("SELECT * FROM quiz WHERE id=?",(id,))
-            one_task=cur.fetchone()
-            question_mix=[one_task[3], one_task[4], one_task[5], one_task[6]]
-            question_mix=list(filter(None,question_mix))
-            random.shuffle(question_mix)
-            one_task=[one_task[0],one_task[1],one_task[2], one_task[8]]
-            for question in question_mix:
-                one_task.append(question)
-                print(f"otázka: {question}")
-            for i in range(0,4-len(question_mix)):
-                one_task.append("")
-            con.commit()
-            quiz_list.append(one_task)
-            print(f"jedna zamixovaná úloha: {one_task}")"""
-        return render_template("pages/quiz.html", active=3, quiz_list=quiz_list, answers_list=answers_list, correct_wrong=correct_wrong, quiz_list_index=quiz_list_index)
+        return render_template("pages/quiz.html", active=3)
     else:
         return render_template("pages/kvizy.html", active=3)
     
@@ -164,14 +135,6 @@ def next_quiz():
             correct_wrong[quiz_list_index]=0
         print(correct_answer)
         print(correct_wrong)
-        """for i, correct_answer in enumerate(correct_answers):
-            print(correct_answer)
-            if answer==correct_answer[0]:
-                correct_wrong[quiz_list_index]=1
-                return render_template("pages/quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)
-            elif i == len(correct_answers) - 1:
-                correct_wrong[quiz_list_index]=0
-                return render_template("pages/quiz.html", answered=True, answer=answer, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong)"""
         return render_template("pages/quiz.html", answered=True, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong, answer=answer, correct_answer=correct_answer, answers_list=answers_list)
     
 
@@ -325,7 +288,7 @@ def login():
             session["bio"]=user[0][4]
             return render_template("pages/index.html")
         else:
-            pass #zobrazení chybové hlášky
+            return render_template("error.html", message="Uživatel nenalezen!")
         con.commit()
         con.close()
     else:
@@ -401,82 +364,3 @@ def logout():
     session.pop("bio",None)
     return redirect(url_for('index'))
 
-
-    
-
-
-    
-
-"""@app.route("/register", methods=["GET","POST"])
-def register():
-    if request.method=="POST":
-        con = sqlite3.connect("database.db")
-        cur = con.cursor()
-        username=request.form["name"]
-        password=request.form["password"]
-        session["name"]=username
-        cur.execute("INSERT INTO user (username,password) VALUES (?,?)",(username,password))
-        con.commit()
-        con.close()
-    else:
-        return render_template("registerinitial.html")"""
-
-
-
-if __name__=="__main__":
-    app.run(debug=True)
-
-    """
-    {% if answer == quiz_list[quiz_list_index][3] and quiz_list[quiz_list_index][3]!=None %}
-        <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
-        {% else %}
-        <span class="quiz-content-answer">
-        {% endif %}
-            {% if quiz_list[quiz_list_index][3]==None %}
-            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][3] }}" disabled>
-            {% else %}
-            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][3] }}">
-            {% endif %}
-            <label for="first_answer">{{ quiz_list[quiz_list_index][3] }}</label>
-        </span>
-        <br>
-        {% if answer == quiz_list[quiz_list_index][4] and quiz_list[quiz_list_index][4]!=None %}
-        <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
-        {% else %}
-        <span class="quiz-content-answer">
-        {% endif %}
-            {% if quiz_list[quiz_list_index][4]==None %}
-            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][4] }}" disabled>
-            {% else %}
-            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][4] }}">
-            {% endif %}
-            <label for="second_answer">{{ quiz_list[quiz_list_index][4] }}</label>
-        </span>
-        <br>
-        {% if answer == quiz_list[quiz_list_index][5] and quiz_list[quiz_list_index][5]!=None %}
-        <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
-        {% else %}
-        <span class="quiz-content-answer">
-        {% endif %}
-            {% if quiz_list[quiz_list_index][5]==None %}
-            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][5] }}" disabled>
-            {% else %}
-            <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][5] }}">
-            {% endif %}
-            <label for="third_answer">{{ quiz_list[quiz_list_index][5] }}</label>
-        </span>
-        <br>
-        {% if answer == quiz_list[quiz_list_index][6] and quiz_list[quiz_list_index][6]!=None %}
-        <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
-        {% else %}
-        <span class="quiz-content-answer">
-        {% endif %}
-        {% if quiz_list[quiz_list_index][6]==None %}
-        <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][6] }}" disabled>
-        {% else %}
-        <input type="radio" name="answer" value="{{ quiz_list[quiz_list_index][6] }}">
-        {% endif %}
-            <label for="fourth_answer">{{ quiz_list[quiz_list_index][6] }}</label>
-        </span>
-        <br>
-    """
