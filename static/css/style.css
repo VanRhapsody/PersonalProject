@@ -169,27 +169,43 @@ footer {
   background-color: var(--background-green);
 }
 
-.task-table {
-  width: 100%;
-  border-top: solid black 2px;
-  
+.user-table {
+  width: 80%;
+  border: solid var(--background-green) 1px;
+  border-collapse: collapse;
+  margin: auto;
+  display: block;
+  margin-top: 20px;
 }
 
-.task-table th {
+
+
+.user-table th {
   font-size: 50px;
   padding: 10px;
   text-align: center;
+  border: solid black 1px;
+  border-collapse: collapse;
 }
 
-.task-table td {
+.user-table td {
   font-size: 40px;
+  border: solid var(--background-green) 1px;
+  border-collapse: collapse;
 }
 
-.task-table tr:first-child:hover {
+.user-table tr:first-child {
   background-color: var(--background-green);
 }
 
-.task-table tr:hover {
+.user-table tr:first-child td {
+  background-color: var(--background-green);
+
+}
+
+
+
+.user-table tr:hover {
   background-color: var(--active-green);
 }
 

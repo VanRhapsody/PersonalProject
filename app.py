@@ -1,111 +1,82 @@
 from flask import Flask, render_template, request, session, flash, url_for, redirect
 import sqlite3
 from collections import OrderedDict
+import bcrypt
 import random
 
 app=Flask(__name__)
 app.secret_key="Velice tajny klic xddd"
 
-quiz_list=[]
-quiz_list_index=0
-correct_wrong=[]
-quiz_id_max=0
-category=""
+salt=bcrypt.gensalt()
 
+def db_connect():
+    con = sqlite3.connect("database.db") #připojení do databáze uložené v adresáři jako database.db
+    cur = con.cursor() #vytvoření cursor pro interakci s databází
+    return cur
 
 @app.route("/")
 def index():
-    return render_template("pages/index.html", active=1)
+    return render_template("pages/index.html", active=1) # active reprezentuje, jaká stránka je momentálně aktivní a má se tak zvýraznit v navbaru
 
-@app.route("/uloha/<task_id>")
-def task(task_id):
-    con = sqlite3.connect("database.db")
-    cur = con.cursor()
-    cur.execute("SELECT * FROM task WHERE id=?",(task_id))
-    task=cur.fetchone()
-    con.commit()
+@app.route("/users")
+def users():
+    cur=db_connect()
+    cur.execute("SELECT id, username,email FROM user")
+    users=cur.fetchall()
+    return render_template("pages/users.html", users=users)
 
-    cur.execute("SELECT distinct(category) FROM task")
+@app.route("/users/<user_id>")
+def user(user_id):
+    cur=db_connect()
+    cur.execute("SELECT username, email, bio, quiz_correct, quiz_absolved FROM user WHERE id=?", (user_id,))
+    username, email, bio, quiz_correct, quiz_absolved=cur.fetchone()
+    cur.execute("SELECT quiz_correct, quiz_absolved FROM user WHERE username=?",(session["username"],))
+    quiz_correct, quiz_absolved=cur.fetchone()
+    cur.execute("SELECT * FROM language_popularity WHERE user_id=?",(session["id"],))
+    language_popularity_temporary=cur.fetchall()
+    cur.execute("SELECT name FROM category")
     categories=cur.fetchall()
-    con.commit()
-    con.close()
-
-    return render_template("pages/uloha.html", task=task, categories=categories)
-
-@app.route("/ulohy/", defaults={'categories':None})
-@app.route("/ulohy/<categories>") #do routování se zadá jazyk - např. sql a  to se ptoom předá jako vstupní parametr funkce, která z databáze získá všechny instance, kde jazyk je sql a zobrazí je
-def tasks(categories):
-    con = sqlite3.connect("database.db")
-    cur = con.cursor()
-    if categories is None:
-        cur.execute("SELECT * FROM task")
-    else:
-        cur.execute("SELECT * FROM task WHERE category=?",(categories,))
-    con.commit()
-    tasks=cur.fetchall()
-    cur.execute("SELECT DISTINCT(category) FROM task")
-    con.commit()
-    categories=cur.fetchall()
-
-    return render_template("pages/ulohy.html", active=2, tasks=tasks, categories=categories)
-
-@app.route("/ulohy/add", methods=["POST","GET"])
-def add_task():
-    if request.method=="POST":
-        title=request.form["title"]
-        category=request.form["category"]
-        difficulty=request.form["difficulty"]
-        description=request.form["description"]
-        solution=request.form["solution"]
-        con = sqlite3.connect("database.db")
-        cur = con.cursor()
-        cur.execute("INSERT INTO task (title, category, difficulty, description, solution) VALUES (?,?,?,?,?)",(title,category,difficulty,description,solution,))
-        con.commit()
-        return redirect(url_for("tasks"))
-    else:
-        return render_template("funcionality_forms/taskadd.html")
-
-
+    language_popularity={}
+    for i in range (0, len(categories)):
+        language_popularity[categories[i]]=language_popularity_temporary[i][3]
+    language_popularity=sorted(language_popularity.items(), key=lambda x: x[1], reverse=True)
+    return render_template("pages/profil.html", active=4, username=username, email=email, bio=bio, quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity)
 
 @app.route("/kvizy", methods=["POST","GET"])
 def kvizy():
     if request.method=="POST":
-        if session.get("username")==None:
+        if session.get("username")==None: #Pokud uživatel není přihlášen, tedy proměnná session["username"] je prázdná, tak se vypíše chybová hláška
             return render_template("messages/error.html", message="Nelze spustit kvíz, pokud nejste přihlášeni!")
-        session["quiz_list_index"]=0
-        session["correct_wrong"]=[]
-        count=request.form["count"]
-        category=request.form["category"]
-        con = sqlite3.connect("database.db")
-        cur = con.cursor()
-        cur.execute(f"SELECT id FROM category WHERE name=?", (category,))
-        category_id_0=cur.fetchone()
-        session["category_id"]=category_id_0[0]
+        session["quiz_list_index"]=0 #quiz list index slouží k procházení jednotlivých kvízů, které byly pro uživatele vygenerovány
+        session["correct_wrong"]=[] #correct_wrong je list na začátku obsahující samé nuly a na základě správné či špatné odpovědi u konkrétní otázky v kvízu se nastaví na 1 nebo 0
+        count=request.form["count"] #count reprezentuje počet zvolených otázek (5, 10)
+        category=request.form["category"] #category reprezentuje vybranou kategorii (Python, C#)
+        cur=db_connect() #využití funkce db connect pro připojení k db
+        cur.execute(f"SELECT id FROM category WHERE name=?", (category,)) #vybrání všech id z tabulky kategorie, kde se jméno kategorie rovná zvolenému jménu (python, cs)
+        category_id=cur.fetchone() #spojení jednoho výsledku do proměnné category_id
+        session["category_id"]=category_id[0] #přiřazení nultého indexu (všechny tyto proměnné se ukládají jako tuple) do proměnné session["category_id"]
+        cur.execute(f"SELECT id FROM question ORDER BY id DESC") #vybrání všech id z tabulky question při jejich sestupném řazení
+        id_max=cur.fetchone() #přiřazení jednoho výsledku dotazu (nejvyššího možného id) do proměnné id_max
+        id_max=id_max[0] #přiřazení nultého indexu id_max (uchovává se jako tuple) do stejné proměnné
+        session["quiz_list"]=[] #vytvoření session["quiz_list"] pro uchování jednotlivých otázek v kvízech
+        session["answers_list"]=[] #vytvoření session["answers_list"] pro uchování jednotlivých odpovědí ke kvízům a zda jsou správné
+        for i in range(0, int(count)): #založení for cyklu pro generaci náhodných otázek n-krát podle počtu zvolených kvízů
+            question=None #nastavení question na None pro možnost jeho kontroly, zda je none
+            while (question is None) or (question in session["quiz_list"]): #kontrola, jestli je Question none nebo jestli už je v proměnné quiz_list pro zamezení existenci duplikátních otázek
+                quiz_id_random=(random.randint(1,int(id_max))) #generování náhodného kvízu pro volbu jedné otázky v rozmezí od 1 do maxima
+                cur.execute("SELECT id, prompt, image_url FROM question WHERE category_id=? AND id=?", (session["category_id"],quiz_id_random,)) #vybrání id, slovního zadání a případného obrázku pro jednu konkrétní vybranou otázku se stejným id jako vygenerovaným a stejným category_id jako zvolená kategorie
+                question=cur.fetchone() #přiřazení jedné otázky do proměnné question
 
-        cur.execute(f"SELECT id FROM question ORDER BY id DESC")
-        id_max_0=cur.fetchone()
-        id_max=id_max_0[0]
-        con.commit()
-        session["quiz_list"]=[]
-        session["answers_list"]=[]
-        for i in range(0, int(count)):
-            question=None
-            while (question is None) or (question in session["quiz_list"]):
-                quiz_id_random=(random.randint(1,int(id_max)))
-                cur.execute("SELECT id, prompt, image_url FROM question WHERE category_id=? AND id=?", (session["category_id"],quiz_id_random,))
-                question=cur.fetchone()
-
-            session["quiz_list"].append(question)
-            session["correct_wrong"].append(None)
-        for id in session["quiz_list"]:
-            cur.execute("SELECT * FROM answer WHERE quiz_id=? AND is_used==1", (id[0],))
-            one_answer=cur.fetchall()
-            random.shuffle(one_answer)
+            session["quiz_list"].append(question) #přidání question jako list do quiz_list
+            session["correct_wrong"].append(None) #přidání nulové hodnoty do correct_wrong při úspěšném vytvoření jedné otázky
+        for id in session["quiz_list"]: #založení for each cyklu vybírajícího id jednotlivých otázek 
+            cur.execute("SELECT * FROM answer WHERE quiz_id=? AND is_used==1", (id[0],)) #vybrání jedné odpovědi, kde quiz_id je roven zvolené kategorii a otázka je použita na základě is_used
+            one_answer=cur.fetchall() #přiřazení jedné hodnoty z dotazu do proměnné one_answer
+            random.shuffle(one_answer) #náhodné 
             while len(one_answer)<4:
-                one_answer.append(['','','',''])
-            session["answers_list"].append(one_answer)
-
-        return render_template("pages/quiz.html", active=3)
+                one_answer.append(['','','','']) #přidávání prázdných listů do one_answer, dokud její délka nebudou 4 listy, protože na každé stránce kvízu se zobrazují čtyři políčka pro odpověď 
+            session["answers_list"].append(one_answer) #přidání jedné odpovědi do dvojrozměrného listu answers_list
+        return render_template("pages/quiz.html", active=3) 
     else:
         return render_template("pages/kvizy.html", active=3)
     
@@ -196,7 +167,9 @@ def profile():
         cur = con.cursor()
         username=request.form["name"]
         email=request.form["email"]
-        password=request.form["password"]
+        password = b'' + request.form["password"].encode('utf-8')
+        
+        hashed_password=bcrypt.hashpw(password, salt)
         bio=request.form["bio"]
         email_duplicate=cur.execute("SELECT email FROM user WHERE email=?",(email,))
         email_duplicate=email_duplicate.fetchall()
@@ -215,8 +188,9 @@ def profile():
             flash("Zadané uživatelské jméno je obsazené!")
             con.close()           
             return redirect(url_for("profile"))
+        
         else:
-            cur.execute("INSERT INTO user (username, email, password,bio) VALUES (?,?,?,?)",(username,email,password,bio))
+            cur.execute("INSERT INTO user (username, email, password,bio) VALUES (?,?,?,?)",(username,email,hashed_password,bio))
             cur.execute("SELECT id FROM user where username=?",(username,))
             id=cur.fetchone()
 
@@ -256,12 +230,14 @@ def login():
         con = sqlite3.connect("database.db")
         cur = con.cursor()
         identifier=request.form["identifier"]
-        password=request.form["password"]
+        password = b'' + request.form["password"].encode('utf-8')
+        hashed_password=bcrypt.hashpw(password, salt)
+        print()
         if identifier.__contains__("@"):
-            cur.execute("SELECT * FROM user WHERE email=? AND password=?",(identifier,password))
+            cur.execute("SELECT * FROM user WHERE email=? AND password=?",(identifier,hashed_password))
             user=cur.fetchall()
         else:
-            cur.execute("SELECT * FROM user WHERE username=? AND password=?",(identifier,password))
+            cur.execute("SELECT * FROM user WHERE username=? AND password=?",(identifier,hashed_password))
             user=cur.fetchall()
         if user:
             session["id"]=user[0][0]

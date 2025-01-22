@@ -1,0 +1,19 @@
+{% extends "layout/header.html" %}
+{% block title %}Uzivatele{% endblock %}
+{% block content %}
+
+
+<table class="user-table">
+    <tr>
+        <th style="text-align: center; padding: 0;">Uživatelské jméno</th>
+        <th>E-Mail</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td><a href="{{ url_for('user', user_id=user[0]) }}" style="text-decoration: none;">{{ user[1] }}</a></td>
+        <td>{{ user[2] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
