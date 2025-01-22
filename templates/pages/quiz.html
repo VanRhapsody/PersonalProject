@@ -3,10 +3,10 @@
 {% block content %}
 
 <div class="quiz-content-left">
-    {% for i in range (quiz_list|length) %}
-        {% if correct_wrong[i] == 1 %}
+    {% for i in range (session["quiz_list"]|length) %}
+        {% if session["correct_wrong"][i] == 1 %}
         <span class="quiz-content-left-circle" style="background-color: var(--active-green);"></span><br>
-        {% elif correct_wrong[i] == 0 %}
+        {% elif session["correct_wrong"][i] == 0 %}
         <span class="quiz-content-left-circle" style="background-color: red;"></span><br>
         {% else %}
         <span class="quiz-content-left-circle" style="background-color: var(--page-background);"></span><br>
@@ -16,78 +16,78 @@
 </div>
 
 <div class="quiz-content-main">
-    <h2 style="padding: 20px;">{{ quiz_list[quiz_list_index][1] }}</h2>
+    <h2 style="padding: 20px;">{{ session["quiz_list"][session["quiz_list_index"]][1] }}</h2>
     <br>
     <div style="text-align: center;">
-        <img src="/static/images/{{ session['quiz_list'][session['quiz_list_index']][2] }}" alt="">
+        <img src='/static/images/{{ session["quiz_list"][session["quiz_list_index"]][2] }}' alt="">
     </div>
     <hr>
     <form action="{{ url_for('next_quiz') }}" method="post" class="quiz-content-form">
         <label>
-        {% if (answer == session['answers_list'][session['quiz_list_index']][0][2] and session['correct_wrong'][session['quiz_list_index']] == 1) or (session['answers_list'][quiz_list_index][0][3] == 1 and answer != answers_list[quiz_list_index][0][2] and answer) %}
+        {% if (answer == session["answers_list"][session["quiz_list_index"]][0][2] and session["correct_wrong"][session["quiz_list_index"]] == 1) or (session["answers_list"][session["quiz_list_index"]][0][3] == 1 and answer != session["answers_list"][session["quiz_list_index"]][0][2] and answer) %}
         <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
-        {% elif answer == answers_list[quiz_list_index][0][2] and correct_wrong[quiz_list_index]==0 %}
+        {% elif answer == session["answers_list"][session["quiz_list_index"]][0][2] and session["correct_wrong"][session["quiz_list_index"]]==0 %}
         <span class="quiz-content-answer" style="background-color:red !important">
         {% else %}
         <span class="quiz-content-answer">
         {% endif %}
-            {% if answers_list[quiz_list_index][0][2]==None %}
-            <input type="radio" name="answer" value="{{ answers_list[quiz_list_index][0][2] }}" disabled>
+            {% if session["answers_list"][session["quiz_list_index"]][0][2]==None %}
+            <input type="radio" name="answer" value='{{ session["answers_list"][session["quiz_list_index"]][0][2] }}' disabled>
             {% else %}
-            <input type="radio" name="answer" value="{{ answers_list[quiz_list_index][0][2] }}">
+            <input type="radio" name="answer" value='{{ session["answers_list"][session["quiz_list_index"]][0][2] }}'>
             {% endif %}
-            <label>{{ answers_list[quiz_list_index][0][2] }}</label>
+            <label>{{ session["answers_list"][session["quiz_list_index"]][0][2] }}</label>
         </span>
         </label>
         <br>
         <label>
-        {% if (answer == answers_list[quiz_list_index][1][2] and correct_wrong[quiz_list_index]==1) or (answers_list[quiz_list_index][1][3] == 1 and answer != answers_list[quiz_list_index][1][2] and answer)  %}
+        {% if (answer == session["answers_list"][session["quiz_list_index"]][1][2] and session["correct_wrong"][session["quiz_list_index"]]==1) or (session["answers_list"][session["quiz_list_index"]][1][3] == 1 and answer != session["answers_list"][session["quiz_list_index"]][1][2] and answer)  %}
         <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
-        {% elif answer == answers_list[quiz_list_index][1][2] and correct_wrong[quiz_list_index]==0 %}
+        {% elif answer == session["answers_list"][session["quiz_list_index"]][1][2] and session["correct_wrong"][session["quiz_list_index"]]==0 %}
         <span class="quiz-content-answer" style="background-color:red !important">
         {% else %}
         <span class="quiz-content-answer">
         {% endif %}
-            {% if answers_list[quiz_list_index][1][2]==None %}
-            <input type="radio" name="answer" value="{{ answers_list[quiz_list_index][1][2] }}" disabled>
+            {% if session["answers_list"][session["quiz_list_index"]][1][2]==None %}
+            <input type="radio" name="answer" value='{{ session["answers_list"][session["quiz_list_index"]][1][2] }}' disabled>
             {% else %}
-            <input type="radio" name="answer" value="{{ answers_list[quiz_list_index][1][2] }}">
+            <input type="radio" name="answer" value='{{ session["answers_list"][session["quiz_list_index"]][1][2] }}'>
             {% endif %}
-            <label>{{ answers_list[quiz_list_index][1][2] }}</label>
+            <label>{{ session["answers_list"][session["quiz_list_index"]][1][2] }}</label>
         </span>
         </label>
         <br>
         <label>
-        {% if (answer == answers_list[quiz_list_index][2][2] and correct_wrong[quiz_list_index]==1) or (answers_list[quiz_list_index][0][3] == 1 and answer != answers_list[quiz_list_index][0][2] and answer)  %}
+        {% if (answer == session["answers_list"][session["quiz_list_index"]][2][2] and session["correct_wrong"][session["quiz_list_index"]]==1) or (session["answers_list"][session["quiz_list_index"]][2][3] == 1 and answer != session["answers_list"][session["quiz_list_index"]][2][2] and answer)  %}
         <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
-        {% elif answer == answers_list[quiz_list_index][2][2] and correct_wrong[quiz_list_index]==0 %}
+        {% elif answer == session["answers_list"][session["quiz_list_index"]][2][2] and session["correct_wrong"][session["quiz_list_index"]]==0 %}
         <span class="quiz-content-answer" style="background-color: red !important">
         {% else %}
         <span class="quiz-content-answer">
         {% endif %}
-            {% if answers_list[quiz_list_index][2][2]==None %}
-            <input type="radio" name="answer" value="{{ answers_list[quiz_list_index][2][2] }}" disabled>
+            {% if session["answers_list"][session["quiz_list_index"]][2][2]==None %}
+            <input type="radio" name="answer" value='{{ session["answers_list"][session["quiz_list_index"]][2][2] }}' disabled>
             {% else %}
-            <input type="radio" name="answer" value="{{ answers_list[quiz_list_index][2][2] }}">
+            <input type="radio" name="answer" value='{{ session["answers_list"][session["quiz_list_index"]][2][2] }}'>
             {% endif %}
-            <label>{{ answers_list[quiz_list_index][2][2] }}</label>
+            <label>{{ session["answers_list"][session["quiz_list_index"]][2][2] }}</label>
         </span>
         </label>
         <br>
         <label>
-        {% if (answer == answers_list[quiz_list_index][3][2] and correct_wrong[quiz_list_index]==1) or (answers_list[quiz_list_index][0][3] == 1 and answer != answers_list[quiz_list_index][0][2] and answer)  %}
+        {% if (answer == session["answers_list"][session["quiz_list_index"]][3][2] and session["correct_wrong"][session["quiz_list_index"]]==1) or (session["answers_list"][session["quiz_list_index"]][3][3] == 1 and answer != session["answers_list"][session["quiz_list_index"]][3][2] and answer)  %}
         <span class="quiz-content-answer" style="background-color:var(--active-green) !important">
-        {% elif answer == answers_list[quiz_list_index][3][2] and correct_wrong[quiz_list_index]==0 %}
+        {% elif answer == session["answers_list"][session["quiz_list_index"]][3][2] and session["correct_wrong"][session["quiz_list_index"]]==0 %}
         <span class="quiz-content-answer" style="background-color:red !important">
         {% else %}
         <span class="quiz-content-answer">
         {% endif %}
-            {% if answers_list[quiz_list_index][3][2]==None %}
-            <input type="radio" name="answer" value="{{ answers_list[quiz_list_index][3][2] }}" disabled>
+            {% if session["answers_list"][session["quiz_list_index"]][3][2]==None %}
+            <input type="radio" name="answer" value='{{ session["answers_list"][session["quiz_list_index"]][3][2] }}' disabled>
             {% else %}
-            <input type="radio" name="answer" value="{{ answers_list[quiz_list_index][3][2] }}">
+            <input type="radio" name="answer" value='{{ session["answers_list"][session["quiz_list_index"]][3][2] }}'>
             {% endif %}
-            <label>{{ answers_list[quiz_list_index][3][2] }}</label>
+            <label>{{ session["answers_list"][session["quiz_list_index"]][3][2] }}</label>
         </span>
         </label>
         <br>

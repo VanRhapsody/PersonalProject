@@ -46,8 +46,7 @@ def tasks(categories):
     cur.execute("SELECT DISTINCT(category) FROM task")
     con.commit()
     categories=cur.fetchall()
-    print(categories)
-    print(tasks)
+
     return render_template("pages/ulohy.html", active=2, tasks=tasks, categories=categories)
 
 @app.route("/ulohy/add", methods=["POST","GET"])
@@ -71,11 +70,6 @@ def add_task():
 @app.route("/kvizy", methods=["POST","GET"])
 def kvizy():
     if request.method=="POST":
-        global quiz_list
-        global quiz_list_index
-        global correct_wrong
-        global category_id
-        global answers_list
         if session.get("username")==None:
             return render_template("messages/error.html", message="Nelze spustit kvíz, pokud nejste přihlášeni!")
         session["quiz_list_index"]=0
@@ -87,6 +81,7 @@ def kvizy():
         cur.execute(f"SELECT id FROM category WHERE name=?", (category,))
         category_id_0=cur.fetchone()
         session["category_id"]=category_id_0[0]
+
         cur.execute(f"SELECT id FROM question ORDER BY id DESC")
         id_max_0=cur.fetchone()
         id_max=id_max_0[0]
@@ -95,10 +90,11 @@ def kvizy():
         session["answers_list"]=[]
         for i in range(0, int(count)):
             question=None
-            while (question is None) or (question in quiz_list):
+            while (question is None) or (question in session["quiz_list"]):
                 quiz_id_random=(random.randint(1,int(id_max)))
                 cur.execute("SELECT id, prompt, image_url FROM question WHERE category_id=? AND id=?", (session["category_id"],quiz_id_random,))
                 question=cur.fetchone()
+
             session["quiz_list"].append(question)
             session["correct_wrong"].append(None)
         for id in session["quiz_list"]:
@@ -108,8 +104,7 @@ def kvizy():
             while len(one_answer)<4:
                 one_answer.append(['','','',''])
             session["answers_list"].append(one_answer)
-        for answer in answers_list:
-            print(f"Odpověď: {answer}")
+
         return render_template("pages/quiz.html", active=3)
     else:
         return render_template("pages/kvizy.html", active=3)
@@ -117,43 +112,33 @@ def kvizy():
 @app.route("/kvizy/next", methods=["POST","GET"])
 def next_quiz():
     if request.method=="POST":
-        global quiz_list
-        global correct_wrong
-        global quiz_id_max
-        global answers_list
         con = sqlite3.connect("database.db")
         cur = con.cursor()
         answer=request.form["answer"]
-        print(answer)
+
         correct_answer=None
-        for one_answer in answers_list[quiz_list_index]:
+        for one_answer in session["answers_list"][session["quiz_list_index"]]:
             if one_answer[3]==1:
                 correct_answer=one_answer
+
         if correct_answer[2]==answer:
-            correct_wrong[quiz_list_index]=1
+            session["correct_wrong"][session["quiz_list_index"]]=1
         else:
-            correct_wrong[quiz_list_index]=0
-        print(correct_answer)
-        print(correct_wrong)
-        return render_template("pages/quiz.html", answered=True, active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong, answer=answer, correct_answer=correct_answer, answers_list=answers_list)
+            session["correct_wrong"][session["quiz_list_index"]]=0
+        session.modified=True #bez použití této funkce se z nějakého důvodu correct_wrong vždy vymazalo na samé None
+        return render_template("pages/quiz.html", answered=True, active=3, answer=answer, correct_answer=correct_answer)
     
 
 @app.route("/kvizy/verify")
 def send_answer():
-        global quiz_list
-        global quiz_list_index
-        global correct_wrong
-        global quiz_id_max
-        global category_id
-        print(quiz_list_index)
-        for one_answer in answers_list[quiz_list_index]:
+        for one_answer in session["answers_list"][session["quiz_list_index"]]:
             if one_answer[3]==1:
                 correct_answer=one_answer
-        quiz_list_index+=1
-        if int(quiz_list_index)>=int(len(quiz_list)):
+        session["quiz_list_index"]+=1
+        if int(session["quiz_list_index"])>=int(len(session["quiz_list"])):
             correct=0
             wrong=0
-            for element in correct_wrong:
+            for element in session["correct_wrong"]:
                 if element==1:
                     correct+=1
                 else:
@@ -162,12 +147,11 @@ def send_answer():
             cur = con.cursor()
             cur.execute("UPDATE user SET quiz_correct = quiz_correct + ?", (correct,))
             cur.execute("UPDATE user SET quiz_absolved = quiz_absolved + 1")
-            print(session["id"], category_id)
-            cur.execute("UPDATE language_popularity SET value = value + 1 WHERE user_id=? AND category_id=?", (session["id"], category_id))
+            cur.execute("UPDATE language_popularity SET value = value + 1 WHERE user_id=? AND category_id=?", (session["id"], session["category_id"],))
             con.commit()
             con.close()
             return render_template("pages/kvizy.html", correct=correct, wrong=wrong)
-        return render_template("pages/quiz.html", active=3, quiz_list=quiz_list, quiz_list_index=quiz_list_index, correct_wrong=correct_wrong, answers_list=answers_list)
+        return render_template("pages/quiz.html", active=3)
 
 
 @app.route("/kvizy/add", methods=["POST","GET"])
@@ -193,8 +177,7 @@ def add_quiz():
             if len(input) < max:
                 for i in range(0, (max - len(input))):
                     input.append("")
-        for input in list_of_inputs:
-            print(input)                           
+                          
         con = sqlite3.connect("database.db")
         cur = con.cursor()
         for i in range(0,len(category)):
@@ -207,7 +190,7 @@ def add_quiz():
 
 @app.route("/profile", methods=["POST","GET"])
 def profile():
-    print(session.get("username"))
+
     if request.method=="POST":
         con = sqlite3.connect("database.db")
         cur = con.cursor()
@@ -236,7 +219,7 @@ def profile():
             cur.execute("INSERT INTO user (username, email, password,bio) VALUES (?,?,?,?)",(username,email,password,bio))
             cur.execute("SELECT id FROM user where username=?",(username,))
             id=cur.fetchone()
-            print(id[0])
+
             session["id"]=id[0]
             cur.execute("SELECT id FROM category ORDER BY id DESC")
             category_id_max=cur.fetchone()[0]
@@ -245,7 +228,7 @@ def profile():
             session["bio"]=bio
             session["username"]=username
             session["email"]=email
-            print(session["id"])
+
             con.commit()
             con.close()
             return redirect(url_for("index"))
@@ -261,7 +244,6 @@ def profile():
         language_popularity={}
         for i in range (0, len(categories)):
             language_popularity[categories[i]]=language_popularity_temporary[i][3]
-        print(language_popularity)
         language_popularity=sorted(language_popularity.items(), key=lambda x: x[1], reverse=True)
         return render_template("pages/profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"], quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity)
     else:
@@ -364,3 +346,6 @@ def logout():
     session.pop("bio",None)
     return redirect(url_for('index'))
 
+
+if __name__=="__main__":
+    app.run()
