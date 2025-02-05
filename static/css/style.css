@@ -2,19 +2,23 @@
     font-family: "Ubuntu Mono", monospace;
     color: white;
 }
+/* přiřazení fontu ubuntu mono a typu monospace na celý dokument, a to v bílé barvě */
+
 
 :root {
-    --background-green:#285238;
+    --background-green:#285238; 
     --hover-green:#007C41;
     --active-green:#01D758;
     --page-background: #34403A;
 }
+/* deklarace proměnných pro jednotlivé barvy v kořenovém souboru celého projektu */
 
 body {
     margin: 0;
     padding: 0;
     background-color: #34403A;
 }
+/* nastavení nulového marginu a paddingu na body z formálních důvodů a barvy pozadí */
 
 header ul {
   list-style-type: none;
@@ -26,33 +30,47 @@ header ul {
   justify-content: space-evenly; 
   align-items: center;
 }
+/*list-style-type nastaveno na none, protože se nemají u listu zobrazovat jakékoliv tečky, římská čísla apod.
+margin a padding 0, aby zde nebylo zbytkové místo, které by kazilo dojem zarovnání na střed
+overflow hidden proto, aby se do navbaru nedával scrollbar v případě, že by jeho content přesáhl požadovanou velikost
+nastavení background-color na proměnnou background green
+zobrazení jako flex pro možnost elegantního zarovnání prvků
+justify-content space-evenly, aby veškeré elementy zabíraly šířku navbaru rovnoměrně
+align-items center pro vertikální zarovnání všech prvků
+*/
 
 
 header li a, button {
   display: block;
   text-align: center;
-  padding: 30px 30px;
+  padding: 30px;
   margin: 0;
   text-decoration: none;
   font-size:30px;
   transition: 0.3s;
   background-color: none;
-
 }
-
+/*display block, aby jednotlivé odkazy v navbaru nebyly mezi sebou provázané
+padding 30, aby odkazy nebyly namáčknuté na okraji navbaru
+margin 0, aby nebyla porušena specifikace space evenly
+text-decoration none, aby odkazy nebyly podtrženy
+transition 0,3s kvůli hover efektu
+*/
 
 
 header li a:hover:not(.active), button:hover:not(.active) {
   background-color: var(--hover-green);
   transition: 0.3s;
-
 }
+/*pseudoclass, pokud se na header li a nebo button namíří myší a tyto prvky nejsou aktivní, tak se barva změní na proměnnou hover green
+transition 0,3s kvůli efektu*/
+
 
 header .active {
   background-color: var(--active-green);
   color:var(--background-green);
-
 }
+/*třída active v rámci headeru má nastavené pozadí na proměnnou active green a barvu textu na proměnnou background green*/
 
 h1 {
     font-size: 75px;
@@ -61,11 +79,14 @@ h1 {
     margin: auto;
     position: relative;
 }
+/*display inline-block, aby se text pořád nezalamoval, ale zároveň, aby bylo možné s ním blíže manipulovat
+margin auto, aby se text zarovnal horizontálně doprostřed
+position relative nastavuje, že se text pozicuje vůči pozici, kde by normálně byl, opak by byl absolute, kdy by se element pozicoval vůči bodu 0,0 na stránce
+*/
 
 h2 {
   font-size: 60px;
   display: inline-block;
-
 }
 
 h3 {
@@ -73,7 +94,6 @@ h3 {
   display: inline-block;
   margin: 20px;
   padding: 5px;
-  
 }
 
 .align-center {
@@ -81,18 +101,21 @@ h3 {
   margin-left: auto;
   margin-right: auto;
 }
+/*mnou vytvořená třída align-center, která specifikuje horizontální zarovnání na střed*/
 
 .align-left {
   text-align: center;
   left: 0;
   float: left;
 }
+/*mnou vytvořená třída align-left, která specifikuje horziontální zarovnání doleva pomocí float*/
 
 .align-right {
   text-align: center;
   right: 0;
   float: right;
 }
+/*mnou vytvořená třída align-right, která specifikuje horizontální zarovnání doprava pomocí float*/
 
 .main-menu-img {
   margin: 20px;
@@ -105,7 +128,6 @@ h3 {
   margin-top: 50px;
   margin-bottom: 400px;
   padding: 20px;
-  
 }
 
 footer {
@@ -119,55 +141,12 @@ footer {
   padding-right: 0;
 }
 
-.vertical-navbar {
-  position: sticky;
-  margin:20px;
-  top: 20px;
-  width: 10%;
-  background-color: var(--background-green);
-}
-
-.vertical-navbar ul {
-  list-style-type: none;
-  font-family: "Ubuntu Mono", monospace;
-  padding: 0;
-  
-}
-
-.vertical-navbar li {
-  border-bottom: solid var(--hover-green);
-}
-
-
-.vertical-navbar li a {
-  font-family: "Ubuntu Mono", monospace;
-  font-size: 30px;
-  padding: 20px;
-  display: block;
-  text-align: center;
-  text-decoration: none;
-}
-
-.vertical-navbar li:hover {
-  background-color: var(--active-green);
-}
-
-.vertical-navbar li:last-child {
-  border-bottom: none;
-  padding-bottom: 10px;
-}
-
-.vertical-navbar li:first-child {
-  padding-top: 10px;
-}
-
-.task-menu {
-  width: 85%; 
-  float: right;
-  right: 20px;
-  position: relative;
-  background-color: var(--background-green);
-}
+/*display flex 
+flex-directon row protože ty prvky mají být v řádku, opak by byl column
+justify-content center protože ty prvky mají být horizontálně na středu
+align-items center protože ty prvky mají být vertikálně na středu
+nulový padding vpravo, protože tu stránku roztahoval až moc doprava, což ničilo zarovnání na střed
+*/
 
 .user-table {
   width: 80%;
@@ -178,73 +157,45 @@ footer {
   margin-top: 20px;
 }
 
-
+/*border-collapse collapse protože jinak by se u každé buňky udělalo dvojité ohraničení, takhle je jen jedno
+margin auto, aby byla tabulka zarovnána na střed
+*/
 
 .user-table th {
   font-size: 50px;
   padding: 10px;
   text-align: center;
   border: solid black 1px;
-  border-collapse: collapse;
 }
+/*text-align center protože text v table head
+border solid protože má být jednoduchou čárou, 1px, aby byl tenčí*/
 
 .user-table td {
   font-size: 40px;
   border: solid var(--background-green) 1px;
-  border-collapse: collapse;
 }
+/*border solid, aby byla použita jednoduchá čára, barva nastavena na proměnnou background-green*/
 
 .user-table tr:first-child {
   background-color: var(--background-green);
 }
+/*pseduoclass first-child znamená, že se aplikuje na úplně první prvek v zanořeném tagu, v tomto případě tr
+nastavení barvy u first-child na proměnnou background-green*/
 
 .user-table tr:first-child td {
   background-color: var(--background-green);
-
 }
-
-
+/*pseudoclass first-child se aplikuje i na td v rámci tohoto first-child a u nich se nastavuje barva na background-green*/
 
 .user-table tr:hover {
   background-color: var(--active-green);
 }
+/*pseudoclass hover aplikována na tr, tedy pokud se namíří na table row, celá se zabarví do proměnné active-green*/
 
-.filters {
-  font-size: 30px;
-  width: 100%;
+.user-table tr:first-child:hover {
   background-color: var(--background-green);
-  border-collapse: collapse;
-  text-align: center;
 }
-
-.filters p {
-  padding: 10px;
-  border-left: solid var(--hover-green);
-  display: inline-block;
-  font-size: 40px;
-}
-
-.filters p:first-child {
-  border-left: none;
-}
-
-.filters-form {
-  padding: 10px; 
-  color: white;
-  font-size: 30px;
-}
-
-
-
-.filters-table th {
-  border: solid var(--hover-green);
-  border-collapse: collapse;
-}
-
-.filters-table td {
-  border: solid var(--hover-green);
-  border-collapse: collapse;
-}
+/*pseudoclass first-child a hover zde dělá to, že v případě najetí myší na první řádek v tabulce se nezabarví do proměnné active green*/
 
 .quiz-choice {
   top: 10px;
@@ -254,8 +205,11 @@ footer {
   width: 95%;
   text-align: center;
   background-color: var(--background-green);
-  
 }
+/*odsazení quiz-choice shora o 10 px, aby nebylo namáčklé na navbaru
+position relative, protože je lepší ho v této situaci pozicovat vůči své výchozí pozici
+margin auto, aby quiz-choice byl zarovnán doprostřed
+text-align center, aby veškerý text byl uprostřed*/
 
 .quiz-choice input, select, label, option {
   margin-top: 60px;
@@ -263,6 +217,7 @@ footer {
   font-size: 30px;
   color: black;
 }
+/*specifikace u prvků input, select, label a option v rámci quiz-choice pro margin-top a bottom, a také font-size, aby byly více zvýrazněné a viditlené*/
 
 .quiz-content-left {
   background-color: var(--background-green);
@@ -271,8 +226,11 @@ footer {
   float: left;
   min-height: 200px;
   padding-top: 20px;
-  
 }
+/*width 10% aby měl prvek 10 % velikosti prvku, který ho obaluje
+float left, protože má prvek být zarovnaný nalevo
+min-height 200, protože zde může být minimálně 5 kruhů a s nimi to vypadá moc krátké
+padding-top 20px, protože jinak byl horní kruh až moc namáčklý nahoře*/
 
 .quiz-content-left-circle {
   display: block;
@@ -280,8 +238,13 @@ footer {
   height: 100px;
   border-radius: 50%;
   margin: auto;
-  filter: drop-shadow(0 0 0.75rem black);
+  filter: drop-shadow(0 0 1px black);
 }
+/*display block, aby bylo možné manipulovat s width a height
+nastavení width a height na 100px, aby ten kruh nebyl elipsa
+nastavení border-radius 50%, aby element s touto třídou byl kruh
+margin auto, aby byl prvek zarovnaný na střed
+drop-shadow nastaven tak, aby nebyl posunutý o x a y, ale měl velikost 1px*/
 
 .quiz-content-main {
   width: 85%;
@@ -290,24 +253,29 @@ footer {
   background-color: var(--background-green);
   color: white;
 }
+/*width 85%, protože má zabírat většinu stránky, 
+float right protože ten hlavní content je primárně vpravo až na středu
+background color nastaven na proměnnou background green*/
 
 .quiz-content-form {
   width: 100%;
   text-align: center;
   font-size: 30px;
 }
+/*quiz-content-form je prvek uvnitř quiz-content-right, ve kterém se nachází formulář pro vyplnění otázek kvízu*/
 
 .quiz-content-form label,input {
   color: white;
   margin: 20px;
   padding: 5px;
 }
-
-
+/*nastavení barvy, marginu a paddingu u prvků, které jsou v div quiz-content-form*/
 
 .quiz-content-form input[type=submit] {
   color: black;
 }
+/*nastavení černé barvy textu u inputu v rámci quiz-content-form s typem submit, protože se to z
+nějakého důvodu neaplikovalo*/
 
 .quiz-content-answer {
   padding: 5px;
@@ -317,10 +285,9 @@ footer {
   display: inline-block;
   text-align: left;
 }
-
-.quiz-content-form input:focus ~ .quiz-content-answer {
-  background-color: var(--active-green) !important;
-}
+/*nastavení padding na 5px, aby nebyl tak namáčklý
+inline-block, aby se mohlo manipulovat s width, ale zároveň se text furt nezalamoval
+text-align left, protože má být text zarovnaný normálně doleva, a ne být na středu*/
 
 .profile-left-section {
   width: 50%;
@@ -328,8 +295,10 @@ footer {
   text-align: center;
   margin: 10px;
   background-color: var(--background-green);
-
 }
+/*width 50%, protože obě dvě části profilu mají zabírat přibližně polovinu
+float left, protože se jedná o levou část stránky s profilem
+text-align center, protože veškerý text zde má být zarovnán na středu*/
 
 .profile-left-section h2 {
  margin: 10px;
@@ -378,15 +347,12 @@ footer {
 .profile-links tr, td {
   text-align: center;
   padding: 10px;
-
-
 }
 
 .profile-links td {
   min-width: 200px;
   border: solid var(--page-background);
-  transition: 0.3s;
-  
+  transition: 0.3s; 
 }
 
 .profile-links td:hover {
