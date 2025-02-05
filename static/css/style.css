@@ -304,6 +304,7 @@ text-align center, protože veškerý text zde má být zarovnán na středu*/
  margin: 10px;
  max-width: 90%;
 }
+/*max-width 90%, protože při jeho nenastavení tento text přetékal mimo div profile-left-section*/
 
 .profile-left-section p {
   font-size: 20px;
@@ -314,8 +315,10 @@ text-align center, protože veškerý text zde má být zarovnán na středu*/
   float: right;
   margin: 10px;
   background-color: var(--background-green);
-  min-height: 500px;
 }
+/*width: 47, protože jednak tento obsah nevyžaduje takovou šířku a zároveň kdyby měl také 50%, tak by se
+stránka samovolně rozšířila
+float right protože se jedná o pravý obsah stránky s profilem*/
 
 .profile-right-section h1,h2 {
   width: 100%;
