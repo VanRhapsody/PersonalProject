@@ -29,6 +29,13 @@ form {
   height: 40%;
   padding: 20px;
 }
+/*background color white pro nastavení bílé barvy na pozadí
+border radius 30px, aby byly rohy zaoblené
+filter drop shadow, dvakrát použití 5px posouvá stín o 5px doprava a dolů, 15px určuje rozsah stínů a jak moc se rozplývá
+text align center pro zarovnání textu na střed
+font size 20px, aby byl nějak viditelný
+nastavení relativní width a height, aby stránka lépe reagovala na změnu velikosti
+padding 20px, aby měl form trochu odstup od sousedních prvků*/
 
 form input {
   margin: 10px;
@@ -36,6 +43,10 @@ form input {
   font-size: 20px;
   vertical-align: middle;
 }
+/*margin 10px, aby byl rozestup mezi prvky
+position relative pro možnost použití vertical align
+font-size 20px 
+vertical align middle, aby byly veškeré inputy zarovnány vertikálně uprostřed jim odpovídajícího tagu a ne nahoře*/
 
 form textarea {
   margin: 10px;
@@ -43,7 +54,7 @@ form textarea {
   font-size: 20px;
   vertical-align: middle;
 }
-
+/*textarea je část pro napsání více textu použitá pro bio, má nastavené stejné parametry jako běžný input*/
 
 form input[type=submit] {
   padding: 10px;
@@ -51,11 +62,16 @@ form input[type=submit] {
   border: 1px solid rgba(0, 0, 0, 0.4);
   transition: 0.5s;
 }
+/*nastavení jiného stylu pro input, jehož type je submit
+nastavení borderu na jednoduchý černý s rgba nastaveným na 40% opacity
+nastavení transition na 0.5s*/
 
 form input[type=submit]:hover {
   border: 1px solid black;
   transition: 0.5s;
 }
+/*nastavení stylu pro input type submit a konkrétně pseudoclass hover
+*/
 
 form label {
   display: inline-block;
@@ -64,14 +80,19 @@ form label {
   margin-right: 10px;
   vertical-align: middle;
 }
+/*nastavení displaye na inline-block, aby se zobrazil jako běžný text s možností manipulace s width a height
+nastavení width fixně, protože jinak by se text špatně zarovnával na střed
+nastavení vertical align na middle, aby se zobrazil na správné úrovni*/
 
 form p,a {
   font-size: 15px;
 }
+/*nastaevní font size na 15px, aby byl text menší než ostatní prvky v formu*/   
 
 #disclaimer {
   opacity: 50%;
 }
+/*nastavení opacity disclaimer na 50%, protože se to tak praktikuje*/
 
 .ubuntu-mono-regular {
   font-family: "Ubuntu Mono", monospace;
