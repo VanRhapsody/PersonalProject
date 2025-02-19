@@ -27,7 +27,11 @@
     <tr>
         <td colspan="2"><a href="{{ url_for('add_quiz') }}">Přidat kvíz</a></td>
     </tr>
-    
+    {% if username==session["username"] and is_admin==1 %}
+    <tr>
+        <td colspan="2"><a href="{{ url_for('category_choose') }}">Odstranit kvíz</a></td>
+    </tr>
+    {% endif %}
     </table>
     {% endif %}
 </div>

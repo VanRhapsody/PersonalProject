@@ -1,0 +1,17 @@
+{% extends "layout/header.html" %}
+{% block title %}Uzivatele{% endblock %}
+{% block content %}
+
+
+<table class="user-table" style="border: none; position: relative !important; width: 250px !important;">
+    <tr>
+        <th style="text-align: center; padding: 0;">Název kategorie</th>
+    </tr>
+    {% for category in categories %}
+    <tr>
+        <td><a href="{{ url_for('quiz_choose', category_id=category[0]) }}" style="text-decoration: none;">{{ category[1] }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

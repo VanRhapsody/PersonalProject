@@ -37,7 +37,7 @@ def user(user_id):
     language_popularity=sorted(language_popularity.items(), key=lambda x: x[1], reverse=True) # language_popularity.items přetvoří dictionary na list, ve kterém jsou další listy, které vždy obsahující dvojici klíč a k ní hodnota
     # tento list se následně seřadí s klíčem pro řazení jako druhou (první) hodnotou v listech, což je právě hodnota popularity jazyku
     # nakonec je reverse nastaveno na True pro sestpné řazení
-    return render_template("pages/profil.html", active=2, username=username, email=email, bio=bio, quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity)
+    return render_template("pages/profil.html", active=2, username=username, email=email, bio=bio, quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity, is_admin=0)
 
 @app.route("/kvizy", methods=["POST","GET"])
 def kvizy():
@@ -63,15 +63,12 @@ def kvizy():
                 quiz_id_random=(random.randint(1,int(id_max))) # generování náhodného kvízu pro volbu jedné otázky v rozmezí od 1 do maxima
                 cur.execute("SELECT id, prompt, image_url FROM question WHERE category_id=? AND id=?", (session["category_id"],quiz_id_random,)) # vybrání id, slovního zadání a případného obrázku pro jednu konkrétní vybranou otázku se stejným id jako vygenerovaným a stejným category_id jako zvolená kategorie
                 question=cur.fetchone() # přiřazení jedné otázky do proměnné question
-
             session["quiz_list"].append(question) # přidání question jako list do quiz_list
             session["correct_wrong"].append(None) # přidání nulové hodnoty do correct_wrong při úspěšném vytvoření jedné otázky
         for id in session["quiz_list"]: # založení for each cyklu vybírajícího id jednotlivých otázek 
             cur.execute("SELECT * FROM answer WHERE quiz_id=? AND is_used==1", (id[0],)) # vybrání jedné odpovědi, kde quiz_id je roven zvolené kategorii a otázka je použita na základě is_used
             one_answer=cur.fetchall() # přiřazení jedné hodnoty z dotazu do proměnné one_answer
-            random.shuffle(one_answer) # náhodné zamixování otázek
-            while len(one_answer)<4:
-                one_answer.append(['','','','']) # přidávání prázdných listů do one_answer, dokud její délka nebudou 4 listy, protože na každé stránce kvízu se zobrazují čtyři políčka pro odpověď 
+            random.shuffle(one_answer) # náhodné zamixování otázek 
             session["answers_list"].append(one_answer) # přidání jedné odpovědi do dvojrozměrného listu answers_list
         con.close() # uzavření connection z bezpečnostních důvodů 
         return render_template("pages/quiz.html", active=3) 
@@ -108,9 +105,8 @@ def send_answer():
                 else:
                     wrong+=1
             cur, con=db_connect()
-            query1=("UPDATE user SET quiz_correct = quiz_correct + ?", (correct,)) # zvýšení počtu správných odpovědí u uživatele o hodnotu correct
-            query2=("UPDATE user SET quiz_absolved = quiz_absolved + 1") # inkrementace počtu absolvovaných kvízů
-            cur.execute(query1, query2)
+            cur.execute("UPDATE user SET quiz_correct = quiz_correct + ?", (correct,)) # zvýšení počtu správných odpovědí u uživatele o hodnotu correct
+            cur.execute("UPDATE user SET quiz_absolved = quiz_absolved + 1") # inkrementace počtu absolvovaných kvízů
             cur.execute("UPDATE language_popularity SET value = value + 1 WHERE user_id=? AND category_id=?", (session["id"], session["category_id"],)) # zvýšení popularity konkrétní kategorie u uživatele na základě category_id
             con.commit() # commitnutí výsledku dotazu do databáze 
             con.close() # uzavření connection z bezpečnostních důvodů
@@ -148,6 +144,7 @@ def add_quiz():
         cur.execute("SELECT id FROM question ORDER BY id DESC") # vybrání quiz_id v dotazu a jeho řazení sestupně, pro získání maximálního id
         quiz_id=cur.fetchall()
         quiz_id=quiz_id[0][0]+1 # nastavení quiz id na nultý index nultého listu, z nějakého důvodu jsou výsledky vraceny takhle
+        #přičtení 1, protože vložená otázka kvízu logicky nemůže mít stejné ID jako ta poslední dosud vložená
         for i in range(0,max): # vytvoření for cyklu pro počet vložených otázek do kvízů daný počtem max
             cur.execute("INSERT INTO question(prompt, category_id) VALUES (?,?)",(list_of_inputs[0][i], category_id)) # vložení konkrétní otázky v rámci kvízu do tabulky question na základě quiz_id
             is_correct=1 # nastavení is correct na 1, protože jako první se vkládá správná odpověď
@@ -160,6 +157,38 @@ def add_quiz():
         return redirect(url_for('kvizy')) #  přesměrování na stránku pro kvízy
     else:
         return render_template("funcionality_forms/quizadd.html") #  v případě, že metodou není post, zůstaň na stránce s formulářem pro přidání kvízu
+
+#kvizy delete je route, která se aktivuje při volby odstranit kvíz u admina a poskytne stránku, kde si vybere kategorii
+#v rámci které chce kvíz odstranit
+@app.route("/kvizy/delete")
+def category_choose():
+    cur,con=db_connect()
+    cur.execute("SELECT * FROM category") #vybrání všeho z tabulky category pro možnost zobrazení jednotlivých kategorií v tabulce
+    categories=cur.fetchall() #spojení všech výsledků dotazu do proměnné categories
+    return render_template("pages/categorychoose.html", categories=categories) #přesměrování na stránku s výběrem kategorií s předáním proměnné categories
+
+@app.route("/kvizy/delete/<category_id>")
+def quiz_choose(category_id):
+    cur, con=db_connect()
+    cur.execute("SELECT name FROM category WHERE id=?", (category_id, )) #vybrání jména z kategorie pro záznamy, kde se id rovná hledanému id kategorie
+    category=cur.fetchone() #spojení výsledku dotazu do proměnné category, fetchone, protože logicky se pro dané id vrátí jen jeden záznam
+    category=category[0] #nastavení kategorie na nultý list, protože z nějakého důvodu vrací tuple
+    cur.execute("SELECT id, prompt, is_used FROM question WHERE category_id=?", (category_id, )) #vybrání id, otázky a is_used z question
+    #id, aby bylo možné při kliknutí na otázku ji jednoznačně identifiovat v db
+    #otázku pro zobrazení otázky v kvízu
+    #a is_used, protože se nesmí zobrazovat už "odstraněné otázky"
+    questions=cur.fetchall() #spojení výsledků dotazu do proměnné questions
+    return render_template("pages/deletequiz.html", questions=questions, category=category) #předání stránky pro odstranění konkrétního kvízu, předání parametrů questions a category
+
+#důvod, proč funkce pro zobrazení kvízů a odstranění kvízů jsou odlišené je, že ta předchozí funkce pouze vykresluje seznam kvízů k odstranění
+#zatímco tato funkce slouží jako funkcionalita pro odstranění kvízu a vykoná se po kliknutí na odkaz "Smazat"
+@app.route("/kvizy/delete/action/<quiz_id>")
+def quiz_delete(quiz_id):
+    cur,con=db_connect()
+    cur.execute("UPDATE question SET is_used=0 WHERE id=?", (quiz_id, )) #nastavení is_used u vybrané otázky na 0, aby nemohla být použita
+    cur.execute("UPDATE answer SET is_used=0 WHERE quiz_id=?", (quiz_id, )) #nastavení is_used u odpovědí k vybrané otázce na 0, aby nemohly být použity
+    con.commit() #commitnutí výsledků do databáze, aby se projevily
+    return redirect(url_for("index")) #přesměrování na funkci index pro vykreslení domovské stránky
 
 @app.route("/profile", methods=["POST","GET"])
 def profile():
@@ -200,8 +229,8 @@ def profile():
             return redirect(url_for("index")) # vrácení na stránku pod funkcí index
     elif "username" in session: # pokud už session obsahuje proměnnou s názvem username, zobrazí se místo toho už. profil
         cur, con = db_connect()
-        cur.execute("SELECT quiz_correct, quiz_absolved FROM user WHERE username=?",(session["username"],)) # vybrání hodnot pro úpspěšně zodpovězené otázky a počet absolvovaných kvízů z tabulky, kde je username rovno session["username"]
-        quiz_correct, quiz_absolved=cur.fetchone() # spojení výsledku dotazu do proměnných quiz_correct a quiz_absolved
+        cur.execute("SELECT is_admin, quiz_correct, quiz_absolved FROM user WHERE username=?",(session["username"],)) # vybrání hodnot pro úpspěšně zodpovězené otázky a počet absolvovaných kvízů z tabulky, kde je username rovno session["username"]
+        is_admin, quiz_correct, quiz_absolved=cur.fetchone() # spojení výsledku dotazu do proměnných quiz_correct a quiz_absolved
         cur.execute("SELECT * FROM language_popularity WHERE user_id=?",(session["id"],)) # vybrání všech hodnot z tabulky language popularity, kde id uživatele je rovno session["id"]
         language_popularity_temporary=cur.fetchall() # spojení výsledku dotazu do proměnné language_popularity, která je v tomto kontextu list
         cur.execute("SELECT name FROM category") # vybrání všech hodnot atributu name z tabulky category pro získání všech kategorií (C, Python, ...)
@@ -212,7 +241,7 @@ def profile():
         language_popularity=sorted(language_popularity.items(), key=lambda x: x[1], reverse=True) # language_popularity.items přetvoří dictionary na list, ve kterém jsou další listy, které vždy obsahující dvojici klíč a k ní hodnota
         # tento list se následně seřadí s klíčem pro řazení jako druhou (první) hodnotou v listech, což je právě hodnota popularity jazyku
         # nakonec je reverse nastaveno na True pro sestpné řazení
-        return render_template("pages/profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"], quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity)
+        return render_template("pages/profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"], quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity, is_admin=is_admin)
     else: # pokud není metoda post a uživatel ani nemá uživatelské jméno v session, předá se formulář pro registraci
         
         return render_template("profile_forms/register.html", active=4)

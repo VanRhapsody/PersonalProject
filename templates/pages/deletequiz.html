@@ -1,0 +1,23 @@
+{% extends "layout/header.html" %}
+{% block title %}Uzivatele{% endblock %}
+{% block content %}
+
+<table class="user-table">
+    <tr>
+        <th>Kategorie</th>
+        <th style="text-align: center; padding: 0;">Název kvízu</th>
+        <th>Volba</th>
+    </tr>
+    {% for question in questions %}
+    {% if question[2] != 0 %}
+    <tr>
+        <td>{{ category }}</td>
+        <td>{{ question[1] }}</td>
+        <td><a href="{{ url_for('quiz_delete', quiz_id=question[0]) }}" style="text-decoration: none;">Smazat</a></td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+
+
+{% endblock %}

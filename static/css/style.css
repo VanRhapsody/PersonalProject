@@ -325,21 +325,33 @@ float right protože se jedná o pravý obsah stránky s profilem*/
   padding: 5px;
   text-align: center;
 }
+/* width 100%, protože ten text má zabírat celou šířku pravé části profilu
+text-align center protože text má být zarovnaný na středu
+padding 5px pro zajištění nějaké mezery mezi okraji right-section*/
 
 .profile-right-section h1 {
   border-bottom: solid var(--hover-green);
 }
+/*nastavení border-bottom, aby se zachovalo oddělení od zbytku obsahu right-section*/
 
 .profile-right-section p {
   font-size: 30px;
   padding: 5px;
   text-align: center;
 }
+/* font-size 30px, aby byl p dobře viditelný
+padding opět pro lepší oddělení od okrajů right-section
+text-align center*/
+
 
 .profile-links {
   margin: auto;
   border-spacing: 10px;
 }
+/*nastavení margin auto, aby byly odkazy v rámci profilu zarovnány uprostřed prvku, který je obaluje
+border-spacing, aby byly jednotlivé odkazy trochu více od sebe*/
+
+
 
 .profile-links a {
   text-decoration: none;
@@ -347,21 +359,34 @@ float right protože se jedná o pravý obsah stránky s profilem*/
   font-size:50px;
 }
 
+/*text-decoration none, aby nebyl text potržený
+font-weight bold, protože text má být tučný
+font-size 50px, aby byl text dobře viditelný*/
+
 .profile-links tr, td {
   text-align: center;
   padding: 10px;
 }
+
+/*text-align center pro zarovnání obsahů table uprostřed buněk
+padding 10px, aby byl nějaký rozestup od okrajů tabulky*/
 
 .profile-links td {
   min-width: 200px;
   border: solid var(--page-background);
   transition: 0.3s; 
 }
+/* nastavení min width na 200px, protože jinak byly buňky až moc u sebe a kazilo to margin auto
+nastavení border na solid (nemá být přerušovaný) s barvou proměnné page-background
+nastavení transition na 0.3s, aby zde byla delay při zrušení pseudoclass hover na prvek td*/
 
 .profile-links td:hover {
   background-color: var(--active-green);
   transition: 0.3s;
 }
+/*nastavení background color na proměnnou active green
+nastavení transition na 0.3s, aby zde byla delay při aktivaci pseudoclass hover*/
+
 
 .quiz-check {
   all: unset; 
@@ -372,11 +397,19 @@ float right protože se jedná o pravý obsah stránky s profilem*/
   transition: 0.3s;
 }
 
+/*nastavení všeho na unset, protože tlačítko pro quiz-check dědilo od ostatních tlačítek uvedených ve formuláři pro kvíz
+padding 30px aby byl rozestup do okrajů obalovacího divu
+margin 10px, aby byl rozestup mezi vedlejším tlačítkem pro poskytnutí možnost pokračování v kvízu*/
+
 .quiz-check:hover {
   background-color: var(--hover-green);
   transition: 0.3s;
 }
+/*nastavení barvy pozadí na hover green v případě najetí na prvky a aktivace pseudoclass hover
+transition 0,3s, aby byl volný přechod mezi aktivací a deaktivací pseudoclass hover*/
 
+
+/* fonty, které jsou použité na celé stránce*/
 .ubuntu-mono-regular {
     font-family: "Ubuntu Mono", monospace;
     font-weight: 400;
