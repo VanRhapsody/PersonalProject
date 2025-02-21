@@ -7,19 +7,12 @@
     <title>Document</title>
 </head>
 <body style="background-image: url(static/images/EWjl.gif); background-size: cover;">
-    {% with messages=get_flashed_messages() %}
-        {% if messages %}
-            {% for msg in messages %}
-                <p>{{msg}}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <div class="form-class">
-    <form action="{{ url_for('change_email') }}" method="post">
+    <div class="form-class" style="width: 500px !important;">
+    <form action="{{ url_for('change_email') }}" method="post" style="width: 100% !important;">
         <label for="email">Zadejte E-Mail:</label>
         <input type="email" name="email" id="email" placeholder="Zadejte E-Mail:"><br>
         <input type="submit" value="Nastavit E-Mail"><br>
-        <a href="{{ url_for('index') }}">Vrátit se zpět</a>
+        <a href="{{ url_for('profile') }}">Vrátit se zpět</a>
     </form>
     
 </div>

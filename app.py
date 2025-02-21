@@ -251,6 +251,10 @@ def login():
     if request.method=="POST": # pokud je metoda post
         cur, con = db_connect()
         identifier=request.form["identifier"] # získání identifier z formuláře, může se jednat o uživatelské jméno nebo heslo
+        cur.execute("SELECT id FROM user WHERE username=? OR email=?", (identifier, identifier, ))
+        result=cur.fetchall()
+        if not result:
+            return render_template("messages/error.html", message="Uživatel nenalezen!")
         user_password = request.form["password"].encode('utf-8') # převedení hesla do formátu pybtes a jeho zakódování pomocí utf-8 pro možnost zahashování
         cur.execute("SELECT password FROM user WHERE email=? OR username=?",(identifier,identifier)) # vybrání zahashovaného hesla na základě identifikátoru uživatele, kterým může být uživatelské jméno nebo email
         password=cur.fetchone()[0] # spojení výsledku dotazu do proměnné password
@@ -265,7 +269,7 @@ def login():
             session["bio"]=user[0][4] # na třetí hodnotu v nultém listu
             return render_template("pages/index.html")
         else:
-            return render_template("messages/error.html", message="Uživatel nenalezen!") # přesměrování na stránku s chybovou hlášku o tom, že uživatel nebyl nalezen
+            return render_template("messages/error.html", message="Špatné heslo!") # přesměrování na stránku s chybovou hlášku o tom, že uživatel nebyl nalezen
     else: # pokud metoda není post, přesměruje se uživatel na stránku s formulářem pro login
         return render_template("profile_forms/login.html")
     
@@ -296,11 +300,20 @@ def change_email():
 @app.route("/change_password", methods=["POST","GET"]) # route pro změnu hesla
 def change_password():
     if request.method=="POST": # pokud je metoda post
-        password=request.form["password"] # získání hesla z formuláře
-        session["password"]=password # nastavení session["password"] na hodnotu získanou z formuláře
+        password=request.form["password"].encode('utf-8') # získání hesla z formuláře
+        current_password=request.form["current_password"].encode('utf-8')
         cur, con = db_connect() 
-        cur.execute("UPDATE user SET password=? WHERE username=?",(password,session["username"])) # aktualizace atributu password na hodnotu z formuláře pro záznamy, kde se password rovná session["password"]
-        con.commit() # commitnutí výsledku dotazu do databáze
+        cur.execute("SELECT password FROM user WHERE username=?", (session["username"], ))
+        db_password=cur.fetchone()[0]
+        result=bcrypt.checkpw(current_password, db_password)
+        if result:
+            salt=bcrypt.gensalt()
+            hashed_pw=bcrypt.hashpw(password, salt)
+            cur.execute("UPDATE user SET password=? WHERE username=?",(hashed_pw,session["username"])) # aktualizace atributu password na hodnotu z formuláře pro záznamy, kde se password rovná session["password"]
+            con.commit() # commitnutí výsledku dotazu do databáze
+            session["password"]=password # nastavení session["password"] na hodnotu získanou z formuláře
+        else:
+            return render_template("messages/error.html", message="Nesprávně zadané aktuální heslo!")
         return redirect(url_for("profile")) # přesměrování na funkci pro zobrazení uživatelského profilu
     else: # pokud metoda není post, přesměruje se uživatel na stránku s formulářem pro změnu hesla
         return render_template("profile_forms/password.html")
@@ -329,4 +342,4 @@ def logout():
     return redirect(url_for('index')) # přesměrování na funkci pro zobrazení hlavní stránky
 
 if __name__=="__main__": # zajištění toho, že soubor app.py se spustí pouze tehdy, pokud bude spouštěn jako hlavní soubor a ne např. jen jako importovaný modul do jiného souboru
-    app.run() # zapnutí proměnné app uvedené na začátku souboru
+    app.run(debug=True) # zapnutí proměnné app uvedené na začátku souboru
