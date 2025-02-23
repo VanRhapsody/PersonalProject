@@ -1,5 +1,5 @@
 {% extends "layout/header.html" %}
-{% block title %}Ulohy{% endblock %}
+{% block title %}Quiz{% endblock %}
 {% block content %}
 <!--tato část kódu renderuje levou část stránky pro zobrazení kvízu
 založí se zde for cyklus, kde range je délka listu session["quiz_list"], jehož délka určuje počet zvolených otázek
@@ -21,7 +21,7 @@ V ostatních situacích se zobrazí kruh s barvou pozadí stránky, protože je�
 </div>
 <div class="quiz-content-main">
     <!--Tato část zobrazuje zadání otázky v rámci kvízu-->
-    <h2 style="padding: 20px;">{{ session["quiz_list"][session["quiz_list_index"]][1] }}</h2>
+    <h2 style="width: 800px; margin: auto; display: block;">{{ session["quiz_list"][session["quiz_list_index"]][1] }}</h2>
     <br>
     <div style="text-align: center;">
     <!--Tato část zobrazuje případné fotky v rámci otázky kvízu, které jsou uloženy v daném projektu-->

@@ -18,7 +18,7 @@ def index():
 @app.route("/users") # route pro zobrazení všech už. profilů
 def users():
     cur, con=db_connect()
-    cur.execute("SELECT id, username,email FROM user") # vybrání id, už. jména a e-mailu z tabulky user
+    cur.execute("SELECT id, username,email FROM user WHERE is_active=1") # vybrání id, už. jména a e-mailu z tabulky user pro záznamy, kde je is_active rovno 1, tedy uživatelův účet není deaktivoanány
     users=cur.fetchall() # spojení výsledku dotazu do proměnné users
     return render_template("pages/users.html", users=users) # přesměrování na stránku users.html s předaným parametrem users
 
@@ -52,7 +52,7 @@ def kvizy():
         cur.execute(f"SELECT id FROM category WHERE name=?", (category,)) # vybrání všech id z tabulky kategorie, kde se jméno kategorie rovná zvolenému jménu (python, cs)
         category_id=cur.fetchone() # spojení jednoho výsledku do proměnné category_id
         session["category_id"]=category_id[0] # přiřazení nultého indexu (všechny tyto proměnné se ukládají jako tuple) do proměnné session["category_id"]
-        cur.execute(f"SELECT id FROM question ORDER BY id DESC") # vybrání všech id z tabulky question při jejich sestupném řazení
+        cur.execute(f"SELECT id FROM question WHERE category_id=? ORDER BY id DESC", (session["category_id"],)) # vybrání všech id z tabulky question při jejich sestupném řazení
         id_max=cur.fetchone() # přiřazení jednoho výsledku dotazu (nejvyššího možného id) do proměnné id_max
         id_max=id_max[0] # přiřazení nultého indexu id_max (uchovává se jako tuple) do stejné proměnné
         session["quiz_list"]=[] # vytvoření session["quiz_list"] pro uchování jednotlivých otázek v kvízech
@@ -61,7 +61,7 @@ def kvizy():
             question=None # nastavení question na None pro možnost jeho kontroly, zda je none
             while (question is None) or (question in session["quiz_list"]): # kontrola, jestli je Question none nebo jestli už je v proměnné quiz_list pro zamezení existenci duplikátních otázek
                 quiz_id_random=(random.randint(1,int(id_max))) # generování náhodného kvízu pro volbu jedné otázky v rozmezí od 1 do maxima
-                cur.execute("SELECT id, prompt, image_url FROM question WHERE category_id=? AND id=?", (session["category_id"],quiz_id_random,)) # vybrání id, slovního zadání a případného obrázku pro jednu konkrétní vybranou otázku se stejným id jako vygenerovaným a stejným category_id jako zvolená kategorie
+                cur.execute("SELECT id, prompt, image_url FROM question WHERE category_id=? AND id=? AND is_used==?", (session["category_id"],quiz_id_random, 1, )) # vybrání id, slovního zadání a případného obrázku pro jednu konkrétní vybranou otázku se stejným id jako vygenerovaným a stejným category_id jako zvolená kategorie
                 question=cur.fetchone() # přiřazení jedné otázky do proměnné question
             session["quiz_list"].append(question) # přidání question jako list do quiz_list
             session["correct_wrong"].append(None) # přidání nulové hodnoty do correct_wrong při úspěšném vytvoření jedné otázky
@@ -71,6 +71,8 @@ def kvizy():
             random.shuffle(one_answer) # náhodné zamixování otázek 
             session["answers_list"].append(one_answer) # přidání jedné odpovědi do dvojrozměrného listu answers_list
         con.close() # uzavření connection z bezpečnostních důvodů 
+        print(session["quiz_list"])
+        print(session["answers_list"])
         return render_template("pages/quiz.html", active=3) 
     else:
         return render_template("pages/kvizy.html", active=3)
@@ -300,15 +302,15 @@ def change_email():
 @app.route("/change_password", methods=["POST","GET"]) # route pro změnu hesla
 def change_password():
     if request.method=="POST": # pokud je metoda post
-        password=request.form["password"].encode('utf-8') # získání hesla z formuláře
-        current_password=request.form["current_password"].encode('utf-8')
-        cur, con = db_connect() 
-        cur.execute("SELECT password FROM user WHERE username=?", (session["username"], ))
-        db_password=cur.fetchone()[0]
-        result=bcrypt.checkpw(current_password, db_password)
-        if result:
-            salt=bcrypt.gensalt()
-            hashed_pw=bcrypt.hashpw(password, salt)
+        password=request.form["password"].encode('utf-8') # získání nového hesla z formuláře
+        current_password=request.form["current_password"].encode('utf-8') #získání aktuálního hesla z formuláře
+        cur, con = db_connect() #připojení do databáze
+        cur.execute("SELECT password FROM user WHERE username=?", (session["username"], )) #vybrání hesla z tabulky user pro záznamy, kde se atribut username rovná session["username"]
+        db_password=cur.fetchone()[0] #spojení výsledku dotazu do proměnné db_password a nastavení na nultý index, protože předává hodnoty jako tuple
+        result=bcrypt.checkpw(current_password, db_password) #kontrola aktuálního hesla a hesla získaného z databáe pomocí funkce bcrypt, do proměnné result se předá true nebo false
+        if result: #pokud je result true
+            salt=bcrypt.gensalt() #vygenerování soli pro zahashování nového hesla
+            hashed_pw=bcrypt.hashpw(password, salt) #zahashování nového hesla pomocí funkce hashpw
             cur.execute("UPDATE user SET password=? WHERE username=?",(hashed_pw,session["username"])) # aktualizace atributu password na hodnotu z formuláře pro záznamy, kde se password rovná session["password"]
             con.commit() # commitnutí výsledku dotazu do databáze
             session["password"]=password # nastavení session["password"] na hodnotu získanou z formuláře
