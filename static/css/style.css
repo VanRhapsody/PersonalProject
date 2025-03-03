@@ -434,3 +434,115 @@ transition 0,3s, aby byl volný přechod mezi aktivací a deaktivací pseudoclas
     font-style: italic;
   }
 
+
+  .task-menu {
+    width: 85%; 
+    float: right;
+    right: 20px;
+    position: relative;
+    background-color: var(--background-green);
+  }
+  
+  .task-table {
+    width: 100%;
+    border-top: solid black 2px;
+    
+  }
+  
+  .task-table th {
+    font-size: 50px;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .task-table td {
+    font-size: 40px;
+  }
+  
+  .task-table tr:first-child:hover {
+    background-color: var(--background-green);
+  }
+  
+  .task-table tr:hover {
+    background-color: var(--active-green);
+  }
+  
+  .filters {
+    font-size: 30px;
+    width: 100%;
+    background-color: var(--background-green);
+    border-collapse: collapse;
+    text-align: center;
+  }
+  
+  .filters p {
+    padding: 10px;
+    border-left: solid var(--hover-green);
+    display: inline-block;
+    font-size: 40px;
+  }
+  
+  .filters p:first-child {
+    border-left: none;
+  }
+  
+  .filters-form {
+    padding: 10px; 
+    color: white;
+    font-size: 30px;
+  }
+  
+  
+  
+  .filters-table th {
+    border: solid var(--hover-green);
+    border-collapse: collapse;
+  }
+  
+  .filters-table td {
+    border: solid var(--hover-green);
+    border-collapse: collapse;
+  }
+
+
+  .vertical-navbar {
+    position: sticky;
+    margin:20px;
+    top: 20px;
+    width: 10%;
+    background-color: var(--background-green);
+  }
+  
+  .vertical-navbar ul {
+    list-style-type: none;
+    font-family: "Ubuntu Mono", monospace;
+    padding: 0;
+    
+  }
+  
+  .vertical-navbar li {
+    border-bottom: solid var(--hover-green);
+  }
+  
+  
+  .vertical-navbar li a {
+    font-family: "Ubuntu Mono", monospace;
+    font-size: 30px;
+    padding: 20px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+  }
+  
+  .vertical-navbar li:hover {
+    background-color: var(--active-green);
+  }
+  
+  .vertical-navbar li:last-child {
+    border-bottom: none;
+    padding-bottom: 10px;
+  }
+  
+  .vertical-navbar li:first-child {
+    padding-top: 10px;
+  }

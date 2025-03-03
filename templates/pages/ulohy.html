@@ -1,0 +1,55 @@
+{% extends "layout/header.html" %}
+{% block title %}Ulohy{% endblock %}
+{% block content %}
+
+
+<div style="top: 10px; position: relative;">
+<div class="task-menu">
+    <div class="filters">
+        <h1>Filtry</h1>
+        <form action="" class="filters-form">
+            <p>Verified</p> 
+            <input type="radio" id="ano" name="volba" value="ano">
+            <label for="ano">Ano</label>
+            <input type="radio" id="ne" name="volba" value="ne">
+            <label for="ne">Ne</label>
+            <p>Obtížnost</p>
+            <select id="language" name="language">
+                <option value="Easy">Lehká</option>
+                <option value="Medium">Střední</option>
+                <option value="Hard">Těžká</option>
+            </select>
+            <br>
+            <input type="submit" value="Odeslat" style="color: black;">
+        </form>
+    </div>
+    
+    <table class="task-table">
+        <tr>
+            <th style="text-align: center; padding: 0;">VER</th>
+            <th>Název</th>
+            <th>Téma</th>
+            <th>Úroveň</th>
+        </tr>
+        {% for element in tasks %}
+        <tr>
+            <td style="text-align: center;"><img src="static\images\shield_15627713.png" alt=""></td>
+            <td><a href="{{ url_for('task', task_id=element[0]) }}" style="text-decoration: none;">{{ element[1] }}</a></td>
+            <td>{{ element[2] }}</td>
+            <td>{{ element[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</div>
+
+<div class="vertical-navbar">
+    <ul>
+        {% for category in categories %}
+        <li><a href="{{ url_for('tasks', categories=category[0]) }}">{{ category[0] }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+{% endblock %}

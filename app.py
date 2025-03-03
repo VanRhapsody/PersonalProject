@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, session, flash, url_for, redi
 import sqlite3
 import bcrypt
 import random
+import subprocess
+import os
 
 app=Flask(__name__) # založení proměnné app s názvem __name__
 app.secret_key="Velice tajny klic xddd" # založení tajného klíče pro možnost založení session
@@ -342,6 +344,73 @@ def logout():
     session.pop("email",None) # proměnné e-mail
     session.pop("bio",None) # proměnné bio
     return redirect(url_for('index')) # přesměrování na funkci pro zobrazení hlavní stránky
+
+
+@app.route("/uloha/<task_id>", methods=["POST", "GET"])
+def task(task_id):
+    if request.method=="POST":
+        con = sqlite3.connect("database.db")
+        cur = con.cursor()
+        cur.execute("SELECT output FROM task WHERE id=?",(task_id))
+        solution=cur.fetchone()[0]
+        file = request.files["file"]
+        UPLOAD_FOLDER = "inputs/"
+        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+        file.save(file_path)
+        result = subprocess.run(["python", file_path], capture_output=True, text=True, check=True)
+        output = result.stdout.strip()  # Výstup skriptu
+        print(solution, output)
+        if str(output)==str(solution):
+            print("yeees")
+    else:
+        con = sqlite3.connect("database.db")
+        cur = con.cursor()
+        cur.execute("SELECT * FROM task WHERE id=?",(task_id))
+        task=cur.fetchone()
+        con.commit()
+        print(task)
+        cur.execute("SELECT name FROM category WHERE id=?", (str(task[4]), ))
+        categories=cur.fetchall()
+        con.commit()
+        con.close()
+
+        return render_template("pages/uloha.html", task=task, categories=categories)
+
+@app.route("/ulohy/", defaults={'categories':None})
+@app.route("/ulohy/<categories>") #do routování se zadá jazyk - např. sql a  to se ptoom předá jako vstupní parametr funkce, která z databáze získá všechny instance, kde jazyk je sql a zobrazí je
+def tasks(categories):
+    con = sqlite3.connect("database.db")
+    cur = con.cursor()
+    if categories is None:
+        cur.execute("SELECT * FROM task")
+    else:
+        cur.execute("SELECT * FROM task WHERE category_id=?",(categories,))
+    con.commit()
+    tasks=cur.fetchall()
+    cur.execute("SELECT name FROM category WHERE id=?", (categories, ))
+    con.commit()
+    categories=cur.fetchall()
+
+    return render_template("pages/ulohy.html", active=2, tasks=tasks, categories=categories)
+
+@app.route("/ulohy/add", methods=["POST","GET"])
+def add_task():
+    if request.method=="POST":
+        title=request.form["title"]
+        category=request.form["category"]
+        difficulty=request.form["difficulty"]
+        description=request.form["description"]
+        solution=request.form["solution"]
+        con = sqlite3.connect("database.db")
+        cur = con.cursor()
+        cur.execute("INSERT INTO task (title, category, difficulty, description, solution) VALUES (?,?,?,?,?)",(title,category,difficulty,description,solution,))
+        con.commit()
+        return redirect(url_for("tasks"))
+    else:
+        return render_template("funcionality_forms/taskadd.html")
+
+
+
 
 if __name__=="__main__": # zajištění toho, že soubor app.py se spustí pouze tehdy, pokud bude spouštěn jako hlavní soubor a ne např. jen jako importovaný modul do jiného souboru
     app.run(debug=True) # zapnutí proměnné app uvedené na začátku souboru

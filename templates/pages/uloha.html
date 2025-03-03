@@ -1,0 +1,31 @@
+{% extends "layout/header.html" %}
+{% block title %}Ulohy{% endblock %}
+{% block content %}
+
+
+<div style="top: 10px; position: relative;">
+<div class="task-menu">
+    <h1 style="margin: auto;">{{ task[1] }}</h1>
+    <hr>
+    <p>{{ task[3] }}</p>
+    <br>
+    <form action="{{ url_for('task', task_id=task[0]) }}" method="POST" enctype="multipart/form-data">
+        <label for="file">Vložte soubor .py s řešením</label>
+        <input type="file" id="file" name="file" accept=".py">
+        <input type="submit" name="" id="" value="Odeslat">
+    </form>
+
+</div>
+</div>
+
+<div class="vertical-navbar">
+    <ul>
+        {% for category in categories %}
+        <li><a href="{{ url_for('tasks', categories=category[0]) }}">{{ category[0] }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+
+{% endblock %}
