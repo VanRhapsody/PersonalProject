@@ -77,6 +77,9 @@ def kvizy():
         print(session["answers_list"])
         return render_template("pages/quiz.html", active=3) 
     else:
+        session["quiz_list_index"]=0
+        session["quiz_list"]=[]
+        session["answers_list"]=[]
         return render_template("pages/kvizy.html", active=3)
     
 @app.route("/kvizy/next", methods=["POST","GET"])
@@ -351,45 +354,44 @@ def task(task_id):
     if request.method=="POST":
         con = sqlite3.connect("database.db")
         cur = con.cursor()
-        cur.execute("SELECT output FROM task WHERE id=?",(task_id))
-        solution=cur.fetchone()[0]
-        file = request.files["file"]
-        UPLOAD_FOLDER = "inputs/"
-        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
-        file.save(file_path)
-        result = subprocess.run(["python", file_path], capture_output=True, text=True, check=True)
+        cur.execute("SELECT output FROM task WHERE id=?",(task_id)) #získání žádáného outputu napsaného programu z databáze
+        solution=cur.fetchone()[0] #spojení výsledku dotazu do proměnné solution a její nastavení na nultý index 
+        file = request.files["file"] #získání složky z formuláře
+        UPLOAD_FOLDER = "inputs/" #nastavení cesty pro ukládání jednotlivých inputů
+        file_path = os.path.join(UPLOAD_FOLDER, file.filename) #spojení názvu souboru a zadané cesty do jedné cesty
+        file.save(file_path) #uložení získanéo souboru pomocí získané cesty
+        result = subprocess.run(["python", file_path], capture_output=True, text=True, check=True) #spuštění souboru na zadané cestěpomocí pythonu
+        #capture output znmená, že zachytí výsledek místo jeho výpisu
+        #text znamená, že výstup ve formátu pybytes převede na string
+        #pokud proces ukončí chybou, způsobí pád programu pro bezpečnost
         output = result.stdout.strip()  # Výstup skriptu
-        print(solution, output)
-        if str(output)==str(solution):
-            print("yeees")
+        if str(output)==str(solution): # v případě, že se text výstupu rovná zadanému kódu, zobrazí se zpráva
+            return render_template("messages/error.html", message="Gratulujeme! Zadaný kód je správný!")
+        else:
+            return render_template("messages/error.html", messages="Litujeme, to není správné řešení")
     else:
         con = sqlite3.connect("database.db")
         cur = con.cursor()
-        cur.execute("SELECT * FROM task WHERE id=?",(task_id))
-        task=cur.fetchone()
-        con.commit()
-        print(task)
-        cur.execute("SELECT name FROM category WHERE id=?", (str(task[4]), ))
-        categories=cur.fetchall()
-        con.commit()
-        con.close()
+        cur.execute("SELECT * FROM task WHERE id=?",(task_id)) #vybrání všeho z tabulky task
+        task=cur.fetchone() #spojení jednoho výsledku dotazu do proměnné task
+        cur.execute("SELECT name FROM category WHERE id=?", (str(task[4]), )) #vybrání názvu kategorie z tabulky kategorie, kde id se rovná category_id z task
+        categories=cur.fetchone() #spojení výsledku dotazu do proměnné categories
+        con.close() 
+        return render_template("pages/uloha.html", task=task, categories=categories) #přesměrování na stránku uloha s předáním hodnot task a categories
 
-        return render_template("pages/uloha.html", task=task, categories=categories)
-
-@app.route("/ulohy/", defaults={'categories':None})
+@app.route("/ulohy/", defaults={'categories':None}) #pokud se do routování nezadá žádná kategorie, předají se všechny kategorie
 @app.route("/ulohy/<categories>") #do routování se zadá jazyk - např. sql a  to se ptoom předá jako vstupní parametr funkce, která z databáze získá všechny instance, kde jazyk je sql a zobrazí je
 def tasks(categories):
     con = sqlite3.connect("database.db")
     cur = con.cursor()
-    if categories is None:
+    if categories is None: #pokud categories je none, tedy uživatel nic nezadal, pak se vezmou všechny úlohy
         cur.execute("SELECT * FROM task")
-    else:
+    else: #pokud bylo cateogories zadáno, tak se z databáze vezmou jen ty záznamy, kde je category_id rovno zadané hodnotě
         cur.execute("SELECT * FROM task WHERE category_id=?",(categories,))
+    tasks=cur.fetchall() #spojení výsledků dotazu do proměnné tasks
+    cur.execute("SELECT name FROM category WHERE id=?", (categories, )) #vybrání jména z kategorie, kde id té kategorie se rovná zadanému id
     con.commit()
-    tasks=cur.fetchall()
-    cur.execute("SELECT name FROM category WHERE id=?", (categories, ))
-    con.commit()
-    categories=cur.fetchall()
+    categories=cur.fetchone() #spojení výsledku dotazu do proměnné cateogries
 
     return render_template("pages/ulohy.html", active=2, tasks=tasks, categories=categories)
 
