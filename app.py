@@ -22,7 +22,7 @@ def users():
     cur, con=db_connect()
     cur.execute("SELECT id, username,email FROM user WHERE is_active=1") # vybrání id, už. jména a e-mailu z tabulky user pro záznamy, kde je is_active rovno 1, tedy uživatelův účet není deaktivoanány
     users=cur.fetchall() # spojení výsledku dotazu do proměnné users
-    return render_template("pages/users.html", users=users) # přesměrování na stránku users.html s předaným parametrem users
+    return render_template("pages/users.html", users=users, active=2) # přesměrování na stránku users.html s předaným parametrem users
 
 @app.route("/users/<user_id>") # route pro zobrazení konkrétního už. profilu
 def user(user_id):
@@ -85,7 +85,10 @@ def kvizy():
 @app.route("/kvizy/next", methods=["POST","GET"])
 def next_quiz():
     if request.method=="POST":
-        answer=request.form["answer"] # získání hodnoty answer z formu na kviz.html
+        if request.form.get("answer"):
+            answer=request.form["answer"] # získání hodnoty answer z formu na kviz.html
+        else:
+            answer=True
         correct_answer=None # nastavení correct answer na None pro možnost následného přiřazení správné odpovědi
         for one_answer in session["answers_list"][session["quiz_list_index"]]: # založení for cyklu pro procházení answers list, a to v nestnuntém listu pro quiz_list_index reprezentující konkrétní otázku
             if one_answer[3]==1: # kontrola, jestli se hodnota reprezentující is_correct u dané otázky rovná 1
@@ -236,6 +239,7 @@ def profile():
             return redirect(url_for("index")) # vrácení na stránku pod funkcí index
     elif "username" in session: # pokud už session obsahuje proměnnou s názvem username, zobrazí se místo toho už. profil
         cur, con = db_connect()
+        print(session["username"])
         cur.execute("SELECT is_admin, quiz_correct, quiz_absolved FROM user WHERE username=?",(session["username"],)) # vybrání hodnot pro úpspěšně zodpovězené otázky a počet absolvovaných kvízů z tabulky, kde je username rovno session["username"]
         is_admin, quiz_correct, quiz_absolved=cur.fetchone() # spojení výsledku dotazu do proměnných quiz_correct a quiz_absolved
         cur.execute("SELECT * FROM language_popularity WHERE user_id=?",(session["id"],)) # vybrání všech hodnot z tabulky language popularity, kde id uživatele je rovno session["id"]
@@ -389,10 +393,13 @@ def tasks(categories):
     else: #pokud bylo cateogories zadáno, tak se z databáze vezmou jen ty záznamy, kde je category_id rovno zadané hodnotě
         cur.execute("SELECT * FROM task WHERE category_id=?",(categories,))
     tasks=cur.fetchall() #spojení výsledků dotazu do proměnné tasks
-    cur.execute("SELECT name FROM category WHERE id=?", (categories, )) #vybrání jména z kategorie, kde id té kategorie se rovná zadanému id
+    if categories is None:
+        cur.execute("SELECT name FROM category WHERE id=?", (categories, ))
+        categories=cur.fetchall()
+    else:
+        cur.execute("SELECT name FROM category WHERE id=?", (categories, )) #vybrání jména z kategorie, kde id té kategorie se rovná zadanému id
+        categories=cur.fetchone() #spojení výsledku dotazu do proměnné cateogries
     con.commit()
-    categories=cur.fetchone() #spojení výsledku dotazu do proměnné cateogries
-
     return render_template("pages/ulohy.html", active=2, tasks=tasks, categories=categories)
 
 @app.route("/ulohy/add", methods=["POST","GET"])

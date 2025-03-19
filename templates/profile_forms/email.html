@@ -10,7 +10,7 @@
     <div class="form-class" style="width: 500px !important;">
     <form action="{{ url_for('change_email') }}" method="post" style="width: 100% !important;">
         <label for="email">Zadejte E-Mail:</label>
-        <input type="email" name="email" id="email" placeholder="Zadejte E-Mail:"><br>
+        <input type="email" name="email" id="email" placeholder="Zadejte E-Mail:" maxlength="40"><br>
         <input type="submit" value="Nastavit E-Mail"><br>
         <a href="{{ url_for('profile') }}">Vrátit se zpět</a>
     </form>
