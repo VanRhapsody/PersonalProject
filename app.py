@@ -76,8 +76,9 @@ def kvizy():
         print(session["quiz_list"])
         print(session["answers_list"])
         return render_template("pages/quiz.html", active=3) 
-    else:
-        session["quiz_list_index"]=0
+    else: #pokud se uživatel na stránku kvízy přesměruje bez jakékoliv metody, dojde k vynulování údajů v rámci kvízů
+        # a přesměrování na stránku kvizy.html
+        session["quiz_list_index"]=0 
         session["quiz_list"]=[]
         session["answers_list"]=[]
         return render_template("pages/kvizy.html", active=3)
@@ -85,10 +86,10 @@ def kvizy():
 @app.route("/kvizy/next", methods=["POST","GET"])
 def next_quiz():
     if request.method=="POST":
-        if request.form.get("answer"):
+        if request.form.get("answer"): #pokud je answer v rámci formu prázdný
             answer=request.form["answer"] # získání hodnoty answer z formu na kviz.html
         else:
-            answer=True
+            answer=True #jinak se answer nastaví na True, aby se v rámci kvízů automaticky nezobrazí správná odpověď už před odpovědi
         correct_answer=None # nastavení correct answer na None pro možnost následného přiřazení správné odpovědi
         for one_answer in session["answers_list"][session["quiz_list_index"]]: # založení for cyklu pro procházení answers list, a to v nestnuntém listu pro quiz_list_index reprezentující konkrétní otázku
             if one_answer[3]==1: # kontrola, jestli se hodnota reprezentující is_correct u dané otázky rovná 1
@@ -149,8 +150,8 @@ def add_quiz():
                 for i in range(0, (max - len(input))):
                     input.append("")
         
-        cur.execute("SELECT id FROM category WHERE name=?", (category, ))
-        category_id=cur.fetchall()[0][0]
+        cur.execute("SELECT id FROM category WHERE name=?", (category, )) #vybrání všech hodnot z tabulky kategorie pro záznamy, kde se název kateogrie rovná hledanému názvu
+        category_id=cur.fetchone()[0] #spojení nultého indexu do proměnné category_id
         cur.execute("SELECT id FROM question ORDER BY id DESC") # vybrání quiz_id v dotazu a jeho řazení sestupně, pro získání maximálního id
         quiz_id=cur.fetchall()
         quiz_id=quiz_id[0][0]+1 # nastavení quiz id na nultý index nultého listu, z nějakého důvodu jsou výsledky vraceny takhle
@@ -401,25 +402,6 @@ def tasks(categories):
         categories=cur.fetchone() #spojení výsledku dotazu do proměnné cateogries
     con.commit()
     return render_template("pages/ulohy.html", active=2, tasks=tasks, categories=categories)
-
-@app.route("/ulohy/add", methods=["POST","GET"])
-def add_task():
-    if request.method=="POST":
-        title=request.form["title"]
-        category=request.form["category"]
-        difficulty=request.form["difficulty"]
-        description=request.form["description"]
-        solution=request.form["solution"]
-        con = sqlite3.connect("database.db")
-        cur = con.cursor()
-        cur.execute("INSERT INTO task (title, category, difficulty, description, solution) VALUES (?,?,?,?,?)",(title,category,difficulty,description,solution,))
-        con.commit()
-        return redirect(url_for("tasks"))
-    else:
-        return render_template("funcionality_forms/taskadd.html")
-
-
-
 
 if __name__=="__main__": # zajištění toho, že soubor app.py se spustí pouze tehdy, pokud bude spouštěn jako hlavní soubor a ne např. jen jako importovaný modul do jiného souboru
     app.run(debug=True) # zapnutí proměnné app uvedené na začátku souboru
