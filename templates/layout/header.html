@@ -40,7 +40,7 @@
             {% elif active!=4 %}
             <li><a href="{{url_for('profile')}}">{{ session["username"] }}</a></li>
             {% else %}
-            <li class="active" style="float:right"><a href="{{url_for('profile')}}">{{ session["username"] }}</a></li>
+            <li style="float:right"><a class="active"  href="{{url_for('profile')}}">{{ session["username"] }}</a></li>
             {% endif %}
 
       </ul>

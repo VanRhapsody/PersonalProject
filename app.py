@@ -174,6 +174,14 @@ def add_quiz():
 @app.route("/kvizy/delete")
 def category_choose():
     cur,con=db_connect()
+    if not session.get("username"): #pokud session["username"] není vůbec definován
+        #přesměruje se na stránku s chybovou hláškou, že bez přihlášení či práv administrátora nemůže mazat kvízy
+        return render_template("messages/error.html", message="Nelze mazat kvízy, pokud nejste přihlášení, nebo nejste admin!")
+    cur.execute("SELECT is_admin FROM user WHERE username=?", (session["username"], )) #vybrání hodnoty is_admin u záznamu, kde se username rovná username v session
+    admin=int(cur.fetchone()[0]) #spojení výsledku dotazu do proměnné admin a její přetypování na int
+    if admin!=1: #pokud hodnota admin není 1
+        #přesměruje se na stránku s chybovou hláškou, že bez přihlášení či práv administrátora nemůže mazat kvízy
+        return render_template("messages/error.html", message="Nelze mazat kvízy, pokud nejste přihlášení, nebo nejste admin!")
     cur.execute("SELECT * FROM category") #vybrání všeho z tabulky category pro možnost zobrazení jednotlivých kategorií v tabulce
     categories=cur.fetchall() #spojení všech výsledků dotazu do proměnné categories
     return render_template("pages/categorychoose.html", categories=categories) #přesměrování na stránku s výběrem kategorií s předáním proměnné categories
@@ -181,6 +189,14 @@ def category_choose():
 @app.route("/kvizy/delete/<category_id>")
 def quiz_choose(category_id):
     cur, con=db_connect()
+    if not session.get("username"): #pokud session["username"] není vůbec definován
+        #přesměruje se na stránku s chybovou hláškou, že bez přihlášení či práv administrátora nemůže mazat kvízy
+        return render_template("messages/error.html", message="Nelze mazat kvízy, pokud nejste přihlášení, nebo nejste admin!")
+    cur.execute("SELECT is_admin FROM user WHERE username=?", (session["username"], )) #vybrání hodnoty is_admin u záznamu, kde se username rovná username v session
+    admin=int(cur.fetchone()[0]) #spojení výsledku dotazu do proměnné admin a její přetypování na int
+    if admin!=1: #pokud hodnota admin není 1
+        #přesměruje se na stránku s chybovou hláškou, že bez přihlášení či práv administrátora nemůže mazat kvízy
+        return render_template("messages/error.html", message="Nelze mazat kvízy, pokud nejste přihlášení, nebo nejste admin!")
     cur.execute("SELECT name FROM category WHERE id=?", (category_id, )) #vybrání jména z kategorie pro záznamy, kde se id rovná hledanému id kategorie
     category=cur.fetchone() #spojení výsledku dotazu do proměnné category, fetchone, protože logicky se pro dané id vrátí jen jeden záznam
     category=category[0] #nastavení kategorie na nultý list, protože z nějakého důvodu vrací tuple
@@ -196,6 +212,14 @@ def quiz_choose(category_id):
 @app.route("/kvizy/delete/action/<quiz_id>")
 def quiz_delete(quiz_id):
     cur,con=db_connect()
+    if not session.get("username"): #pokud session["username"] není vůbec definován
+        #přesměruje se na stránku s chybovou hláškou, že bez přihlášení či práv administrátora nemůže mazat kvízy
+        return render_template("messages/error.html", message="Nelze mazat kvízy, pokud nejste přihlášení, nebo nejste admin!")
+    cur.execute("SELECT is_admin FROM user WHERE username=?", (session["username"], )) #vybrání hodnoty is_admin u záznamu, kde se username rovná username v session
+    admin=int(cur.fetchone()[0]) #spojení výsledku dotazu do proměnné admin a její přetypování na int
+    if admin!=1: #pokud hodnota admin není 1
+        #přesměruje se na stránku s chybovou hláškou, že bez přihlášení či práv administrátora nemůže mazat kvízy
+        return render_template("messages/error.html", message="Nelze mazat kvízy, pokud nejste přihlášení, nebo nejste admin!")
     cur.execute("UPDATE question SET is_used=0 WHERE id=?", (quiz_id, )) #nastavení is_used u vybrané otázky na 0, aby nemohla být použita
     cur.execute("UPDATE answer SET is_used=0 WHERE quiz_id=?", (quiz_id, )) #nastavení is_used u odpovědí k vybrané otázce na 0, aby nemohly být použity
     con.commit() #commitnutí výsledků do databáze, aby se projevily
