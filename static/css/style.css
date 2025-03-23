@@ -149,7 +149,7 @@ nulový padding vpravo, protože tu stránku roztahoval až moc doprava, což ni
 */
 
 .user-table {
-  width: 80%;
+  width: 1200px;
   border: solid var(--background-green) 1px;
   border-collapse: collapse;
   margin: auto;
@@ -329,10 +329,6 @@ float right protože se jedná o pravý obsah stránky s profilem*/
 text-align center protože text má být zarovnaný na středu
 padding 5px pro zajištění nějaké mezery mezi okraji right-section*/
 
-.profile-right-section h1 {
-  border-bottom: solid var(--hover-green);
-}
-/*nastavení border-bottom, aby se zachovalo oddělení od zbytku obsahu right-section*/
 
 .profile-right-section p {
   font-size: 30px;
