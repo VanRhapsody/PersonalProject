@@ -75,8 +75,6 @@ def kvizy():
             random.shuffle(one_answer) # náhodné zamixování otázek 
             session["answers_list"].append(one_answer) # přidání jedné odpovědi do dvojrozměrného listu answers_list
         con.close() # uzavření connection z bezpečnostních důvodů 
-        print(session["quiz_list"])
-        print(session["answers_list"])
         return render_template("pages/quiz.html", active=3) 
     else: #pokud se uživatel na stránku kvízy přesměruje bez jakékoliv metody, dojde k vynulování údajů v rámci kvízů
         # a přesměrování na stránku kvizy.html
