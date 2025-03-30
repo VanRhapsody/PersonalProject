@@ -27,8 +27,10 @@ def users():
 @app.route("/users/<user_id>") # route pro zobrazení konkrétního už. profilu
 def user(user_id):
     cur, con=db_connect()
-    cur.execute("SELECT username, email, bio, quiz_correct, quiz_absolved FROM user WHERE id=?", (user_id,)) # vybrání už. jména, e-mailu, bia, počtu správných odpovědí a absolvovaných kvízů z tabulky user v záznamech, kde se id rovná předanému parametru
-    username, email, bio, quiz_correct, quiz_absolved=cur.fetchone() # spojení výsledku dotazu do stejnojmenných proměnných 
+    cur.execute("SELECT username, email, bio, FROM user WHERE id=?", (user_id,)) # vybrání už. jména, e-mailu, bia, počtu správných odpovědí a absolvovaných kvízů z tabulky user v záznamech, kde se id rovná předanému parametru
+    username, email, bio=cur.fetchone() # spojení výsledku dotazu do stejnojmenných proměnných 
+    cur.execute("SELECT quiz_correct, quiz_absolved FROM statistics WHERE user_id=?", (user_id,))
+    quiz_correct, quiz_absolved=cur.fetchone()
     cur.execute("SELECT * FROM language_popularity WHERE user_id=?",(user_id,)) # vybrání všech atributů z tabulky language_popularity
     language_popularity_temporary=cur.fetchall() # spojení výsledku do dotazu language popularity
     cur.execute("SELECT name FROM category") # výběr jmen kategorií z tabulky category
@@ -116,8 +118,8 @@ def send_answer():
                 else:
                     wrong+=1
             cur, con=db_connect()
-            cur.execute("UPDATE user SET quiz_correct = quiz_correct + ?", (correct,)) # zvýšení počtu správných odpovědí u uživatele o hodnotu correct
-            cur.execute("UPDATE user SET quiz_absolved = quiz_absolved + 1") # inkrementace počtu absolvovaných kvízů
+            cur.execute("UPDATE statistics SET quiz_correct = quiz_correct + ? WHERE user_id=?", (correct, session["id"], )) # zvýšení počtu správných odpovědí u uživatele o hodnotu correct
+            cur.execute("UPDATE statistics SET quiz_absolved = quiz_absolved + 1 WHERE user_id=?", (session["id"], )) # inkrementace počtu absolvovaných kvízů
             cur.execute("UPDATE language_popularity SET value = value + 1 WHERE user_id=? AND category_id=?", (session["id"], session["category_id"],)) # zvýšení popularity konkrétní kategorie u uživatele na základě category_id
             con.commit() # commitnutí výsledku dotazu do databáze 
             con.close() # uzavření connection z bezpečnostních důvodů
@@ -252,6 +254,7 @@ def profile():
             session["id"]=id[0] # nastavení session["id"] na nultý index pro id kvůli tomu, že se furt získává jako list
             cur.execute("SELECT id FROM category ORDER BY id DESC") # získání maximálního id z tabulky category
             category_id_max=cur.fetchone()[0] # spojení maximáního id do proměnné category_id
+            cur.execute("INSERT INTO statistics (quiz_correct, quiz_absolved, user_id) VALUES (?,?,?)", (0,0,session["id"],))
             for i in range(1,category_id_max+1): # založení for cyklu pro vkládání nulových hodnot do tabulky langugage_popularity
                 #  v případě, že by se toto neudělalo, vyhazovalo by zobrazení profilu uživatele chybu, protože by nebylo možné získat údaje o popualritě jazyků
                 cur.execute("INSERT INTO language_popularity(user_id, category_id, value) VALUES (?, ?,?)",(session["id"],i,0,))
@@ -265,8 +268,10 @@ def profile():
     elif "username" in session: # pokud už session obsahuje proměnnou s názvem username, zobrazí se místo toho už. profil
         cur, con = db_connect()
         print(session["username"])
-        cur.execute("SELECT is_admin, quiz_correct, quiz_absolved FROM user WHERE username=?",(session["username"],)) # vybrání hodnot pro úpspěšně zodpovězené otázky a počet absolvovaných kvízů z tabulky, kde je username rovno session["username"]
-        is_admin, quiz_correct, quiz_absolved=cur.fetchone() # spojení výsledku dotazu do proměnných quiz_correct a quiz_absolved
+        cur.execute("SELECT is_admin FROM user WHERE username=?",(session["username"],)) # vybrání hodnot pro úpspěšně zodpovězené otázky a počet absolvovaných kvízů z tabulky, kde je username rovno session["username"]
+        is_admin=cur.fetchone() # spojení výsledku dotazu do proměnných quiz_correct a quiz_absolved
+        cur.execute("SELECT quiz_correct, quiz_absolved FROM statistics WHERE user_id=?", (session["id"],))
+        quiz_correct, quiz_absolved=cur.fetchone()
         cur.execute("SELECT * FROM language_popularity WHERE user_id=?",(session["id"],)) # vybrání všech hodnot z tabulky language popularity, kde id uživatele je rovno session["id"]
         language_popularity_temporary=cur.fetchall() # spojení výsledku dotazu do proměnné language_popularity, která je v tomto kontextu list
         cur.execute("SELECT name FROM category") # vybrání všech hodnot atributu name z tabulky category pro získání všech kategorií (C, Python, ...)
@@ -397,7 +402,7 @@ def task(task_id):
         if str(output)==str(solution): # v případě, že se text výstupu rovná zadanému kódu, zobrazí se zpráva
             return render_template("messages/error.html", message="Gratulujeme! Zadaný kód je správný!")
         else:
-            return render_template("messages/error.html", messages="Litujeme, to není správné řešení")
+            return render_template("messages/error.html", message="Litujeme, to není správné řešení")
     else:
         con = sqlite3.connect("database.db")
         cur = con.cursor()
