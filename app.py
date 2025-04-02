@@ -29,8 +29,8 @@ def user(user_id):
     cur, con=db_connect()
     cur.execute("SELECT username, email, bio, FROM user WHERE id=?", (user_id,)) # vybrání už. jména, e-mailu, bia, počtu správných odpovědí a absolvovaných kvízů z tabulky user v záznamech, kde se id rovná předanému parametru
     username, email, bio=cur.fetchone() # spojení výsledku dotazu do stejnojmenných proměnných 
-    cur.execute("SELECT quiz_correct, quiz_absolved FROM statistics WHERE user_id=?", (user_id,))
-    quiz_correct, quiz_absolved=cur.fetchone()
+    cur.execute("SELECT quiz_correct, quiz_absolved FROM statistics WHERE user_id=?", (user_id,)) #vybrání quiz_correct, quiz_absolved z tabulky statistics, kde user_id rovná proměnné user_id
+    quiz_correct, quiz_absolved=cur.fetchone() #spojení výsledku dotazu do proměnných quiz_correct a quiz_absolved
     cur.execute("SELECT * FROM language_popularity WHERE user_id=?",(user_id,)) # vybrání všech atributů z tabulky language_popularity
     language_popularity_temporary=cur.fetchall() # spojení výsledku do dotazu language popularity
     cur.execute("SELECT name FROM category") # výběr jmen kategorií z tabulky category
@@ -78,9 +78,9 @@ def kvizy():
         return render_template("pages/quiz.html", active=3) 
     else: #pokud se uživatel na stránku kvízy přesměruje bez jakékoliv metody, dojde k vynulování údajů v rámci kvízů
         # a přesměrování na stránku kvizy.html
-        session["quiz_list_index"]=0 
-        session["quiz_list"]=[]
-        session["answers_list"]=[]
+        session["quiz_list_index"]=0 #nastavení proměnné quiz_list_index v případě, že metoda není post, tedy uživatel nespustil konkrétní kvíz
+        session["quiz_list"]=[] #nastavení quiz list na prázdný list v případě, že metoda není post
+        session["answers_list"]=[] #nastavení answers list na prázdný list
         return render_template("pages/kvizy.html", active=3)
     
 @app.route("/kvizy/next", methods=["POST","GET"])
@@ -113,7 +113,7 @@ def send_answer():
             for element in session["correct_wrong"]: # založení for each cyklu pro průchod correct wrong
                 if element==1: # pokud se daný element rovná 1, inkrementuje se correct
                     correct+=1
-                else:
+                else: #naopak pokud se rovná 0, inkrementuje se wrong značící špatnou odpověď
                     wrong+=1
             cur, con=db_connect()
             cur.execute("UPDATE statistics SET quiz_correct = quiz_correct + ? WHERE user_id=?", (correct, session["id"], )) # zvýšení počtu správných odpovědí u uživatele o hodnotu correct
@@ -142,7 +142,7 @@ def add_quiz():
         fourth=fourth.split(";")
         list_of_inputs=[description,correct,second,third,fourth] # vytvoření listu jednotlivých vícehodntových atributů
         max=0
-        for input in list_of_inputs:
+        for input in list_of_inputs: #zjištění maximální délky v rámci list_of_inputs, aby se mu přizpůsobily ostatní ostatní inputy
             if len(input) > max:
                 max=len(input)
         for input in list_of_inputs: # vyplnění dílčích inputů prázdným textem na základě toho, jestli je jeho délka menší než zjištěná maximální délka největšího inputu (např. vyplnění prázdných odpovědí u třetí a čtvrté odpovědi při volbě pouze A,B)
@@ -246,6 +246,10 @@ def profile():
         elif username_duplicate: # pokud je už. jméno obsazené, vypíše se chybová hláška          
             return render_template("messsages/error.html", message="Zadané uživatelské jméno je obsazené!")
         else: # pokud není nic obsazené
+            if len(username)>15: #pokud uživatel zadal už. jméno delší než 30 znaků, vypíše se chybová hláška
+                return render_template("messages/error.html", message="Uživatelské jméno nesmí být delší než 30 znaků!")
+            if len (email)>25: #pokud uživatel zadal e-mail delší než 50 znaků, vypíše se chybová hláška
+                return render_template("messages/error.html", message="E-Mail nesmí být delší než 50 znaků!")
             cur.execute("INSERT INTO user (username, email, password,bio) VALUES (?,?,?,?)",(username,email,hashed_password,bio)) # vložení username, zahashovaného hesla a bia do tabulky user
             cur.execute("SELECT id FROM user where username=?",(username,)) # získání id z tabulky user na základě vloženého username
             id=cur.fetchone() # spojení id do proměnné id
@@ -256,7 +260,7 @@ def profile():
             for i in range(1,category_id_max+1): # založení for cyklu pro vkládání nulových hodnot do tabulky langugage_popularity
                 #  v případě, že by se toto neudělalo, vyhazovalo by zobrazení profilu uživatele chybu, protože by nebylo možné získat údaje o popualritě jazyků
                 cur.execute("INSERT INTO language_popularity(user_id, category_id, value) VALUES (?, ?,?)",(session["id"],i,0,))
-            session["bio"]=bio
+            session["bio"]=bio #nastavení session bio, username a email na adekvátní proměnné
             session["username"]=username
             session["email"]=email
             # nastavení promenných v rámci session na získané údaje z původního formuláře
@@ -265,7 +269,6 @@ def profile():
             return redirect(url_for("index")) # vrácení na stránku pod funkcí index
     elif "username" in session: # pokud už session obsahuje proměnnou s názvem username, zobrazí se místo toho už. profil
         cur, con = db_connect()
-        print(session["username"])
         cur.execute("SELECT is_admin FROM user WHERE username=?",(session["username"],)) # vybrání hodnot pro úpspěšně zodpovězené otázky a počet absolvovaných kvízů z tabulky, kde je username rovno session["username"]
         is_admin=cur.fetchone() # spojení výsledku dotazu do proměnných quiz_correct a quiz_absolved
         cur.execute("SELECT quiz_correct, quiz_absolved FROM statistics WHERE user_id=?", (session["id"],))
@@ -290,9 +293,9 @@ def login():
     if request.method=="POST": # pokud je metoda post
         cur, con = db_connect()
         identifier=request.form["identifier"] # získání identifier z formuláře, může se jednat o uživatelské jméno nebo heslo
-        cur.execute("SELECT id FROM user WHERE username=? OR email=?", (identifier, identifier, ))
-        result=cur.fetchall()
-        if not result:
+        cur.execute("SELECT id FROM user WHERE username=? OR email=?", (identifier, identifier, )) #vybrání id z tabulky user pro záznamy, kde se username nebo email rovnají identifieru
+        result=cur.fetchall() #spojení výsledku dotazu do proměnné result
+        if not result: #pokud je result prázdný, pak se vypíše chybová hláška
             return render_template("messages/error.html", message="Uživatel nenalezen!")
         user_password = request.form["password"].encode('utf-8') # převedení hesla do formátu pybtes a jeho zakódování pomocí utf-8 pro možnost zahashování
         cur.execute("SELECT password FROM user WHERE email=? OR username=?",(identifier,identifier)) # vybrání zahashovaného hesla na základě identifikátoru uživatele, kterým může být uživatelské jméno nebo email
@@ -421,9 +424,9 @@ def tasks(categories):
     else: #pokud bylo cateogories zadáno, tak se z databáze vezmou jen ty záznamy, kde je category_id rovno zadané hodnotě
         cur.execute("SELECT * FROM task WHERE category_id=?",(categories,))
     tasks=cur.fetchall() #spojení výsledků dotazu do proměnné tasks
-    if categories is None:
-        cur.execute("SELECT name FROM category WHERE id=?", (categories, ))
-        categories=cur.fetchall()
+    if categories is None: #pokud jsou kategorie none, to znamená, že uživatel si nevybral konkrétní kategorii, v rámci které se chce zobrazit výsledky
+        cur.execute("SELECT name FROM category") #pak se vyberou všechny názvy kategorií
+        categories=cur.fetchall() #spojení výsledků dotazu do proměnné categories
     else:
         cur.execute("SELECT name FROM category WHERE id=?", (categories, )) #vybrání jména z kategorie, kde id té kategorie se rovná zadanému id
         categories=cur.fetchone() #spojení výsledku dotazu do proměnné cateogries

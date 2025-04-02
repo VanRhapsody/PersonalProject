@@ -43,7 +43,7 @@
 </div>
 </div>
 
-<div class="vertical-navbar">
+<div class="vertical-navbar" style="width: 240px;">
     <ul>
         {% for category in categories %}
         <li><a href="{{ url_for('tasks', categories=category[0]) }}">{{ category[0] }}</a></li>
