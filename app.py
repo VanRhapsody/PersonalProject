@@ -270,7 +270,7 @@ def profile():
     elif "username" in session: # pokud už session obsahuje proměnnou s názvem username, zobrazí se místo toho už. profil
         cur, con = db_connect()
         cur.execute("SELECT is_admin FROM user WHERE username=?",(session["username"],)) # vybrání hodnot pro úpspěšně zodpovězené otázky a počet absolvovaných kvízů z tabulky, kde je username rovno session["username"]
-        is_admin=cur.fetchone() # spojení výsledku dotazu do proměnných quiz_correct a quiz_absolved
+        is_admin=cur.fetchone()[0] # spojení výsledku dotazu do proměnných quiz_correct a quiz_absolved
         cur.execute("SELECT quiz_correct, quiz_absolved FROM statistics WHERE user_id=?", (session["id"],))
         quiz_correct, quiz_absolved=cur.fetchone()
         cur.execute("SELECT * FROM language_popularity WHERE user_id=?",(session["id"],)) # vybrání všech hodnot z tabulky language popularity, kde id uživatele je rovno session["id"]
