@@ -5,12 +5,10 @@
     <h2>Uživatelské jméno: {{ username }}</h2><br>
     <h2>E-Mail: {{ email }}</h2><br>
     <h2>Bio</h2><br>
-    <p> 
        
         {% if bio %}
-            {{ bio }}
+            <p style="overflow-wrap: break-word; ">{{ bio }}</p> 
         {% endif %}
-    </p>
     {% if username==session["username"] %}
     <table class="profile-links">
     <tr>
