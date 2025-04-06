@@ -1,0 +1,186 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1400">
+  <!-- Styles -->
+  <style>
+    .box { fill: #f0f8ff; stroke: #4682b4; stroke-width: 2; }
+    .decision { fill: #fff0f5; stroke: #db7093; stroke-width: 2; }
+    .terminator { fill: #e6e6fa; stroke: #9370db; stroke-width: 2; }
+    .arrow { stroke: #708090; stroke-width: 2; marker-end: url(#arrowhead); fill: none; }
+    .text { font-family: Arial, sans-serif; font-size: 14px; fill: #333; text-anchor: middle; }
+    .small-text { font-family: Arial, sans-serif; font-size: 12px; fill: #333; text-anchor: middle; }
+    .arrow-text { font-family: Arial, sans-serif; font-size: 12px; fill: #555; text-anchor: middle; }
+  </style>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#708090" />
+    </marker>
+  </defs>
+  
+  <!-- Start node -->
+  <ellipse cx="500" cy="30" rx="80" ry="25" class="terminator" />
+  <text x="500" y="35" class="text">Start</text>
+  
+  <!-- Request method decision -->
+  <polygon points="500,60 580,100 500,140 420,100" class="decision" />
+  <text x="500" y="105" class="text">Metoda?</text>
+  
+  <!-- POST Flow -->
+  <rect x="200" y="170" width="170" height="50" rx="10" class="box" />
+  <text x="285" y="195" class="small-text">Získej data: username, email, heslo, bio</text>
+  
+  <rect x="200" y="250" width="170" height="50" rx="10" class="box" />
+  <text x="285" y="275" class="small-text">Vygeneruj salt a zahashuj heslo</text>
+  
+  <rect x="200" y="330" width="170" height="50" rx="10" class="box" />
+  <text x="285" y="355" class="small-text">Zkontroluj duplicity v DB</text>
+  
+  <polygon points="285,400 365,440 285,480 205,440" class="decision" />
+  <text x="285" y="435" class="small-text">Email i username duplicitní?</text>
+  
+  <rect x="50" y="440" width="150" height="40" rx="10" class="box" />
+  <text x="125" y="460" class="small-text">Chyba: "Obojí obsazeno"</text>
+  
+  <polygon points="285,500 365,540 285,580 205,540" class="decision" />
+  <text x="285" y="535" class="small-text">Email duplicitní?</text>
+  
+  <rect x="50" y="540" width="150" height="40" rx="10" class="box" />
+  <text x="125" y="560" class="small-text">Chyba: "Email obsazen"</text>
+  
+  <polygon points="285,600 365,640 285,680 205,640" class="decision" />
+  <text x="285" y="635" class="small-text">Username duplicitní?</text>
+  
+  <rect x="50" y="640" width="150" height="40" rx="10" class="box" />
+  <text x="125" y="660" class="small-text">Chyba: "Username obsazen"</text>
+  
+  <polygon points="285,700 365,740 285,780 205,740" class="decision" />
+  <text x="285" y="740" class="small-text">Username > 15 znaků?</text>
+  
+  <rect x="50" y="740" width="150" height="40" rx="10" class="box" />
+  <text x="125" y="760" class="small-text">Chyba: "Max 30 znaků"</text>
+  
+  <polygon points="285,800 365,840 285,880 205,840" class="decision" />
+  <text x="285" y="840" class="small-text">Email > 25 znaků?</text>
+  
+  <rect x="50" y="840" width="150" height="40" rx="10" class="box" />
+  <text x="125" y="860" class="small-text">Chyba: "Max 50 znaků"</text>
+  
+  <rect x="200" y="900" width="170" height="40" rx="10" class="box" />
+  <text x="285" y="920" class="small-text">Vlož nového uživatele do DB</text>
+  
+  <rect x="200" y="970" width="170" height="40" rx="10" class="box" />
+  <text x="285" y="990" class="small-text">Nastav session proměnné</text>
+  
+  <rect x="200" y="1040" width="170" height="40" rx="10" class="box" />
+  <text x="285" y="1060" class="small-text">Inicializuj statistiky</text>
+  
+  <rect x="200" y="1110" width="170" height="40" rx="10" class="box" />
+  <text x="285" y="1130" class="small-text">Inicializuj language_popularity</text>
+  
+  <rect x="200" y="1180" width="170" height="40" rx="10" class="box" />
+  <text x="285" y="1200" class="small-text">Commit a zavři spojení</text>
+  
+  <rect x="200" y="1250" width="170" height="40" rx="10" class="box" />
+  <text x="285" y="1270" class="small-text">Přesměruj na index</text>
+  
+  <!-- GET flow with session -->
+  <polygon points="700,170 780,210 700,250 620,210" class="decision" />
+  <text x="700" y="210" class="small-text">"username" v session?</text>
+  
+  <rect x="620" y="270" width="160" height="40" rx="10" class="box" />
+  <text x="700" y="290" class="small-text">Připoj se k databázi</text>
+  
+  <rect x="620" y="340" width="160" height="40" rx="10" class="box" />
+  <text x="700" y="360" class="small-text">Získej admin status</text>
+  
+  <rect x="620" y="410" width="160" height="40" rx="10" class="box" />
+  <text x="700" y="430" class="small-text">Získej kvízové statistiky</text>
+  
+  <rect x="620" y="480" width="160" height="40" rx="10" class="box" />
+  <text x="700" y="500" class="small-text">Získej data o oblíbenosti</text>
+  
+  <rect x="620" y="550" width="160" height="40" rx="10" class="box" />
+  <text x="700" y="570" class="small-text">Vytvoř dictionary</text>
+  
+  <rect x="620" y="620" width="160" height="40" rx="10" class="box" />
+  <text x="700" y="640" class="small-text">Seřaď podle popularity</text>
+  
+  <rect x="620" y="690" width="160" height="40" rx="10" class="box" />
+  <text x="700" y="710" class="small-text">Zobraz profil uživatele</text>
+  
+  <!-- GET flow without session -->
+  <rect x="830" y="270" width="160" height="40" rx="10" class="box" />
+  <text x="910" y="290" class="small-text">Zobraz registrační formulář</text>
+  
+  <!-- End node -->
+  <ellipse cx="500" cy="1350" rx="80" ry="25" class="terminator" />
+  <text x="500" y="1355" class="text">Konec</text>
+  
+  <!-- Arrows -->
+  <!-- Main flow -->
+  <path d="M 500,55 L 500,60" class="arrow" />
+  <path d="M 420,100 L 285,100 L 285,170" class="arrow" />
+  <text x="350" y="90" class="arrow-text">POST</text>
+  <path d="M 580,100 L 700,100 L 700,170" class="arrow" />
+  <text x="640" y="90" class="arrow-text">GET</text>
+  
+  <!-- POST flow -->
+  <path d="M 285,220 L 285,250" class="arrow" />
+  <path d="M 285,300 L 285,330" class="arrow" />
+  <path d="M 285,380 L 285,400" class="arrow" />
+  <path d="M 205,440 L 150,440" class="arrow" />
+  <text x="175" y="425" class="arrow-text">Ano</text>
+  <path d="M 125,480 L 125,1300 L 500,1300" class="arrow" />
+  
+  <path d="M 285,480 L 285,500" class="arrow" />
+  <text x="270" y="490" class="arrow-text">Ne</text>
+  <path d="M 205,540 L 150,540" class="arrow" />
+  <text x="175" y="525" class="arrow-text">Ano</text>
+  <path d="M 125,580 L 125,1300" class="arrow" />
+  
+  <path d="M 285,580 L 285,600" class="arrow" />
+  <text x="270" y="590" class="arrow-text">Ne</text>
+  <path d="M 205,640 L 150,640" class="arrow" />
+  <text x="175" y="625" class="arrow-text">Ano</text>
+  <path d="M 125,680 L 125,1300" class="arrow" />
+  
+  <path d="M 285,680 L 285,700" class="arrow" />
+  <text x="270" y="690" class="arrow-text">Ne</text>
+  <path d="M 205,740 L 150,740" class="arrow" />
+  <text x="175" y="725" class="arrow-text">Ano</text>
+  <path d="M 125,780 L 125,1300" class="arrow" />
+  
+  <path d="M 285,780 L 285,800" class="arrow" />
+  <text x="270" y="790" class="arrow-text">Ne</text>
+  <path d="M 205,840 L 150,840" class="arrow" />
+  <text x="175" y="825" class="arrow-text">Ano</text>
+  <path d="M 125,880 L 125,1300" class="arrow" />
+  
+  <path d="M 285,880 L 285,900" class="arrow" />
+  <text x="270" y="890" class="arrow-text">Ne</text>
+  <path d="M 285,940 L 285,970" class="arrow" />
+  <path d="M 285,1010 L 285,1040" class="arrow" />
+  <path d="M 285,1080 L 285,1110" class="arrow" />
+  <path d="M 285,1150 L 285,1180" class="arrow" />
+  <path d="M 285,1220 L 285,1250" class="arrow" />
+  <path d="M 285,1290 L 285,1320 L 500,1320" class="arrow" />
+  
+  <!-- GET with session flow -->
+  <path d="M 700,250 L 700,270" class="arrow" />
+  <text x="685" y="260" class="arrow-text">Ano</text>
+  <path d="M 700,310 L 700,340" class="arrow" />
+  <path d="M 700,380 L 700,410" class="arrow" />
+  <path d="M 700,450 L 700,480" class="arrow" />
+  <path d="M 700,520 L 700,550" class="arrow" />
+  <path d="M 700,590 L 700,620" class="arrow" />
+  <path d="M 700,660 L 700,690" class="arrow" />
+  <path d="M 700,730 L 700,1300 L 500,1300" class="arrow" />
+  
+  <!-- GET without session flow -->
+  <path d="M 780,210 L 910,210 L 910,270" class="arrow" />
+  <text x="850" y="195" class="arrow-text">Ne</text>
+  <path d="M 910,310 L 910,1300 L 500,1300" class="arrow" />
+  
+  <!-- End flow -->
+  <path d="M 500,1300 L 500,1325" class="arrow" />
+</svg>
