@@ -10,7 +10,7 @@
     <div class="form-class" style="width: 500px !important;">
     <form action="{{ url_for('change_username') }}" method="post" style="width: 100% !important;">
         <label for="username">Zadejte už. jméno:</label>
-        <input type="text" name="username" id="username" placeholder="Zadejte už. jméno:" maxlength="30"><br>
+        <input type="text" name="username" id="username" placeholder="Zadejte už. jméno:" maxlength="15"><br>
         <input type="submit" value="Nastavit už. jméno"><br>
         <a href="{{ url_for('profile') }}">Vrátit se zpět</a>
     </form>

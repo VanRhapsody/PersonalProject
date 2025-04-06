@@ -27,7 +27,7 @@ def users():
 @app.route("/users/<user_id>") # route pro zobrazení konkrétního už. profilu
 def user(user_id):
     cur, con=db_connect()
-    cur.execute("SELECT username, email, bio, FROM user WHERE id=?", (user_id,)) # vybrání už. jména, e-mailu, bia, počtu správných odpovědí a absolvovaných kvízů z tabulky user v záznamech, kde se id rovná předanému parametru
+    cur.execute("SELECT username, email, bio FROM user WHERE id=?", (user_id,)) # vybrání už. jména, e-mailu, bia, počtu správných odpovědí a absolvovaných kvízů z tabulky user v záznamech, kde se id rovná předanému parametru
     username, email, bio=cur.fetchone() # spojení výsledku dotazu do stejnojmenných proměnných 
     cur.execute("SELECT quiz_correct, quiz_absolved FROM statistics WHERE user_id=?", (user_id,)) #vybrání quiz_correct, quiz_absolved z tabulky statistics, kde user_id rovná proměnné user_id
     quiz_correct, quiz_absolved=cur.fetchone() #spojení výsledku dotazu do proměnných quiz_correct a quiz_absolved

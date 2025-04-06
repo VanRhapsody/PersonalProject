@@ -1,0 +1,248 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/25.0.2 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="25.0.2">
+  <diagram name="Stránka-1" id="XJfSuj41HTyWMwSjYWF-">
+    <mxGraphModel dx="1509" dy="888" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="980" pageHeight="1390" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-1" value="Start" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="190" width="80" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-2" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="200" y="410" as="sourcePoint" />
+            <mxPoint x="200" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-4" value="Pokud username není v session" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="95" y="290" width="210" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-5" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="200" y="410" as="sourcePoint" />
+            <mxPoint x="360" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-6" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="290" y="300" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-7" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="200" y="410" as="sourcePoint" />
+            <mxPoint x="200" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-8" value="0" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="150" y="370" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-9" value="Navrácení stránky s chybovou hláškou, že uživatel není přihlášen" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="300" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-10" value="Založení proměnné quiz_list_index" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="410" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-11" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="199.66" y="470" as="sourcePoint" />
+            <mxPoint x="199.66" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-12" value="Založení proměnné correct_wrong" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="510" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-13" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="199.66" y="570" as="sourcePoint" />
+            <mxPoint x="199.66" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-14" value="Získání počtu otázek z formuláře - count" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="610" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-15" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="199.66" y="670" as="sourcePoint" />
+            <mxPoint x="199.66" y="710" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-16" value="Získání názvu kategorie z formuláře - category" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="125" y="710" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-17" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="199.66" y="770" as="sourcePoint" />
+            <mxPoint x="199.66" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-18" value="Získání ID kategorie z databáe na základě jejího názvu - category_id" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="125" y="810" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-19" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-18">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="209.66" y="780" as="sourcePoint" />
+            <mxPoint x="340" y="840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-20" value="Založení proměnné quiz_list" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="810" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-21" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="I4iAdCrx2UzQbzzxz4gD-22">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="490" y="839.72" as="sourcePoint" />
+            <mxPoint x="555" y="839.72" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-22" value="Založení proměnné answers_list" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="810" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-23" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-22">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="650" y="750" as="sourcePoint" />
+            <mxPoint x="635" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-24" value="for (int i=0; i++; i&amp;lt;count)" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="720" width="210" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-26" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-24">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="680" y="770" as="sourcePoint" />
+            <mxPoint x="800" y="735" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-27" value="Pokud je získaná otázka prázdná, nebo už je obsažena v quiz_list" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="800" y="665" width="210" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-28" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-27">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="910" y="770" as="sourcePoint" />
+            <mxPoint x="1060" y="735" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-29" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="710" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-30" value="Vygenerování náhodného ID omezeného id_max" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="705" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-31" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1180" y="734.62" as="sourcePoint" />
+            <mxPoint x="1240" y="734.62" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-32" value="Vybrání otázky z databáze na základě ID" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="705" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-33" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-32" target="I4iAdCrx2UzQbzzxz4gD-27">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1130" y="790" as="sourcePoint" />
+            <mxPoint x="1090" y="840" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1300" y="850" />
+              <mxPoint x="905" y="850" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-34" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-27">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="860" y="680" as="sourcePoint" />
+            <mxPoint x="905" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-35" value="0" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="850" y="640" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-36" value="Přidání otázky do quiz_list" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="845" y="560" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-37" value="" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.625;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-36" target="I4iAdCrx2UzQbzzxz4gD-24">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="760" y="630" as="sourcePoint" />
+            <mxPoint x="810" y="580" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="660" y="590" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-38" value="Cyklus běží" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="730" y="750" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-40" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.375;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-24">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="490" y="670" as="sourcePoint" />
+            <mxPoint x="609" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-41" value="Cyklus neběží" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="550" y="690" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-42" value="for id in quiz_list" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="530" width="210" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-43" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.375;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-42">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="500" as="sourcePoint" />
+            <mxPoint x="590" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-44" value="Získání odpovědí k otázce na základě id" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="440" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-46" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-44" target="I4iAdCrx2UzQbzzxz4gD-47">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="590" y="570" as="sourcePoint" />
+            <mxPoint x="490" y="390" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="585" y="395" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-47" value="Zamixování odpovědí" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="380" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-48" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-47">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="510" as="sourcePoint" />
+            <mxPoint x="430" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-49" value="Přidání odpovědí do answers_list" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="450" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-50" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-49" target="I4iAdCrx2UzQbzzxz4gD-42">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="510" as="sourcePoint" />
+            <mxPoint x="590" y="460" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="430" y="545" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-51" value="Cyklus běží" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="585" y="500" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-52" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-42" target="I4iAdCrx2UzQbzzxz4gD-54">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="690" y="510" as="sourcePoint" />
+            <mxPoint x="760" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="760" y="545" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-53" value="Cyklus neběží" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="700" y="510" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-54" value="End" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="710" y="305" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="I4iAdCrx2UzQbzzxz4gD-55" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="I4iAdCrx2UzQbzzxz4gD-9" target="I4iAdCrx2UzQbzzxz4gD-54">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="620" y="370" as="sourcePoint" />
+            <mxPoint x="670" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

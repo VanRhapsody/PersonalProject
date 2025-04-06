@@ -14,9 +14,9 @@
 <body style="background-size: cover;">
     <form action="{{ url_for('login') }}" method="post">
         <label for="name">Už. jméno nebo <br>E-Mail</label>
-        <input type="text" name="identifier" id="identifier" placeholder="Zadejte jméno:" maxlength="30"><br>
+        <input type="text" name="identifier" id="identifier" placeholder="Zadejte jméno:" maxlength="25"><br>
         <label for="password">Heslo</label>
-        <input type="password" name="password" id="password" placeholder="Zadejte heslo:" maxlength="40"><br>
+        <input type="password" name="password" id="password" placeholder="Zadejte heslo:"><br>
         <input type="submit" value="Přihlásit se">
         <p>Ještě nemáte účet? <a href="{{ url_for('profile') }}">Registrujte se!</a></p>
         <a href="{{ url_for('index') }}">Vrátit se zpět</a>

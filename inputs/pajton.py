@@ -1,4 +1,4 @@
-def main():
+def cislo():
 	return 1
 
-print(main())
+print(cislo())
