@@ -27,8 +27,8 @@ def users():
 @app.route("/users/<user_id>") # route pro zobrazení konkrétního už. profilu
 def user(user_id):
     cur, con=db_connect()
-    cur.execute("SELECT username, email, bio FROM user WHERE id=?", (user_id,)) # vybrání už. jména, e-mailu, bia, počtu správných odpovědí a absolvovaných kvízů z tabulky user v záznamech, kde se id rovná předanému parametru
-    username, email, bio=cur.fetchone() # spojení výsledku dotazu do stejnojmenných proměnných 
+    cur.execute("SELECT is_admin, username, email, bio FROM user WHERE id=?", (user_id,)) # vybrání už. jména, e-mailu, bia, počtu správných odpovědí a absolvovaných kvízů z tabulky user v záznamech, kde se id rovná předanému parametru
+    is_admin, username, email, bio=cur.fetchone() # spojení výsledku dotazu do stejnojmenných proměnných 
     cur.execute("SELECT quiz_correct, quiz_absolved FROM statistics WHERE user_id=?", (user_id,)) #vybrání quiz_correct, quiz_absolved z tabulky statistics, kde user_id rovná proměnné user_id
     quiz_correct, quiz_absolved=cur.fetchone() #spojení výsledku dotazu do proměnných quiz_correct a quiz_absolved
     cur.execute("SELECT * FROM language_popularity WHERE user_id=?",(user_id,)) # vybrání všech atributů z tabulky language_popularity
@@ -41,7 +41,7 @@ def user(user_id):
     language_popularity=sorted(language_popularity.items(), key=lambda x: x[1], reverse=True) # language_popularity.items přetvoří dictionary na list, ve kterém jsou další listy, které vždy obsahující dvojici klíč a k ní hodnota
     # tento list se následně seřadí s klíčem pro řazení jako druhou (první) hodnotou v listech, což je právě hodnota popularity jazyku
     # nakonec je reverse nastaveno na True pro sestpné řazení
-    return render_template("pages/profil.html", active=2, username=username, email=email, bio=bio, quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity, is_admin=0)
+    return render_template("pages/profil.html", active=2, username=username, email=email, bio=bio, quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity, is_admin=is_admin)
 
 @app.route("/kvizy", methods=["POST","GET"])
 def kvizy():
