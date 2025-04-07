@@ -7,17 +7,12 @@
 <div class="task-menu">
     <div class="filters">
         <h1>Filtry</h1>
-        <form action="" class="filters-form">
-            <p>Verified</p> 
-            <input type="radio" id="ano" name="volba" value="ano">
-            <label for="ano">Ano</label>
-            <input type="radio" id="ne" name="volba" value="ne">
-            <label for="ne">Ne</label>
+        <form action="{{ url_for('tasks')}}" class="filters-form" method="post">
             <p>Obtížnost</p>
-            <select id="language" name="language">
-                <option value="Easy">Lehká</option>
-                <option value="Medium">Střední</option>
-                <option value="Hard">Těžká</option>
+            <select id="difficulty" name="difficulty">
+                <option value="3">Lehká</option>
+                <option value="2">Střední</option>
+                <option value="1">Těžká</option>
             </select>
             <br>
             <input type="submit" value="Odeslat" style="color: black;">
@@ -36,20 +31,13 @@
             <td style="text-align: center;"><img src="static\images\shield_15627713.png" alt=""></td>
             <td><a href="{{ url_for('task', task_id=element[0]) }}" style="text-decoration: none;">{{ element[1] }}</a></td>
             <td>{{ element[2] }}</td>
-            <td>{{ element[3] }}</td>
+            <td>{{ element[5] }}</td>
         </tr>
         {% endfor %}
     </table>
 </div>
 </div>
 
-<div class="vertical-navbar" style="width: 240px;">
-    <ul>
-        {% for category in categories %}
-        <li><a href="{{ url_for('tasks', categories=category[0]) }}">{{ category[0] }}</a></li>
-        {% endfor %}
-    </ul>
-</div>
 
 
 {% endblock %}

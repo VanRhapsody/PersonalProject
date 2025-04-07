@@ -35,13 +35,15 @@ def user(user_id):
     language_popularity_temporary=cur.fetchall() # spojení výsledku do dotazu language popularity
     cur.execute("SELECT name FROM category") # výběr jmen kategorií z tabulky category
     categories=cur.fetchall() # spojení výsledku dotazu do tabulky categories
+    cur.execute("SELECT value FROM task_statistics WHERE user_id=?", (user_id, ))
+    task_statistics=cur.fetchone()
     language_popularity={} # založení dictionary language_popularity
     for i in range (0, len(categories)): # založení for cyklu pro procházení jednotlivých dílčích kategorií 
         language_popularity[categories[i]]=language_popularity_temporary[i][3] # nastavení hodnoty v language_popularity s klíčem categories[i], tedy dílčí kategorie, na hodnotu třetí hodnotu v i-tém listu v language_popularity_temporary
     language_popularity=sorted(language_popularity.items(), key=lambda x: x[1], reverse=True) # language_popularity.items přetvoří dictionary na list, ve kterém jsou další listy, které vždy obsahující dvojici klíč a k ní hodnota
     # tento list se následně seřadí s klíčem pro řazení jako druhou (první) hodnotou v listech, což je právě hodnota popularity jazyku
     # nakonec je reverse nastaveno na True pro sestpné řazení
-    return render_template("pages/profil.html", active=2, username=username, email=email, bio=bio, quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity, is_admin=is_admin)
+    return render_template("pages/profil.html", active=2, username=username, email=email, bio=bio, quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity, is_admin=is_admin, task_statistics=task_statistics)
 
 @app.route("/kvizy", methods=["POST","GET"])
 def kvizy():
@@ -257,6 +259,7 @@ def profile():
             cur.execute("SELECT id FROM category ORDER BY id DESC") # získání maximálního id z tabulky category
             category_id_max=cur.fetchone()[0] # spojení maximáního id do proměnné category_id
             cur.execute("INSERT INTO statistics (quiz_correct, quiz_absolved, user_id) VALUES (?,?,?)", (0,0,session["id"],))
+            cur.execute("INSERT INTO task_statistics (value, user_id) VALUES (?,?)", (0, session["id"], ))
             for i in range(1,category_id_max+1): # založení for cyklu pro vkládání nulových hodnot do tabulky langugage_popularity
                 #  v případě, že by se toto neudělalo, vyhazovalo by zobrazení profilu uživatele chybu, protože by nebylo možné získat údaje o popualritě jazyků
                 cur.execute("INSERT INTO language_popularity(user_id, category_id, value) VALUES (?, ?,?)",(session["id"],i,0,))
@@ -277,15 +280,16 @@ def profile():
         language_popularity_temporary=cur.fetchall() # spojení výsledku dotazu do proměnné language_popularity, která je v tomto kontextu list
         cur.execute("SELECT name FROM category") # vybrání všech hodnot atributu name z tabulky category pro získání všech kategorií (C, Python, ...)
         categories=cur.fetchall() # spojení výsledku dotazu do proměnné categories
+        cur.execute("SELECT value FROM task_statistics WHERE user_id=?", (session["id"], ))
+        task_statistics=cur.fetchone()
         language_popularity={} # vytvoření dictionary language_popularity
         for i in range (0, len(categories)): # vytvoření for cyklu pro procházení jednotlivých získaných kategorií 
             language_popularity[categories[i]]=language_popularity_temporary[i][3] # nastavení záznam v language popularities s klíčem obsahujícím název kategorie na získaný language_popularity pro tuto kategorii (v language_popularity se jedná o i-tý list a jeho třetí hodnotu)
         language_popularity=sorted(language_popularity.items(), key=lambda x: x[1], reverse=True) # language_popularity.items přetvoří dictionary na list, ve kterém jsou další listy, které vždy obsahující dvojici klíč a k ní hodnota
         # tento list se následně seřadí s klíčem pro řazení jako druhou (první) hodnotou v listech, což je právě hodnota popularity jazyku
         # nakonec je reverse nastaveno na True pro sestpné řazení
-        return render_template("pages/profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"], quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity, is_admin=is_admin)
+        return render_template("pages/profil.html", active=4, username=session["username"], email=session["email"], bio=session["bio"], quiz_correct=quiz_correct, quiz_absolved=quiz_absolved, language_popularity=language_popularity, is_admin=is_admin, task_statistics=task_statistics)
     else: # pokud není metoda post a uživatel ani nemá uživatelské jméno v session, předá se formulář pro registraci
-        
         return render_template("profile_forms/register.html", active=4)
     
 @app.route("/login",methods=["POST","GET"]) # route pro login uživatele
@@ -329,10 +333,14 @@ def change_bio():
     
 @app.route("/change_email", methods=["POST","GET"]) # route pro změnu e-mailu uživatele
 def change_email():
+    cur, con = db_connect()
     if request.method=="POST": # pokud je metoda post
         email=request.form["email"] # získání e-mailu z formuláře
+        cur.execute("SELECT email FROM user WHERE email=?", (email, ))
+        duplicate_email=cur.fetchall()
+        if duplicate_email:
+            return render_template("messages/error.html", message="E-Mail je již použitý!")
         session["email"]=email # nastavení session["email"] na hodnotu získanou z formuláře
-        cur, con = db_connect()
         cur.execute("UPDATE user SET email=? WHERE username=?",(email,session["username"])) # aktualizace atributu email na hodnotu z formuláře pro záznamy, kde se e-mail rovná session["email"]
         con.commit() # commitnutí výsledku dotazu do databáze
         return redirect(url_for("profile")) # přesměrování na funkci pro zobrazení uživatelského profilu
@@ -368,6 +376,10 @@ def change_username():
         if session["username"]==username: # pokud se proměnná username rovná session["username"], nic se neudělá, protože by změna nic nezpůsobila
             pass
         else: # pokud je prázdná, dojde ke změně
+            cur.execute("SELECT username FROM user WHERE username=?", (username, ))
+            duplicate_username=cur.fetchall()
+            if duplicate_username:
+                return render_template("messages/error.html", message="Uživatelské jméno je již použito!")
             cur.execute("UPDATE user SET username=? WHERE username=?",(username,session["username"])) # aktualizace atributu username na hodnotu z formuláře pro záznamy, kde se username rovná session["username"]
             session["username"]=username # nastavení session["username"] na získanou hodnotu z formuláře
             con.commit() # commitnutí výsledku dotazu do databáze
@@ -386,6 +398,8 @@ def logout():
 
 @app.route("/uloha/<task_id>", methods=["POST", "GET"])
 def task(task_id):
+    if not session.get("username"):
+        return render_template("messages/error.html", message="Nelze dělat úlohy bez přihlášení!")
     if request.method=="POST":
         con = sqlite3.connect("database.db")
         cur = con.cursor()
@@ -401,6 +415,9 @@ def task(task_id):
         #pokud proces ukončí chybou, způsobí pád programu pro bezpečnost
         output = result.stdout.strip()  # Výstup skriptu
         if str(output)==str(solution): # v případě, že se text výstupu rovná zadanému kódu, zobrazí se zpráva
+            print(session["id"])
+            cur.execute("UPDATE task_statistics SET value=value+? WHERE user_id=?", (1,session["id"])) #inkrementace počtu vyřešených úloh
+            con.commit()
             return render_template("messages/error.html", message="Gratulujeme! Zadaný kód je správný!")
         else:
             return render_template("messages/error.html", message="Litujeme, to není správné řešení")
@@ -414,24 +431,34 @@ def task(task_id):
         con.close() 
         return render_template("pages/uloha.html", task=task, categories=categories) #přesměrování na stránku uloha s předáním hodnot task a categories
 
-@app.route("/ulohy/", defaults={'categories':None}) #pokud se do routování nezadá žádná kategorie, předají se všechny kategorie
-@app.route("/ulohy/<categories>") #do routování se zadá jazyk - např. sql a  to se ptoom předá jako vstupní parametr funkce, která z databáze získá všechny instance, kde jazyk je sql a zobrazí je
+@app.route("/ulohy/", defaults={'categories':None}, methods=["POST", "GET"]) #pokud se do routování nezadá žádná kategorie, předají se všechny kategorie
+@app.route("/ulohy/<categories>", methods=["POST", "GET"]) #do routování se zadá jazyk - např. sql a  to se ptoom předá jako vstupní parametr funkce, která z databáze získá všechny instance, kde jazyk je sql a zobrazí je
 def tasks(categories):
+    session["categories"]=categories
     con = sqlite3.connect("database.db")
     cur = con.cursor()
-    if categories is None: #pokud categories je none, tedy uživatel nic nezadal, pak se vezmou všechny úlohy
-        cur.execute("SELECT * FROM task")
-    else: #pokud bylo cateogories zadáno, tak se z databáze vezmou jen ty záznamy, kde je category_id rovno zadané hodnotě
-        cur.execute("SELECT * FROM task WHERE category_id=?",(categories,))
-    tasks=cur.fetchall() #spojení výsledků dotazu do proměnné tasks
-    if categories is None: #pokud jsou kategorie none, to znamená, že uživatel si nevybral konkrétní kategorii, v rámci které se chce zobrazit výsledky
-        cur.execute("SELECT name FROM category") #pak se vyberou všechny názvy kategorií
-        categories=cur.fetchall() #spojení výsledků dotazu do proměnné categories
+    if request.method=="POST":
+        difficulty=request.form.get("difficulty")
+        print(f"{difficulty} tohle je obtížnost")
+        if session["categories"] is None: #pokud categories je none, tedy uživatel nic nezadal, pak se vezmou všechny úlohy
+            if difficulty:
+                cur.execute("SELECT * FROM task WHERE difficulty_id=?", (difficulty, ))
+            else:
+                cur.execute("SELECT * FROM task")
+        else: #pokud bylo cateogories zadáno, tak se z databáze vezmou jen ty záznamy, kde je category_id rovno zadané hodnotě
+            if difficulty:
+                cur.execute("SELECT * FROM task WHERE difficulty_id=? AND category_id=?", (difficulty, session["categories"],))
+            else:
+                cur.execute("SELECT * FROM task WHERE category_id=?", (session["categories"], ))
+        tasks=cur.fetchall() #spojení výsledků dotazu do proměnné tasks
+        return render_template("pages/ulohy.html", active=2, tasks=tasks)
     else:
-        cur.execute("SELECT name FROM category WHERE id=?", (categories, )) #vybrání jména z kategorie, kde id té kategorie se rovná zadanému id
-        categories=cur.fetchone() #spojení výsledku dotazu do proměnné cateogries
-    con.commit()
-    return render_template("pages/ulohy.html", active=2, tasks=tasks, categories=categories)
+        if session["categories"] is None: #pokud categories je none, tedy uživatel nic nezadal, pak se vezmou všechny úlohy
+            cur.execute("SELECT * FROM task")
+        else: #pokud bylo cateogories zadáno, tak se z databáze vezmou jen ty záznamy, kde je category_id rovno zadané hodnotě
+            cur.execute("SELECT * FROM task WHERE category_id=?",(session["categories"],))
+        tasks=cur.fetchall() #spojení výsledků dotazu do proměnné tasks
+        return render_template("pages/ulohy.html", active=2, tasks=tasks)
 
 if __name__=="__main__": # zajištění toho, že soubor app.py se spustí pouze tehdy, pokud bude spouštěn jako hlavní soubor a ne např. jen jako importovaný modul do jiného souboru
     app.run(debug=True) # zapnutí proměnné app uvedené na začátku souboru
