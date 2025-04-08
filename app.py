@@ -374,7 +374,7 @@ def change_username():
         username=request.form["username"] # získání už. jména z formuláře
         cur, con = db_connect()
         if session["username"]==username: # pokud se proměnná username rovná session["username"], nic se neudělá, protože by změna nic nezpůsobila
-            pass
+            return redirect(url_for("profile"))
         else: # pokud je prázdná, dojde ke změně
             cur.execute("SELECT username FROM user WHERE username=?", (username, ))
             duplicate_username=cur.fetchall()

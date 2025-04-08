@@ -1,4 +1,4 @@
-def function():
+def main():
 	return 1
 
-print(function())
+print(main())
